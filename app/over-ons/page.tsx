@@ -3,7 +3,6 @@ import Link from "next/link";
 import Button from "@/components/Button";
 import FadeIn from "@/components/FadeIn";
 import GorillaBackdrop from "@/components/GorillaBackdrop";
-import { CheckIcon } from "@/lib/icons";
 
 export const metadata: Metadata = {
   title: "Over ons",
@@ -34,19 +33,19 @@ export default function OverOnsPage() {
   return (
     <>
       <section className="relative overflow-hidden border-b border-ink-line">
-        <GorillaBackdrop className="absolute -right-24 top-0 h-[560px] w-[560px] text-accent/50" flip />
+        <GorillaBackdrop className="absolute -right-20 top-0 h-[520px] w-[520px] text-paper" flip />
         <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-28">
           <FadeIn>
-            <span className="text-sm font-semibold uppercase tracking-widest text-accent">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-paper/40">
               Over ons
             </span>
           </FadeIn>
-          <FadeIn delay={100}>
+          <FadeIn delay={80}>
             <h1 className="text-display mt-4 max-w-2xl text-4xl text-paper sm:text-5xl">
               Sales is geen kunst. Het is een proces.
             </h1>
           </FadeIn>
-          <FadeIn delay={200}>
+          <FadeIn delay={160}>
             <p className="mt-6 max-w-xl text-paper/60">
               True Culture Marketing is opgericht vanuit de overtuiging dat
               B2B sales voorspelbaar en schaalbaar kan zijn, mits het goed
@@ -69,9 +68,7 @@ export default function OverOnsPage() {
             {values.map((value, i) => (
               <FadeIn key={value.title} delay={i * 90}>
                 <div>
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/10 text-accent">
-                    <CheckIcon />
-                  </span>
+                  <span className="block h-px w-8 bg-accent/70" />
                   <h3 className="mt-5 font-display text-lg text-paper">{value.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-paper/60">{value.description}</p>
                 </div>
@@ -102,7 +99,7 @@ export default function OverOnsPage() {
                 </p>
               </div>
               <div className="relative aspect-square overflow-hidden rounded-2xl border border-ink-line bg-ink-raised">
-                <GorillaBackdrop className="absolute inset-0 h-full w-full text-accent/40" />
+                <GorillaBackdrop className="absolute inset-0 h-full w-full text-paper" />
               </div>
             </div>
           </FadeIn>
@@ -118,7 +115,7 @@ export default function OverOnsPage() {
           </FadeIn>
           <FadeIn delay={100}>
             <div className="mt-8 flex justify-center">
-              <Button href="/contact">Plan een kennismaking</Button>
+              <Button href="/contact">Plan een kennismakingsgesprek</Button>
             </div>
           </FadeIn>
         </div>

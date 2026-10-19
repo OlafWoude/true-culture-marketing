@@ -16,19 +16,19 @@ export default function WerkwijzePage() {
   return (
     <>
       <section className="relative overflow-hidden border-b border-ink-line">
-        <GorillaBackdrop className="absolute -left-32 top-0 h-[520px] w-[520px] text-accent/50" />
+        <GorillaBackdrop className="absolute -left-24 top-0 h-[480px] w-[480px] text-paper" />
         <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-28">
           <FadeIn>
-            <span className="text-sm font-semibold uppercase tracking-widest text-accent">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-paper/40">
               Werkwijze
             </span>
           </FadeIn>
-          <FadeIn delay={100}>
+          <FadeIn delay={80}>
             <h1 className="text-display mt-4 max-w-2xl text-4xl text-paper sm:text-5xl">
               Geen verrassingen. Wel structuur.
             </h1>
           </FadeIn>
-          <FadeIn delay={200}>
+          <FadeIn delay={160}>
             <p className="mt-6 max-w-xl text-paper/60">
               Elk traject doorloopt dezelfde vijf stappen. Zo weet je altijd
               waar je aan toe bent en wat je kunt verwachten.
@@ -58,7 +58,7 @@ export default function WerkwijzePage() {
           </FadeIn>
           <FadeIn delay={100}>
             <div className="mt-8 flex justify-center">
-              <Button href="/contact">Plan een kennismaking</Button>
+              <Button href="/contact">Plan een kennismakingsgesprek</Button>
             </div>
           </FadeIn>
         </div>

@@ -3,7 +3,7 @@ import Button from "@/components/Button";
 import FadeIn from "@/components/FadeIn";
 import GorillaBackdrop from "@/components/GorillaBackdrop";
 import { services } from "@/lib/content";
-import { TargetIcon, PhoneIcon, UsersIcon, ChartIcon, CheckIcon } from "@/lib/icons";
+import { TargetIcon, PhoneIcon, UsersIcon, ChartIcon } from "@/lib/icons";
 
 const iconMap = {
   target: TargetIcon,
@@ -23,19 +23,19 @@ export default function DienstenPage() {
   return (
     <>
       <section className="relative overflow-hidden border-b border-ink-line">
-        <GorillaBackdrop className="absolute -right-24 top-0 h-[520px] w-[520px] text-accent/50" flip />
+        <GorillaBackdrop className="absolute -right-20 top-0 h-[480px] w-[480px] text-paper" flip />
         <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-28">
           <FadeIn>
-            <span className="text-sm font-semibold uppercase tracking-widest text-accent">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-paper/40">
               Diensten
             </span>
           </FadeIn>
-          <FadeIn delay={100}>
+          <FadeIn delay={80}>
             <h1 className="text-display mt-4 max-w-2xl text-4xl text-paper sm:text-5xl">
               Sales-ondersteuning die zich terugverdient
             </h1>
           </FadeIn>
-          <FadeIn delay={200}>
+          <FadeIn delay={160}>
             <p className="mt-6 max-w-xl text-paper/60">
               Elke dienst is op zichzelf in te zetten, of te combineren tot
               een volledig uitbesteed voortraject voor jouw salesteam.
@@ -45,17 +45,22 @@ export default function DienstenPage() {
       </section>
 
       <section className="border-b border-ink-line">
-        <div className="mx-auto max-w-6xl space-y-16 px-6 py-24">
+        <div className="mx-auto max-w-6xl px-6 py-24">
           {services.map((service, i) => {
             const Icon = iconMap[service.icon as keyof typeof iconMap];
             return (
               <FadeIn key={service.slug} delay={i * 60}>
                 <div
                   id={service.slug}
-                  className="grid gap-8 border-t border-ink-line pt-12 first:border-t-0 first:pt-0 md:grid-cols-[1fr_2fr]"
+                  className="grid gap-6 border-t border-ink-line py-12 first:border-t-0 first:pt-0 md:grid-cols-[auto_1fr] md:gap-12"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-accent">
-                    <Icon />
+                  <div className="flex items-start gap-5 md:w-56">
+                    <span className="font-display text-sm text-paper/30">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="text-paper/50">
+                      <Icon />
+                    </span>
                   </div>
                   <div>
                     <h2 className="text-display text-2xl text-paper sm:text-3xl">{service.title}</h2>
@@ -69,18 +74,15 @@ export default function DienstenPage() {
       </section>
 
       <section className="bg-ink-raised">
-        <div className="mx-auto max-w-6xl px-6 py-20">
+        <div className="mx-auto max-w-6xl px-6 py-24 text-center">
           <FadeIn>
-            <div className="flex flex-col items-start gap-4 rounded-2xl border border-ink-line bg-ink p-10 md:flex-row md:items-center md:justify-between">
-              <div className="flex items-center gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-ink">
-                  <CheckIcon />
-                </span>
-                <p className="text-paper/80">
-                  Benieuwd welke dienst het beste past bij jouw situatie?
-                </p>
-              </div>
-              <Button href="/contact">Plan een kennismaking</Button>
+            <h2 className="text-display text-2xl text-paper sm:text-3xl">
+              Benieuwd welke dienst het beste past bij jouw situatie?
+            </h2>
+          </FadeIn>
+          <FadeIn delay={100}>
+            <div className="mt-8 flex justify-center">
+              <Button href="/contact">Plan een kennismakingsgesprek</Button>
             </div>
           </FadeIn>
         </div>

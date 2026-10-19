@@ -13,11 +13,11 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <section className="relative overflow-hidden">
-      <GorillaBackdrop className="absolute -right-32 top-0 h-[560px] w-[560px] text-accent/40" flip />
+      <GorillaBackdrop className="absolute -right-24 top-0 h-[520px] w-[520px] text-paper" flip />
       <div className="relative mx-auto grid max-w-6xl gap-16 px-6 py-24 md:grid-cols-[1fr_1.2fr] md:py-28">
         <FadeIn>
           <div>
-            <span className="text-sm font-semibold uppercase tracking-widest text-accent">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-paper/40">
               Contact
             </span>
             <h1 className="text-display mt-4 text-4xl text-paper sm:text-5xl">
