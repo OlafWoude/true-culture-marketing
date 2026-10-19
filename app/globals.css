@@ -1,35 +1,151 @@
 @import "tailwindcss";
 
+/* Design tokens. These defaults are the original True Culture look; the CMS theme
+   overrides them per site with a generated :root block (see lib/cms/theme-css.ts). */
+:root {
+  --tc-ink: #050505;
+  --tc-ink-2: #0e0e0e;
+  --tc-ink-3: #161616;
+  --tc-line: #232323;
+  --tc-paper: #ffffff;
+  --tc-mist: #f3f3f1;
+  --tc-accent: #fece00;
+  --tc-accent-hover: #ffda3d;
+  --tc-on-accent: #050505;
+
+  --tc-font-display: var(--font-archivo);
+  --tc-display-width: 62;
+  --tc-display-weight: 900;
+  --tc-display-transform: uppercase;
+  --tc-heading-scale: 1;
+  --tc-heading-lh: 0.92;
+  --tc-font-body: var(--font-inter);
+  --tc-body-scale: 1;
+  --tc-lh-scale: 1;
+
+  --tc-radius-btn: 9999px;
+  --tc-radius-scale: 1;
+  --tc-btn-transform: none;
+  --tc-shadow-nav: 0 10px 40px -10px rgba(0, 0, 0, 0.6);
+  --tc-shadow-card: 0 30px 80px -20px rgba(0, 0, 0, 0.6);
+  --tc-watermark: 1;
+
+  --tc-container: 72rem;
+  --tc-section-y: 7rem;
+  --tc-section-y-md: 9rem;
+  --tc-section-y-sm: 6rem;
+  --tc-section-y-sm-md: 8rem;
+}
+
 @theme inline {
-  --color-ink: #050505;
-  --color-ink-2: #0e0e0e;
-  --color-ink-3: #161616;
-  --color-line: #232323;
-  --color-paper: #ffffff;
-  --color-mist: #f3f3f1;
-  --color-mist-2: #e9e9e5;
-  --color-accent: #fece00;
-  --color-accent-hover: #ffda3d;
-  --font-sans: var(--font-inter), system-ui, sans-serif;
-  --font-display: var(--font-archivo), "Arial Narrow", sans-serif;
+  --color-ink: var(--tc-ink);
+  --color-ink-2: var(--tc-ink-2);
+  --color-ink-3: var(--tc-ink-3);
+  --color-line: var(--tc-line);
+  --color-paper: var(--tc-paper);
+  --color-mist: var(--tc-mist);
+  --color-accent: var(--tc-accent);
+  --color-accent-hover: var(--tc-accent-hover);
+  --color-on-accent: var(--tc-on-accent);
+  --font-sans: var(--tc-font-body), system-ui, sans-serif;
+  --font-display: var(--tc-font-display), "Arial Narrow", sans-serif;
+
+  --container-site: var(--tc-container);
+  --container-site-wide: calc(var(--tc-container) + 5.5rem);
+
+  --radius-btn: var(--tc-radius-btn);
+  --radius-control: calc(0.75rem * var(--tc-radius-scale));
+  --radius-inner: calc(1rem * var(--tc-radius-scale));
+  --radius-tile: calc(1.5rem * var(--tc-radius-scale));
+  --radius-card: calc(1.75rem * var(--tc-radius-scale));
+  --radius-box: calc(2rem * var(--tc-radius-scale));
+  --radius-panel: calc(2.5rem * var(--tc-radius-scale));
+  --radius-hero-lg: calc(3.5rem * var(--tc-radius-scale));
+
+  --text-sm: calc(0.875rem * var(--tc-body-scale));
+  --text-base: calc(1rem * var(--tc-body-scale));
+  --text-lg: calc(1.125rem * var(--tc-body-scale));
+  --text-xl: calc(1.25rem * var(--tc-body-scale));
+  --text-4xl: calc(2.25rem * var(--tc-heading-scale));
+  --text-5xl: calc(3rem * var(--tc-heading-scale));
+  --text-6xl: calc(3.75rem * var(--tc-heading-scale));
+  --text-7xl: calc(4.5rem * var(--tc-heading-scale));
+  --text-8xl: calc(6rem * var(--tc-heading-scale));
+  --text-9xl: calc(8rem * var(--tc-heading-scale));
+  --leading-snug: calc(1.375 * var(--tc-lh-scale));
+  --leading-relaxed: calc(1.625 * var(--tc-lh-scale));
 }
 
 @utility display {
   font-family: var(--font-display);
-  font-variation-settings: "wdth" 62;
-  font-weight: 900;
-  text-transform: uppercase;
-  line-height: 0.92;
+  font-variation-settings: "wdth" var(--tc-display-width);
+  font-weight: var(--tc-display-weight);
+  text-transform: var(--tc-display-transform);
+  line-height: var(--tc-heading-lh);
   letter-spacing: -0.005em;
   text-wrap: balance;
 }
 
 @utility wordmark {
-  font-family: var(--font-display);
+  font-family: var(--font-archivo), sans-serif;
   font-variation-settings: "wdth" 125;
   font-weight: 900;
   text-transform: uppercase;
   line-height: 0.9;
+}
+
+@utility btn-text {
+  text-transform: var(--tc-btn-transform);
+}
+
+@utility py-section {
+  padding-block: var(--tc-section-y);
+  @media (width >= 48rem) {
+    padding-block: var(--tc-section-y-md);
+  }
+}
+
+@utility pt-section {
+  padding-top: var(--tc-section-y);
+  @media (width >= 48rem) {
+    padding-top: var(--tc-section-y-md);
+  }
+}
+
+@utility pb-section {
+  padding-bottom: var(--tc-section-y);
+  @media (width >= 48rem) {
+    padding-bottom: var(--tc-section-y-md);
+  }
+}
+
+@utility py-section-lg {
+  padding-block: var(--tc-section-y);
+  @media (width >= 48rem) {
+    padding-block: calc(var(--tc-section-y-md) + 1rem);
+  }
+}
+
+@utility py-section-sm {
+  padding-block: var(--tc-section-y-sm);
+  @media (width >= 48rem) {
+    padding-block: var(--tc-section-y-sm-md);
+  }
+}
+
+@utility pb-section-sm {
+  padding-bottom: var(--tc-section-y-sm);
+  @media (width >= 48rem) {
+    padding-bottom: var(--tc-section-y-sm-md);
+  }
+}
+
+@utility shadow-nav {
+  box-shadow: var(--tc-shadow-nav);
+}
+
+@utility shadow-card {
+  box-shadow: var(--tc-shadow-card);
 }
 
 html {
@@ -39,11 +155,16 @@ html {
 body {
   background: var(--color-ink);
   color: var(--color-paper);
+  line-height: calc(1.5 * var(--tc-lh-scale));
 }
 
 ::selection {
   background: var(--color-accent);
-  color: var(--color-ink);
+  color: var(--color-on-accent);
+}
+
+.tc-watermark {
+  opacity: var(--tc-watermark);
 }
 
 .grain {
@@ -59,6 +180,57 @@ body {
   pointer-events: none;
   opacity: 0.05;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Rich text written in the CMS editor. */
+.rich > * + * {
+  margin-top: 1.25rem;
+}
+
+.rich h2 {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" var(--tc-display-width);
+  font-weight: var(--tc-display-weight);
+  text-transform: var(--tc-display-transform);
+  line-height: var(--tc-heading-lh);
+  font-size: calc(2.25rem * var(--tc-heading-scale));
+  margin-top: 2.5rem;
+}
+
+.rich h3 {
+  font-weight: 700;
+  font-size: var(--text-xl);
+  margin-top: 2rem;
+}
+
+.rich ul,
+.rich ol {
+  padding-left: 1.25rem;
+}
+
+.rich ul {
+  list-style: disc;
+}
+
+.rich ol {
+  list-style: decimal;
+}
+
+.rich li + li {
+  margin-top: 0.4rem;
+}
+
+.rich strong {
+  font-weight: 650;
+  color: inherit;
+}
+
+.rich a {
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
 }
 
 @keyframes marquee {

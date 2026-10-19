@@ -3,28 +3,24 @@
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { submitContactForm, type ContactFormState } from "@/app/actions/contact";
+import type { FormsConfig } from "@/lib/cms/documents";
 import { ArrowRightIcon } from "@/lib/icons";
 
 const initialState: ContactFormState = { status: "idle", message: "" };
 
-function SubmitButton() {
+function SubmitButton({ label, sending }: { label: string; sending: string }) {
   const { pending } = useFormStatus();
   return (
     <button
       type="submit"
       disabled={pending}
-      className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-7 py-4 font-semibold text-ink transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-60"
+      className="btn-text group inline-flex w-full items-center justify-center gap-2 rounded-btn bg-accent px-7 py-4 font-semibold text-on-accent transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-60"
     >
-      {pending ? "Versturen…" : "Verstuur aanvraag"}
-      {!pending && (
-        <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
-      )}
+      {pending ? sending : label}
+      {!pending && <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />}
     </button>
   );
 }
-
-const inputClasses =
-  "w-full rounded-xl border border-transparent bg-mist px-4 py-3.5 text-[15px] text-ink placeholder:text-ink/35 outline-none transition-colors focus:border-ink/30 focus:bg-white aria-[invalid=true]:border-red-500";
 
 type FieldProps = {
   id: "name" | "companyName" | "email" | "message";
@@ -49,14 +45,20 @@ function Field({ id, label, error, children }: FieldProps) {
   );
 }
 
-export default function ContactForm() {
+export default function ContactForm({ config, formStyle = "filled" }: { config: FormsConfig; formStyle?: string }) {
   const [state, formAction] = useActionState(submitContactForm, initialState);
   const errors = state.fieldErrors ?? {};
+  const { labels, messages } = config;
+  const inputClasses = `w-full rounded-control border px-4 py-3.5 text-[15px] text-ink placeholder:text-ink/35 outline-none transition-colors aria-[invalid=true]:border-red-500 ${
+    formStyle === "outlined"
+      ? "border-ink/20 bg-white focus:border-ink/60"
+      : "border-transparent bg-mist focus:border-ink/30 focus:bg-white"
+  }`;
 
   if (state.status === "success") {
     return (
       <div role="status" className="py-10 text-center">
-        <p className="display text-5xl text-ink">Bedankt!</p>
+        <p className="display text-5xl text-ink">{messages.successTitle}</p>
         <p className="mx-auto mt-4 max-w-sm text-ink/65">{state.message}</p>
       </div>
     );
@@ -71,27 +73,29 @@ export default function ContactForm() {
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <Field id="name" label="Naam" error={errors.name}>
+        <Field id="name" label={labels.name} error={errors.name}>
           <input
             id="name"
             name="name"
             type="text"
             autoComplete="name"
             required
-            placeholder="Je volledige naam"
+            maxLength={120}
+            placeholder={labels.namePlaceholder}
             className={inputClasses}
             aria-invalid={Boolean(errors.name)}
             aria-describedby={errors.name ? "name-error" : undefined}
           />
         </Field>
-        <Field id="companyName" label="Bedrijfsnaam" error={errors.companyName}>
+        <Field id="companyName" label={labels.company} error={errors.companyName}>
           <input
             id="companyName"
             name="companyName"
             type="text"
             autoComplete="organization"
             required
-            placeholder="Naam van je bedrijf"
+            maxLength={160}
+            placeholder={labels.companyPlaceholder}
             className={inputClasses}
             aria-invalid={Boolean(errors.companyName)}
             aria-describedby={errors.companyName ? "companyName-error" : undefined}
@@ -99,34 +103,44 @@ export default function ContactForm() {
         </Field>
       </div>
 
-      <Field id="email" label="E-mailadres" error={errors.email}>
+      <Field id="email" label={labels.email} error={errors.email}>
         <input
           id="email"
           name="email"
           type="email"
           autoComplete="email"
           required
-          placeholder="naam@bedrijf.nl"
+          maxLength={200}
+          placeholder={labels.emailPlaceholder}
           className={inputClasses}
           aria-invalid={Boolean(errors.email)}
           aria-describedby={errors.email ? "email-error" : undefined}
         />
       </Field>
 
-      <Field id="message" label="Waar kunnen we je mee helpen?" error={errors.message}>
+      <Field id="message" label={labels.message} error={errors.message}>
         <textarea
           id="message"
           name="message"
           rows={5}
           required
-          placeholder="Vertel kort over je bedrijf, je doelgroep en wat je wilt bereiken."
+          maxLength={5000}
+          placeholder={labels.messagePlaceholder}
           className={`${inputClasses} resize-none`}
           aria-invalid={Boolean(errors.message)}
           aria-describedby={errors.message ? "message-error" : undefined}
         />
       </Field>
 
-      <SubmitButton />
+      <SubmitButton label={labels.submit} sending={labels.sending} />
+
+      {config.privacyNote && (
+        <div
+          className="rich text-center text-xs leading-relaxed text-ink/50"
+          // Sanitised on save in the CMS; only basic formatting and safe links are possible.
+          dangerouslySetInnerHTML={{ __html: config.privacyNote }}
+        />
+      )}
 
       {state.status === "error" && (
         <p role="alert" className="text-center text-sm text-red-600">

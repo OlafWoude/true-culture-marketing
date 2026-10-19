@@ -1,22 +1,15 @@
-import Button from "@/components/Button";
-import GorillaMark from "@/components/GorillaMark";
+import Link from "next/link";
 
-export default function NotFound() {
+export default function RootNotFound() {
   return (
-    <section className="grain flex min-h-[80vh] items-center overflow-hidden bg-ink">
-      <GorillaMark className="absolute left-1/2 top-1/2 w-[900px] max-w-none -translate-x-1/2 -translate-y-1/2 text-white/[0.035]" />
-      <div className="relative mx-auto max-w-3xl px-6 pt-24 text-center">
-        <p className="display text-[9rem] text-accent md:text-[12rem]">404</p>
-        <h1 className="display mt-2 text-5xl text-paper md:text-6xl">Deze pagina bestaat niet</h1>
-        <p className="mx-auto mt-6 max-w-md text-lg text-paper/60">
-          De pagina die je zoekt is verplaatst of bestaat niet meer.
-        </p>
-        <div className="mt-10 flex justify-center">
-          <Button href="/" arrow>
-            Terug naar home
-          </Button>
-        </div>
+    <main className="flex min-h-screen items-center justify-center bg-ink px-6 text-center">
+      <div>
+        <p className="display text-8xl text-accent">404</p>
+        <p className="mt-4 text-paper/70">Deze pagina bestaat niet.</p>
+        <Link href="/" className="mt-8 inline-block font-semibold text-paper underline decoration-accent decoration-2 underline-offset-4">
+          Naar de homepage
+        </Link>
       </div>
-    </section>
+    </main>
   );
 }

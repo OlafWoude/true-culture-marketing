@@ -4,6 +4,7 @@ type MarqueeProps = {
 };
 
 export default function Marquee({ items, tone = "light" }: MarqueeProps) {
+  if (!items.length) return null;
   const row = [...items, ...items];
   const text = tone === "light" ? "text-ink" : "text-paper";
 
