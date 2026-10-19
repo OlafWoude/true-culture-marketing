@@ -9,6 +9,7 @@ export type ContactFormState = {
   status: "idle" | "success" | "error";
   message: string;
   fieldErrors?: Partial<Record<"name" | "email" | "companyName" | "message", string>>;
+  values?: { name: string; email: string; companyName: string; message: string };
 };
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -36,14 +37,14 @@ export async function submitContactForm(
   if (companyName.length < 2) fieldErrors.companyName = m.companyError;
   if (message.length < 10) fieldErrors.message = m.messageError;
   if (Object.keys(fieldErrors).length > 0) {
-    return { status: "error", message: m.invalid, fieldErrors };
+    return { status: "error", message: m.invalid, fieldErrors, values: { name, email, companyName, message } };
   }
 
   const db = isDbConfigured();
   if (db) {
     const key = `contact:${await clientIpKey()}`;
     if (await isRateLimited(key, 5, 10 * 60 * 1000)) {
-      return { status: "error", message: m.rateLimited };
+      return { status: "error", message: m.rateLimited, values: { name, email, companyName, message } };
     }
     await recordHit(key);
   }
@@ -73,6 +74,7 @@ export async function submitContactForm(
   }
 
   if (emailed || stored) return { status: "success", message: m.success };
-  if (!recipient || !isEmailConfigured()) return { status: "error", message: m.notConfigured };
-  return { status: "error", message: m.failed };
+  const values = { name, email, companyName, message };
+  if (!recipient || !isEmailConfigured()) return { status: "error", message: m.notConfigured, values };
+  return { status: "error", message: m.failed, values };
 }

@@ -10,7 +10,12 @@ import { createSession, destroyAllSessions, destroyCurrentSession } from "@/lib/
 import { ensureSeeded } from "@/lib/cms/repo";
 import { isEmailConfigured, sendEmail, siteBaseUrl } from "@/lib/email";
 
-export type AuthState = { error?: string; message?: string } | undefined;
+export type AuthState = { error?: string; message?: string; values?: Record<string, string> } | undefined;
+
+// Non-secret fields are echoed back so a form keeps them after an error; passwords never are.
+function keep(formData: FormData, ...keys: string[]) {
+  return Object.fromEntries(keys.map((k) => [k, String(formData.get(k) ?? "").slice(0, 200)]));
+}
 
 const MINUTE = 60 * 1000;
 const emailSchema = z.string().trim().toLowerCase().email().max(200);
@@ -31,17 +36,17 @@ function safeNext(value: FormDataEntryValue | null) {
 }
 
 export async function loginAction(_prev: AuthState, formData: FormData): Promise<AuthState> {
-  if (!isDbConfigured()) return { error: "De database is nog niet gekoppeld." };
+  if (!isDbConfigured()) return { error: "De database is nog niet gekoppeld.", values: keep(formData, "email") };
   const parsedEmail = emailSchema.safeParse(formData.get("email"));
   const password = String(formData.get("password") ?? "");
   const generic = "Onjuist e-mailadres of wachtwoord.";
-  if (!parsedEmail.success || !password || password.length > 200) return { error: generic };
+  if (!parsedEmail.success || !password || password.length > 200) return { error: generic, values: keep(formData, "email") };
   const email = parsedEmail.data;
 
   const ipKey = `login-ip:${await clientIpKey()}`;
   const emailKey = `login-email:${sha256(email)}`;
   if ((await isRateLimited(emailKey, 5, 15 * MINUTE)) || (await isRateLimited(ipKey, 20, 15 * MINUTE))) {
-    return { error: "Te veel inlogpogingen. Wacht 15 minuten en probeer het opnieuw." };
+    return { error: "Te veel inlogpogingen. Wacht 15 minuten en probeer het opnieuw.", values: keep(formData, "email") };
   }
 
   const db = getDb();
@@ -50,7 +55,7 @@ export async function loginAction(_prev: AuthState, formData: FormData): Promise
   if (!user || !valid) {
     await recordHit(emailKey);
     await recordHit(ipKey);
-    return { error: generic };
+    return { error: generic, values: keep(formData, "email") };
   }
 
   await clearHits(emailKey);
@@ -73,25 +78,25 @@ const setupSchema = z.object({
 });
 
 export async function setupAction(_prev: AuthState, formData: FormData): Promise<AuthState> {
-  if (!isDbConfigured()) return { error: "De database is nog niet gekoppeld." };
+  if (!isDbConfigured()) return { error: "De database is nog niet gekoppeld.", values: keep(formData, "name", "email") };
   const expected = setupTokenAvailable();
-  if (!expected) return { error: "Stel eerst de omgevingsvariabele ADMIN_SETUP_TOKEN in (minimaal 24 tekens)." };
+  if (!expected) return { error: "Stel eerst de omgevingsvariabele ADMIN_SETUP_TOKEN in (minimaal 24 tekens).", values: keep(formData, "name", "email") };
 
   const ipKey = `setup-ip:${await clientIpKey()}`;
-  if (await isRateLimited(ipKey, 10, 60 * MINUTE)) return { error: "Te veel pogingen. Probeer het over een uur opnieuw." };
+  if (await isRateLimited(ipKey, 10, 60 * MINUTE)) return { error: "Te veel pogingen. Probeer het over een uur opnieuw.", values: keep(formData, "name", "email") };
 
   const parsed = setupSchema.safeParse(Object.fromEntries(formData));
-  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Controleer de velden." };
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Controleer de velden.", values: keep(formData, "name", "email") };
   const { name, email, password, confirm, token } = parsed.data;
 
   if (!safeEqual(token, expected)) {
     await recordHit(ipKey);
-    return { error: "De setup-sleutel klopt niet." };
+    return { error: "De setup-sleutel klopt niet.", values: keep(formData, "name", "email") };
   }
-  if ((await userCount()) > 0) return { error: "Er bestaat al een beheerder. Log in of gebruik ‘Wachtwoord vergeten’." };
+  if ((await userCount()) > 0) return { error: "Er bestaat al een beheerder. Log in of gebruik ‘Wachtwoord vergeten’.", values: keep(formData, "name", "email") };
   const problem = passwordProblem(password, email);
-  if (problem) return { error: problem };
-  if (password !== confirm) return { error: "De wachtwoorden zijn niet gelijk." };
+  if (problem) return { error: problem, values: keep(formData, "name", "email") };
+  if (password !== confirm) return { error: "De wachtwoorden zijn niet gelijk.", values: keep(formData, "name", "email") };
 
   const db = getDb();
   const [user] = await db
@@ -104,7 +109,7 @@ export async function setupAction(_prev: AuthState, formData: FormData): Promise
 }
 
 export async function requestResetAction(_prev: AuthState, formData: FormData): Promise<AuthState> {
-  if (!isDbConfigured()) return { error: "De database is nog niet gekoppeld." };
+  if (!isDbConfigured()) return { error: "De database is nog niet gekoppeld.", values: keep(formData, "email") };
   const parsed = emailSchema.safeParse(formData.get("email"));
   const done = {
     message:
@@ -181,12 +186,12 @@ export async function resetPasswordAction(_prev: AuthState, formData: FormData):
 }
 
 export async function recoveryAction(_prev: AuthState, formData: FormData): Promise<AuthState> {
-  if (!isDbConfigured()) return { error: "De database is nog niet gekoppeld." };
+  if (!isDbConfigured()) return { error: "De database is nog niet gekoppeld.", values: keep(formData, "email") };
   const expected = setupTokenAvailable();
-  if (!expected) return { error: "De noodprocedure is uitgeschakeld: ADMIN_SETUP_TOKEN is niet ingesteld." };
+  if (!expected) return { error: "De noodprocedure is uitgeschakeld: ADMIN_SETUP_TOKEN is niet ingesteld.", values: keep(formData, "email") };
 
   const ipKey = `recovery-ip:${await clientIpKey()}`;
-  if (await isRateLimited(ipKey, 5, 60 * MINUTE)) return { error: "Te veel pogingen. Probeer het over een uur opnieuw." };
+  if (await isRateLimited(ipKey, 5, 60 * MINUTE)) return { error: "Te veel pogingen. Probeer het over een uur opnieuw.", values: keep(formData, "email") };
 
   const parsedEmail = emailSchema.safeParse(formData.get("email"));
   const token = String(formData.get("token") ?? "");
@@ -194,18 +199,18 @@ export async function recoveryAction(_prev: AuthState, formData: FormData): Prom
   const confirm = String(formData.get("confirm") ?? "");
   if (!safeEqual(token, expected) || !parsedEmail.success) {
     await recordHit(ipKey);
-    return { error: "De gegevens kloppen niet." };
+    return { error: "De gegevens kloppen niet.", values: keep(formData, "email") };
   }
 
   const db = getDb();
   const [user] = await db.select().from(schema.users).where(eq(schema.users.email, parsedEmail.data)).limit(1);
   if (!user) {
     await recordHit(ipKey);
-    return { error: "De gegevens kloppen niet." };
+    return { error: "De gegevens kloppen niet.", values: keep(formData, "email") };
   }
   const problem = passwordProblem(password, user.email);
-  if (problem) return { error: problem };
-  if (password !== confirm) return { error: "De wachtwoorden zijn niet gelijk." };
+  if (problem) return { error: problem, values: keep(formData, "email") };
+  if (password !== confirm) return { error: "De wachtwoorden zijn niet gelijk.", values: keep(formData, "email") };
 
   await db
     .update(schema.users)

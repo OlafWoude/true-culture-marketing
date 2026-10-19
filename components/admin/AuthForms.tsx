@@ -42,7 +42,7 @@ export function LoginForm({ next, notice }: { next: string; notice?: React.React
       <Feedback state={state} />
       <input type="hidden" name="next" value={next} />
       <FieldLabel htmlFor="email" label="E-mailadres">
-        <Input id="email" name="email" type="email" autoComplete="username" required autoFocus />
+        <Input id="email" name="email" type="email" autoComplete="username" required autoFocus defaultValue={state?.values?.email} key={state?.values?.email} />
       </FieldLabel>
       <FieldLabel htmlFor="password" label="Wachtwoord">
         <Input id="password" name="password" type="password" autoComplete="current-password" required />
@@ -72,10 +72,10 @@ export function SetupForm() {
         <Input id="token" name="token" type="password" autoComplete="off" required />
       </FieldLabel>
       <FieldLabel htmlFor="name" label="Je naam">
-        <Input id="name" name="name" autoComplete="name" required />
+        <Input id="name" name="name" autoComplete="name" required defaultValue={state?.values?.name} key={`n-${state?.values?.name ?? ""}`} />
       </FieldLabel>
       <FieldLabel htmlFor="email" label="E-mailadres">
-        <Input id="email" name="email" type="email" autoComplete="username" required />
+        <Input id="email" name="email" type="email" autoComplete="username" required defaultValue={state?.values?.email} key={`e-${state?.values?.email ?? ""}`} />
       </FieldLabel>
       <FieldLabel htmlFor="password" label="Wachtwoord" help={PASSWORD_HELP}>
         <Input id="password" name="password" type="password" autoComplete="new-password" minLength={12} required />
@@ -98,7 +98,7 @@ export function ForgotForm() {
       </div>
       <Feedback state={state} />
       <FieldLabel htmlFor="email" label="E-mailadres">
-        <Input id="email" name="email" type="email" autoComplete="username" required />
+        <Input id="email" name="email" type="email" autoComplete="username" required defaultValue={state?.values?.email} key={`e-${state?.values?.email ?? ""}`} />
       </FieldLabel>
       <Submit>Stuur herstellink</Submit>
       <p className="flex justify-between text-sm">
@@ -149,7 +149,7 @@ export function RecoveryForm() {
         <Input id="token" name="token" type="password" autoComplete="off" required />
       </FieldLabel>
       <FieldLabel htmlFor="email" label="E-mailadres van het beheerdersaccount">
-        <Input id="email" name="email" type="email" autoComplete="username" required />
+        <Input id="email" name="email" type="email" autoComplete="username" required defaultValue={state?.values?.email} key={`e-${state?.values?.email ?? ""}`} />
       </FieldLabel>
       <FieldLabel htmlFor="password" label="Nieuw wachtwoord" help={PASSWORD_HELP}>
         <Input id="password" name="password" type="password" autoComplete="new-password" minLength={12} required />

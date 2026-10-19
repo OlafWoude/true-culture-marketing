@@ -103,7 +103,7 @@ export default async function Dashboard({ searchParams }: Props) {
               ))}
             </div>
           </div>
-          <Card className="p-0">
+          <Card flush>
             <h2 className="border-b border-zinc-200 px-5 py-4 text-lg font-bold">Laatst gewijzigd</h2>
             <ul className="divide-y divide-zinc-200">
               {recent.map((d) => (
@@ -132,7 +132,7 @@ export default async function Dashboard({ searchParams }: Props) {
               ))}
             </ul>
           </Card>
-          <Card className="p-0">
+          <Card flush>
             <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4">
               <h2 className="text-lg font-bold">Laatste aanvragen</h2>
               <Link href="/admin/aanvragen" className="text-sm font-semibold underline underline-offset-4">Alles</Link>

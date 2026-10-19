@@ -48,6 +48,7 @@ function Field({ id, label, error, children }: FieldProps) {
 export default function ContactForm({ config, formStyle = "filled" }: { config: FormsConfig; formStyle?: string }) {
   const [state, formAction] = useActionState(submitContactForm, initialState);
   const errors = state.fieldErrors ?? {};
+  const v = state.values;
   const { labels, messages } = config;
   const inputClasses = `w-full rounded-control border px-4 py-3.5 text-[15px] text-ink placeholder:text-ink/35 outline-none transition-colors aria-[invalid=true]:border-red-500 ${
     formStyle === "outlined"
@@ -65,7 +66,7 @@ export default function ContactForm({ config, formStyle = "filled" }: { config: 
   }
 
   return (
-    <form action={formAction} noValidate className="relative space-y-5">
+    <form key={JSON.stringify(v ?? {})} action={formAction} noValidate className="relative space-y-5">
       {/* Honeypot: hidden from people, filled in by naive bots. */}
       <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
         <label htmlFor="website">Website</label>
@@ -77,6 +78,7 @@ export default function ContactForm({ config, formStyle = "filled" }: { config: 
           <input
             id="name"
             name="name"
+            defaultValue={v?.name}
             type="text"
             autoComplete="name"
             required
@@ -91,6 +93,7 @@ export default function ContactForm({ config, formStyle = "filled" }: { config: 
           <input
             id="companyName"
             name="companyName"
+            defaultValue={v?.companyName}
             type="text"
             autoComplete="organization"
             required
@@ -107,6 +110,7 @@ export default function ContactForm({ config, formStyle = "filled" }: { config: 
         <input
           id="email"
           name="email"
+          defaultValue={v?.email}
           type="email"
           autoComplete="email"
           required
@@ -122,6 +126,7 @@ export default function ContactForm({ config, formStyle = "filled" }: { config: 
         <textarea
           id="message"
           name="message"
+          defaultValue={v?.message}
           rows={5}
           required
           maxLength={5000}

@@ -33,8 +33,8 @@ export function AdminLink({ href, variant = "secondary", className = "", childre
   );
 }
 
-export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm ${className}`}>{children}</div>;
+export function Card({ children, className = "", flush = false }: { children: ReactNode; className?: string; flush?: boolean }) {
+  return <div className={`rounded-2xl border border-zinc-200 bg-white shadow-sm ${flush ? "overflow-hidden" : "p-6"} ${className}`}>{children}</div>;
 }
 
 export function PageHeader({ title, description, actions, back }: { title: string; description?: ReactNode; actions?: ReactNode; back?: { href: string; label: string } }) {

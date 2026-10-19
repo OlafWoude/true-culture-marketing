@@ -29,7 +29,7 @@ export default async function SeoPage() {
         }
       />
       <h2 className="mb-3 text-lg font-bold">Pagina’s</h2>
-      <Card className="mb-10 overflow-x-auto p-0">
+      <Card flush className="mb-10 overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead className="border-b border-zinc-200 bg-zinc-50 text-xs uppercase tracking-wider text-zinc-500">
             <tr>

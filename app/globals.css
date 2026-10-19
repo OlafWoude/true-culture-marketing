@@ -69,6 +69,8 @@
   --text-4xl: calc(2.25rem * var(--tc-heading-scale));
   --text-5xl: calc(3rem * var(--tc-heading-scale));
   --text-6xl: calc(3.75rem * var(--tc-heading-scale));
+  --text-fluid-6xl: calc(clamp(2.5rem, 12.5vw, 3.75rem) * var(--tc-heading-scale));
+  --text-fluid-6xl--line-height: 1;
   --text-7xl: calc(4.5rem * var(--tc-heading-scale));
   --text-8xl: calc(6rem * var(--tc-heading-scale));
   --text-9xl: calc(8rem * var(--tc-heading-scale));
@@ -84,6 +86,8 @@
   line-height: var(--tc-heading-lh);
   letter-spacing: -0.005em;
   text-wrap: balance;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 @utility wordmark {

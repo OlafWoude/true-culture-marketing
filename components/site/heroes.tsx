@@ -105,7 +105,7 @@ export function PageHeroBlock({ data, layout }: BlockProps) {
           </FadeIn>
         )}
         <FadeIn delay={80}>
-          <Heading className="display mt-7 max-w-5xl text-6xl text-paper sm:text-7xl md:text-[calc(6.5rem*var(--tc-heading-scale))]">
+          <Heading className="display mt-7 max-w-5xl text-fluid-6xl text-paper sm:text-7xl md:text-[calc(6.5rem*var(--tc-heading-scale))]">
             <Title title={str(data.title)} highlight={str(data.highlight)} />
           </Heading>
         </FadeIn>
@@ -135,7 +135,7 @@ export function ContactHeroBlock({ data, ctx, layout }: BlockProps) {
               </FadeIn>
             )}
             <FadeIn delay={80}>
-              <Heading className="display mt-7 text-6xl text-paper sm:text-7xl md:text-8xl">
+              <Heading className="display mt-7 text-fluid-6xl text-paper sm:text-7xl md:text-8xl">
                 <Title title={str(data.title)} highlight={str(data.highlight)} />
               </Heading>
             </FadeIn>

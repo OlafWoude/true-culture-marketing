@@ -36,7 +36,7 @@ export function IntroSplitBlock({ data, ctx, layout }: BlockProps) {
         <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-20">
           <FadeIn>
             {str(data.eyebrow) && <Eyebrow tone="light">{str(data.eyebrow)}</Eyebrow>}
-            <h2 className="display mt-6 text-6xl text-ink md:text-7xl">{str(data.title)}</h2>
+            <h2 className="display mt-6 text-fluid-6xl text-ink md:text-7xl">{str(data.title)}</h2>
             <RichText html={str(data.body)} className="mt-8 text-lg leading-relaxed text-ink/70" />
             {ctx.href(ctaValue?.link) && ctaValue?.label && (
               <div className="mt-9">
@@ -79,14 +79,14 @@ export function ComparisonBlock({ data, layout }: BlockProps) {
           {stacked ? (
             <div className="max-w-3xl">
               {str(data.eyebrow) && <Eyebrow tone="light">{str(data.eyebrow)}</Eyebrow>}
-              <h2 className="display mt-6 text-6xl text-ink md:text-7xl">{str(data.title)}</h2>
+              <h2 className="display mt-6 text-fluid-6xl text-ink md:text-7xl">{str(data.title)}</h2>
               {str(data.intro) && <p className="mt-6 text-lg leading-relaxed text-ink/65">{str(data.intro)}</p>}
             </div>
           ) : (
             <div className="grid gap-8 lg:grid-cols-2 lg:items-end">
               <div>
                 {str(data.eyebrow) && <Eyebrow tone="light">{str(data.eyebrow)}</Eyebrow>}
-                <h2 className="display mt-6 text-6xl text-ink md:text-7xl">{str(data.title)}</h2>
+                <h2 className="display mt-6 text-fluid-6xl text-ink md:text-7xl">{str(data.title)}</h2>
               </div>
               {str(data.intro) && <p className="text-lg leading-relaxed text-ink/65 lg:pb-2">{str(data.intro)}</p>}
             </div>
@@ -116,7 +116,7 @@ export function StepsBlock({ data, ctx, layout }: BlockProps) {
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div>
               {str(data.eyebrow) && <Eyebrow tone="light">{str(data.eyebrow)}</Eyebrow>}
-              <h2 className="display mt-6 text-6xl text-ink md:text-7xl">{str(data.title)}</h2>
+              <h2 className="display mt-6 text-fluid-6xl text-ink md:text-7xl">{str(data.title)}</h2>
             </div>
             <CtaButton cta={data.cta as CtaValue} ctx={ctx} variant="outline-dark" />
           </div>
@@ -182,7 +182,7 @@ export function FaqBlock({ data, layout }: BlockProps) {
       <div className="mx-auto grid max-w-site gap-12 px-6 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
         <FadeIn>
           {str(data.eyebrow) && <Eyebrow tone="light">{str(data.eyebrow)}</Eyebrow>}
-          <h2 className="display mt-6 text-6xl text-ink md:text-7xl">{str(data.title)}</h2>
+          <h2 className="display mt-6 text-fluid-6xl text-ink md:text-7xl">{str(data.title)}</h2>
           <RichText html={str(data.text)} className="mt-6 text-lg text-ink/65 [&_a]:text-ink" />
         </FadeIn>
         <FadeIn delay={100}>
@@ -201,7 +201,7 @@ export function ClosingCtaBlock({ data, ctx }: BlockProps) {
       )}
       <div className="relative mx-auto max-w-site px-6 py-section-lg text-center">
         <FadeIn>
-          <h2 className="display mx-auto max-w-4xl text-6xl text-paper sm:text-7xl md:text-8xl">
+          <h2 className="display mx-auto max-w-4xl text-fluid-6xl text-paper sm:text-7xl md:text-8xl">
             <Title title={str(data.title)} highlight={str(data.highlight)} />
           </h2>
         </FadeIn>
@@ -227,7 +227,7 @@ export function StorySplitBlock({ data, ctx, layout }: BlockProps) {
       <div className="mx-auto grid max-w-site items-center gap-12 px-6 lg:grid-cols-2 lg:gap-20">
         <FadeIn>
           {str(data.eyebrow) && <Eyebrow tone="light">{str(data.eyebrow)}</Eyebrow>}
-          <h2 className="display mt-6 text-6xl text-ink md:text-7xl">{str(data.title)}</h2>
+          <h2 className="display mt-6 text-fluid-6xl text-ink md:text-7xl">{str(data.title)}</h2>
           <RichText html={str(data.body)} className="mt-8 text-lg leading-relaxed text-ink/70" />
         </FadeIn>
         <FadeIn delay={120}>
@@ -258,7 +258,7 @@ export function ValuesGridBlock({ data, ctx, layout }: BlockProps) {
         <FadeIn>
           <div className="max-w-3xl">
             {str(data.eyebrow) && <Eyebrow tone="light">{str(data.eyebrow)}</Eyebrow>}
-            <h2 className="display mt-6 text-6xl text-ink md:text-7xl">{str(data.title)}</h2>
+            <h2 className="display mt-6 text-fluid-6xl text-ink md:text-7xl">{str(data.title)}</h2>
           </div>
         </FadeIn>
         <div className="mt-16 grid gap-4 sm:grid-cols-2">
@@ -293,7 +293,7 @@ export function NumberedCardsBlock({ data, layout }: BlockProps) {
       <section className={`mx-auto max-w-site px-6 ${pad(layout.spaceTop, "sm")}`}>
         <FadeIn>
           {str(data.eyebrow) && <Eyebrow tone="light">{str(data.eyebrow)}</Eyebrow>}
-          <h2 className="display mt-6 text-6xl text-ink md:text-7xl">{str(data.title)}</h2>
+          <h2 className="display mt-6 text-fluid-6xl text-ink md:text-7xl">{str(data.title)}</h2>
         </FadeIn>
         <ol className="mt-14 grid gap-4 md:grid-cols-3">
           {items.map((e, i) => (
@@ -363,7 +363,7 @@ export function ImageTextBlock({ data, ctx, layout }: BlockProps) {
       <div className="mx-auto grid max-w-site items-center gap-12 px-6 lg:grid-cols-2 lg:gap-20">
         <FadeIn className={left ? "lg:order-2" : ""}>
           {str(data.eyebrow) && <Eyebrow tone={t.eyebrow}>{str(data.eyebrow)}</Eyebrow>}
-          {str(data.title) && <h2 className={`display mt-6 text-6xl md:text-7xl ${t.title}`}>{str(data.title)}</h2>}
+          {str(data.title) && <h2 className={`display mt-6 text-fluid-6xl md:text-7xl ${t.title}`}>{str(data.title)}</h2>}
           <RichText html={str(data.body)} className={`mt-8 text-lg leading-relaxed ${t.body}`} />
           {ctx.href(ctaValue?.link) && ctaValue?.label && (
             <div className="mt-9">
@@ -431,7 +431,7 @@ export function ContactDetailsBlock({ data, ctx, layout }: BlockProps) {
       <div className="mx-auto grid max-w-site gap-12 px-6 lg:grid-cols-2 lg:gap-20">
         <FadeIn>
           {str(data.eyebrow) && <Eyebrow tone={t.eyebrow}>{str(data.eyebrow)}</Eyebrow>}
-          {str(data.title) && <h2 className={`display mt-6 text-6xl md:text-7xl ${t.title}`}>{str(data.title)}</h2>}
+          {str(data.title) && <h2 className={`display mt-6 text-fluid-6xl md:text-7xl ${t.title}`}>{str(data.title)}</h2>}
           {str(data.intro) && <p className={`mt-6 text-lg leading-relaxed ${t.body}`}>{str(data.intro)}</p>}
         </FadeIn>
         <FadeIn delay={100}>

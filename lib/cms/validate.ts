@@ -29,40 +29,43 @@ const linkSchema = z.union([
   }),
 ]);
 
-function text(max: number) {
-  return z.string().max(max, `Maximaal ${max} tekens`);
+function text(max: number, label?: string) {
+  return z.string().max(max, `${label ? `${label}: m` : "M"}aximaal ${max} tekens`);
 }
 
 export function schemaForField(field: FieldDef): z.ZodType {
   switch (field.type) {
     case "text":
-      return text(field.max ?? 300);
+      return text(field.max ?? 300, field.label);
     case "textarea":
-      return text(field.max ?? 2000);
+      return text(field.max ?? 2000, field.label);
     case "richtext":
-      return z.string().max(40000).transform(sanitizeRichText);
+      return z.string().max(40000, `${field.label}: de tekst is te lang`).transform(sanitizeRichText);
     case "image":
       return uuid.nullable();
     case "images":
-      return z.array(uuid).max(field.max ?? 20);
+      return z.array(uuid).max(field.max ?? 20, `${field.label}: maximaal ${field.max ?? 20} afbeeldingen`);
     case "link":
       return linkSchema;
     case "cta":
-      return z.object({ label: text(60), link: linkSchema });
+      return z.object({ label: text(60, `${field.label} (knoptekst)`), link: linkSchema });
     case "boolean":
       return z.boolean();
     case "select":
       return z.enum(field.options.map((o) => o.value) as [string, ...string[]]);
     case "number":
-      return z.number().min(field.min).max(field.max);
+      return z
+        .number()
+        .min(field.min, `${field.label}: minimaal ${field.min}`)
+        .max(field.max, `${field.label}: maximaal ${field.max}`);
     case "color":
-      return z.string().regex(/^#[0-9a-fA-F]{6}$/, "Gebruik een kleurcode zoals #fece00");
+      return z.string().regex(/^#[0-9a-fA-F]{6}$/, `${field.label}: gebruik een kleurcode zoals #fece00`);
     case "stringList":
-      return z.array(text(200)).max(field.max ?? 30);
+      return z.array(text(200, field.itemLabel)).max(field.max ?? 30, `${field.label}: maximaal ${field.max ?? 30} regels`);
     case "repeater":
       return z
         .array(objectSchema(field.fields).extend({ _key: z.string().max(60).optional() }))
-        .max(field.max ?? 50);
+        .max(field.max ?? 50, `${field.label}: maximaal ${field.max ?? 50} items`);
     case "group":
       return objectSchema(field.fields);
   }

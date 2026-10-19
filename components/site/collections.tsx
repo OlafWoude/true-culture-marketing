@@ -19,7 +19,7 @@ export function ServicesOverviewBlock({ data, ctx, layout }: BlockProps) {
         <FadeIn>
           <div className="mx-auto max-w-3xl text-center">
             {str(data.eyebrow) && <Eyebrow tone="light">{str(data.eyebrow)}</Eyebrow>}
-            <h2 className="display mt-6 text-6xl text-ink md:text-[calc(5.5rem*var(--tc-heading-scale))]">{str(data.title)}</h2>
+            <h2 className="display mt-6 text-fluid-6xl text-ink md:text-[calc(5.5rem*var(--tc-heading-scale))]">{str(data.title)}</h2>
             {str(data.intro) && <p className="mx-auto mt-6 max-w-xl text-lg text-ink/65">{str(data.intro)}</p>}
           </div>
         </FadeIn>
@@ -93,7 +93,7 @@ export function ServicesDetailedBlock({ data, ctx }: BlockProps) {
                     <span className={`display text-2xl ${even ? "text-ink/25" : "text-paper/25"}`}>{nn(i)}</span>
                     <span className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">{s.tag}</span>
                   </div>
-                  <h2 className={`display mt-6 text-6xl md:text-7xl ${even ? "text-ink" : "text-paper"}`}>{s.title}</h2>
+                  <h2 className={`display mt-6 text-fluid-6xl md:text-7xl ${even ? "text-ink" : "text-paper"}`}>{s.title}</h2>
                   <p className={`mt-6 max-w-xl text-lg leading-relaxed ${even ? "text-ink/65" : "text-paper/65"}`}>
                     {s.description}
                   </p>
@@ -180,7 +180,7 @@ export function CasesBlock({ data, ctx, layout }: BlockProps) {
             <div className="relative grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:items-center">
               <div>
                 {str(data.eyebrow) && <Eyebrow>{str(data.eyebrow)}</Eyebrow>}
-                <h2 className="display mt-6 text-6xl text-paper md:text-7xl">
+                <h2 className="display mt-6 text-fluid-6xl text-paper md:text-7xl">
                   <Title title={str(data.title)} highlight={str(data.highlight)} />
                 </h2>
                 {str(data.text) && <p className="mt-6 max-w-lg text-lg leading-relaxed text-paper/60">{str(data.text)}</p>}
@@ -236,7 +236,7 @@ export function TestimonialsBlock({ data, ctx, layout }: BlockProps) {
           <div className="mx-auto max-w-3xl text-center">
             {str(data.eyebrow) && <Eyebrow tone={dark ? "dark" : "light"}>{str(data.eyebrow)}</Eyebrow>}
             {str(data.title) && (
-              <h2 className={`display mt-6 text-6xl md:text-7xl ${dark ? "text-paper" : "text-ink"}`}>{str(data.title)}</h2>
+              <h2 className={`display mt-6 text-fluid-6xl md:text-7xl ${dark ? "text-paper" : "text-ink"}`}>{str(data.title)}</h2>
             )}
             {str(data.intro) && <p className={`mx-auto mt-6 max-w-xl text-lg ${dark ? "text-paper/65" : "text-ink/65"}`}>{str(data.intro)}</p>}
           </div>

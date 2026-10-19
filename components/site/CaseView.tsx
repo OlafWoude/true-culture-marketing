@@ -28,7 +28,7 @@ export default function CaseView({ bundle, slug }: { bundle: Bundle; slug: strin
             <Eyebrow>{item.client || "Case"}</Eyebrow>
           </FadeIn>
           <FadeIn delay={80}>
-            <h1 className="display mt-7 max-w-5xl text-6xl text-paper sm:text-7xl md:text-8xl">{item.title}</h1>
+            <h1 className="display mt-7 max-w-5xl text-fluid-6xl text-paper sm:text-7xl md:text-8xl">{item.title}</h1>
           </FadeIn>
           {item.summary && (
             <FadeIn delay={160}>

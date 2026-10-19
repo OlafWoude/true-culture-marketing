@@ -17,7 +17,7 @@ const opts = (record: Record<string, { label: string }>) =>
 
 export const seoFields: FieldDef[] = [
   { key: "title", label: "SEO-titel", type: "text", max: 70, help: "Titel in Google en in het browsertabblad. Leeg = paginatitel." },
-  { key: "description", label: "Meta description", type: "textarea", max: 170, rows: 3, help: "Korte samenvatting voor Google (ideaal 120–160 tekens)." },
+  { key: "description", label: "Meta description", type: "textarea", max: 200, rows: 3, help: "Korte samenvatting voor Google (ideaal 120–160 tekens)." },
   { key: "ogTitle", label: "Titel bij delen op social media", type: "text", max: 90, help: "Leeg = SEO-titel." },
   { key: "ogDescription", label: "Tekst bij delen op social media", type: "textarea", max: 200, rows: 2, help: "Leeg = meta description." },
   { key: "ogImage", label: "Afbeelding bij delen", type: "image", help: "Leeg = standaard deelafbeelding uit Instellingen." },
@@ -140,7 +140,7 @@ export const singletonDefs = {
       { key: "siteName", label: "Naam van de website", type: "text", max: 80 },
       { key: "siteUrl", label: "Hoofddomein", type: "text", max: 120, help: "Bijv. https://trueculture.nl. Gebruikt voor de sitemap en canonieke links." },
       { key: "titleSuffix", label: "Achtervoegsel paginatitels", type: "text", max: 60, help: "Komt achter elke SEO-titel, bijv. ‘| True Culture Marketing’." },
-      { key: "defaultDescription", label: "Standaard meta description", type: "textarea", max: 170, rows: 3 },
+      { key: "defaultDescription", label: "Standaard meta description", type: "textarea", max: 200, rows: 3, help: "Ideaal 120–160 tekens; Google kort langere teksten af." },
       { key: "ogImage", label: "Standaard afbeelding bij delen", type: "image", help: "Leeg = de huidige True Culture-banner." },
       { key: "allowIndexing", label: "Website tonen in zoekmachines", type: "boolean", help: "Zet alleen uit als de hele website (tijdelijk) niet gevonden mag worden." },
       { key: "company", label: "Bedrijfsgegevens", type: "group", fields: [
