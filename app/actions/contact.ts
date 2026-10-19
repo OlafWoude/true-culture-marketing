@@ -84,6 +84,6 @@ export async function submitContactForm(
 
   return {
     status: "success",
-    message: "Bedankt voor je bericht. We nemen binnen 1 werkdag contact op.",
+    message: "We hebben je aanvraag ontvangen en nemen zo snel mogelijk contact met je op.",
   };
 }

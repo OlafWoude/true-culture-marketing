@@ -23,13 +23,12 @@ export default function FadeIn({ children, delay = 0, className = "" }: FadeInPr
           observer.disconnect();
         }
       },
-      { threshold: 0.15 },
+      { threshold: 0.1 },
     );
     observer.observe(node);
 
-    // Safety net: if the observer never fires (e.g. element already in
-    // view at mount but the browser reports it late), reveal anyway.
-    const fallback = window.setTimeout(() => setVisible(true), 1200);
+    // Some browsers report already-visible elements late; never leave content hidden.
+    const fallback = window.setTimeout(() => setVisible(true), 1500);
 
     return () => {
       observer.disconnect();
@@ -40,7 +39,7 @@ export default function FadeIn({ children, delay = 0, className = "" }: FadeInPr
   return (
     <div
       ref={ref}
-      className={`fade-in-up ${visible ? "is-visible" : ""} ${className}`}
+      className={`fade-in ${visible ? "is-visible" : ""} ${className}`}
       style={{ transitionDelay: visible ? `${delay}ms` : "0ms" }}
     >
       {children}

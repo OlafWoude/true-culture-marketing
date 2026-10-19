@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { Archivo_Black, Inter } from "next/font/google";
+import { Archivo, Inter } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
+import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import Logo from "@/components/Logo";
 
-const archivoBlack = Archivo_Black({
-  variable: "--font-archivo-black",
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
-  weight: "400",
+  axes: ["wdth"],
   display: "swap",
 });
 
@@ -18,45 +19,44 @@ const inter = Inter({
 });
 
 const siteUrl = "https://trueculture.nl";
+const description =
+  "True Culture Marketing is een B2B sales agency. Wij verzorgen leadgeneratie en plannen kwalitatieve afspraken met beslissers in, zodat jouw salesteam zich op de deal kan richten.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "True Culture Marketing — B2B Sales Agency",
-    template: "%s — True Culture Marketing",
+    default: "True Culture Marketing | B2B leadgeneratie en afspraken inplannen",
+    template: "%s | True Culture Marketing",
   },
-  description:
-    "True Culture Marketing is een B2B sales agency die leadgeneratie, afspraken maken en sales op interim basis verzorgt voor bedrijven die willen groeien.",
+  description,
   openGraph: {
     type: "website",
     locale: "nl_NL",
     siteName: "True Culture Marketing",
-    title: "True Culture Marketing — B2B Sales Agency",
-    description:
-      "True Culture Marketing is een B2B sales agency die leadgeneratie, afspraken maken en sales op interim basis verzorgt voor bedrijven die willen groeien.",
     url: siteUrl,
+    title: "True Culture Marketing | B2B leadgeneratie en afspraken inplannen",
+    description,
   },
   twitter: {
     card: "summary_large_image",
-    title: "True Culture Marketing — B2B Sales Agency",
-    description:
-      "True Culture Marketing is een B2B sales agency die leadgeneratie, afspraken maken en sales op interim basis verzorgt voor bedrijven die willen groeien.",
+    title: "True Culture Marketing",
+    description,
   },
-  alternates: {
-    canonical: "/",
-  },
+  alternates: { canonical: "/" },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="nl" className={`${archivoBlack.variable} ${inter.variable}`}>
-      <body className="flex min-h-screen flex-col bg-ink text-paper antialiased">
-        <Header />
-        <main className="flex-1">{children}</main>
+    <html lang="nl" className={`${archivo.variable} ${inter.variable}`}>
+      <body className="bg-ink font-sans text-paper antialiased">
+        <a
+          href="#inhoud"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-24 focus:z-[60] focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:text-ink"
+        >
+          Naar inhoud
+        </a>
+        <Nav logo={<Logo />} />
+        <main id="inhoud">{children}</main>
         <Footer />
       </body>
     </html>

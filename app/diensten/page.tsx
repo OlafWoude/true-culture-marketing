@@ -1,92 +1,135 @@
 import type { Metadata } from "next";
-import Button from "@/components/Button";
+import ClosingCta from "@/components/ClosingCta";
+import Comparison from "@/components/Comparison";
+import Eyebrow from "@/components/Eyebrow";
 import FadeIn from "@/components/FadeIn";
-import GorillaBackdrop from "@/components/GorillaBackdrop";
+import GorillaMark from "@/components/GorillaMark";
+import PageHero from "@/components/PageHero";
 import { services } from "@/lib/content";
-import { TargetIcon, PhoneIcon, UsersIcon, ChartIcon } from "@/lib/icons";
-
-const iconMap = {
-  target: TargetIcon,
-  phone: PhoneIcon,
-  users: UsersIcon,
-  chart: ChartIcon,
-};
+import { CheckIcon } from "@/lib/icons";
 
 export const metadata: Metadata = {
   title: "Diensten",
   description:
-    "Leadgeneratie, afspraken maken, interim sales en sales strategie — de diensten van True Culture Marketing.",
+    "B2B leadgeneratie, afspraken inplannen, outbound campagnes en sales strategie. Bekijk hoe True Culture Marketing jouw salesteam ontlast.",
   alternates: { canonical: "/diensten" },
 };
 
 export default function DienstenPage() {
   return (
     <>
-      <section className="relative overflow-hidden border-b border-ink-line">
-        <GorillaBackdrop className="absolute -right-20 top-0 h-[480px] w-[480px] text-paper" flip />
-        <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-28">
-          <FadeIn>
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-paper/40">
-              Diensten
-            </span>
-          </FadeIn>
-          <FadeIn delay={80}>
-            <h1 className="text-display mt-4 max-w-2xl text-4xl text-paper sm:text-5xl">
-              Sales-ondersteuning die zich terugverdient
-            </h1>
-          </FadeIn>
-          <FadeIn delay={160}>
-            <p className="mt-6 max-w-xl text-paper/60">
-              Elke dienst is op zichzelf in te zetten, of te combineren tot
-              een volledig uitbesteed voortraject voor jouw salesteam.
-            </p>
-          </FadeIn>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Diensten"
+        title={
+          <>
+            Sales-ondersteuning <span className="text-accent">die rendeert</span>
+          </>
+        }
+        intro="Zet één dienst in of laat ons het complete voortraject verzorgen. Elke dienst is afgestemd op jouw doelgroep, propositie en doelen."
+      />
 
-      <section className="border-b border-ink-line">
-        <div className="mx-auto max-w-6xl px-6 py-24">
-          {services.map((service, i) => {
-            const Icon = iconMap[service.icon as keyof typeof iconMap];
-            return (
-              <FadeIn key={service.slug} delay={i * 60}>
-                <div
-                  id={service.slug}
-                  className="grid gap-6 border-t border-ink-line py-12 first:border-t-0 first:pt-0 md:grid-cols-[auto_1fr] md:gap-12"
-                >
-                  <div className="flex items-start gap-5 md:w-56">
-                    <span className="font-display text-sm text-paper/30">
+      <div className="bg-mist py-6 md:py-10">
+        {services.map((s, i) => (
+          <section
+            key={s.slug}
+            id={s.slug}
+            className="mx-auto max-w-[1240px] scroll-mt-28 px-3 py-3 sm:px-6"
+          >
+            <FadeIn>
+              <div
+                className={`grid gap-10 rounded-[2.5rem] p-8 sm:p-12 md:p-16 lg:grid-cols-[1.15fr_1fr] lg:gap-16 ${
+                  i % 2 === 0 ? "bg-white" : "grain overflow-hidden bg-ink"
+                }`}
+              >
+                {i % 2 === 1 && (
+                  <GorillaMark className="absolute -bottom-16 -left-16 w-[520px] text-white/[0.035]" />
+                )}
+                <div className="relative">
+                  <div className="flex items-center gap-4">
+                    <span
+                      className={`display text-2xl ${i % 2 === 0 ? "text-ink/25" : "text-paper/25"}`}
+                    >
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <span className="text-paper/50">
-                      <Icon />
+                    <span className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+                      {s.tag}
                     </span>
                   </div>
-                  <div>
-                    <h2 className="text-display text-2xl text-paper sm:text-3xl">{service.title}</h2>
-                    <p className="mt-4 max-w-2xl text-paper/60">{service.description}</p>
-                  </div>
+                  <h2
+                    className={`display mt-6 text-6xl md:text-7xl ${
+                      i % 2 === 0 ? "text-ink" : "text-paper"
+                    }`}
+                  >
+                    {s.title}
+                  </h2>
+                  <p
+                    className={`mt-6 max-w-xl text-lg leading-relaxed ${
+                      i % 2 === 0 ? "text-ink/65" : "text-paper/65"
+                    }`}
+                  >
+                    {s.description}
+                  </p>
                 </div>
-              </FadeIn>
-            );
-          })}
-        </div>
-      </section>
 
-      <section className="bg-ink-raised">
-        <div className="mx-auto max-w-6xl px-6 py-24 text-center">
+                <div
+                  className={`relative self-start rounded-[1.75rem] p-8 ${
+                    i % 2 === 0 ? "bg-mist" : "border border-white/[0.07] bg-ink-2"
+                  }`}
+                >
+                  <p
+                    className={`text-sm font-semibold ${
+                      i % 2 === 0 ? "text-ink/50" : "text-paper/50"
+                    }`}
+                  >
+                    Wat je krijgt
+                  </p>
+                  <ul className="mt-6 space-y-5">
+                    {s.points.map((p) => (
+                      <li key={p} className="flex items-start gap-4">
+                        <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent text-ink">
+                          <CheckIcon className="h-4 w-4" />
+                        </span>
+                        <span
+                          className={`text-[17px] leading-snug ${
+                            i % 2 === 0 ? "text-ink" : "text-paper"
+                          }`}
+                        >
+                          {p}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </FadeIn>
+          </section>
+        ))}
+      </div>
+
+      <section className="bg-paper py-28 md:py-36">
+        <div className="mx-auto max-w-6xl px-6">
           <FadeIn>
-            <h2 className="text-display text-2xl text-paper sm:text-3xl">
-              Benieuwd welke dienst het beste past bij jouw situatie?
-            </h2>
+            <div className="max-w-3xl">
+              <Eyebrow tone="light">Waarom uitbesteden</Eyebrow>
+              <h2 className="display mt-6 text-6xl text-ink md:text-7xl">
+                Zelf doen of uitbesteden?
+              </h2>
+              <p className="mt-6 text-lg leading-relaxed text-ink/65">
+                Het voortraject vraagt tijd, discipline en een vaste
+                aanpak. Zo verhoudt zelf doen zich tot werken met True
+                Culture.
+              </p>
+            </div>
           </FadeIn>
           <FadeIn delay={100}>
-            <div className="mt-8 flex justify-center">
-              <Button href="/contact">Plan een kennismakingsgesprek</Button>
+            <div className="mt-16">
+              <Comparison />
             </div>
           </FadeIn>
         </div>
       </section>
+
+      <ClosingCta />
     </>
   );
 }

@@ -1,23 +1,35 @@
 @import "tailwindcss";
 
-:root {
+@theme inline {
   --color-ink: #050505;
-  --color-ink-raised: #0e0e0e;
-  --color-ink-line: #202020;
-  --color-paper: #f5f4f0;
-  --color-accent: #ffd400;
-  --color-accent-dim: #c9a900;
+  --color-ink-2: #0e0e0e;
+  --color-ink-3: #161616;
+  --color-line: #232323;
+  --color-paper: #ffffff;
+  --color-mist: #f3f3f1;
+  --color-mist-2: #e9e9e5;
+  --color-accent: #fece00;
+  --color-accent-hover: #ffda3d;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-archivo), "Arial Narrow", sans-serif;
 }
 
-@theme inline {
-  --color-ink: var(--color-ink);
-  --color-ink-raised: var(--color-ink-raised);
-  --color-ink-line: var(--color-ink-line);
-  --color-paper: var(--color-paper);
-  --color-accent: var(--color-accent);
-  --color-accent-dim: var(--color-accent-dim);
-  --font-display: var(--font-archivo-black), "Arial Black", sans-serif;
-  --font-body: var(--font-inter), system-ui, sans-serif;
+@utility display {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 62;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.92;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+
+@utility wordmark {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 125;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.9;
 }
 
 html {
@@ -25,29 +37,8 @@ html {
 }
 
 body {
-  position: relative;
   background: var(--color-ink);
   color: var(--color-paper);
-  font-family: var(--font-body);
-}
-
-/* Subtle paper-grain texture — kept faint so the background reads as dark
-   and matte rather than flat, without becoming a busy pattern. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.035;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-#__next,
-body > * {
-  position: relative;
-  z-index: 1;
 }
 
 ::selection {
@@ -55,29 +46,55 @@ body > * {
   color: var(--color-ink);
 }
 
-.text-display {
-  font-family: var(--font-display);
-  text-wrap: balance;
+.grain {
+  position: relative;
+  isolation: isolate;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .fade-in-up {
-    opacity: 0;
-    transform: translateY(14px);
-    transition:
-      opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
-  }
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
 
-  .fade-in-up.is-visible {
-    opacity: 1;
-    transform: translateY(0);
+@keyframes marquee {
+  from {
+    transform: translateX(0);
   }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee 40s linear infinite;
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fade-in.is-visible {
+  opacity: 1;
+  transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fade-in-up {
+  .marquee-track {
+    animation: none;
+  }
+
+  .fade-in {
     opacity: 1;
     transform: none;
+    transition: none;
   }
 }

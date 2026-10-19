@@ -56,6 +56,14 @@ export function CheckIcon({ className = "h-5 w-5" }: IconProps) {
   );
 }
 
+export function PlusIcon({ className = "h-5 w-5" }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} {...common}>
+      <path d="M12 5v14M5 12h14" />
+    </svg>
+  );
+}
+
 export function ArrowRightIcon({ className = "h-4 w-4" }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" className={className} {...common}>
