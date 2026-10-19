@@ -16,9 +16,11 @@ export function pathForSlug(slug: string) {
 
 export function createRenderCtx(bundle: Bundle): RenderCtx {
   const pages = new Map(bundle.pages.map((p) => [p.id, p]));
+  // In preview mode internal links stay inside the preview.
   const pagePath = (pageId: string) => {
     const page = pages.get(pageId);
-    return page ? pathForSlug(page.slug) : null;
+    if (!page) return null;
+    return bundle.mode === "preview" ? `/preview/${page.id}` : pathForSlug(page.slug);
   };
   const href = (link: LinkValue | null | undefined) => {
     if (!link) return null;
@@ -44,7 +46,7 @@ export function createRenderCtx(bundle: Bundle): RenderCtx {
       const own = href(service.cta?.link);
       if (own) return own;
       if (!servicesPage) return null;
-      const base = pathForSlug(servicesPage.slug);
+      const base = bundle.mode === "preview" ? `/preview/${servicesPage.id}` : pathForSlug(servicesPage.slug);
       return service.anchor ? `${base}#${service.anchor}` : base;
     },
   };

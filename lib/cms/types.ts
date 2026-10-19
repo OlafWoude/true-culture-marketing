@@ -58,6 +58,6 @@ export type DocSummary = {
   deletedAt: string | null;
 };
 
-export type ActionResult<T = undefined> =
+export type ActionResult<T = unknown> =
   | { ok: true; data?: T; message?: string }
   | { ok: false; error: string };

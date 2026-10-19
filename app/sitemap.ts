@@ -1,7 +1,10 @@
 import type { MetadataRoute } from "next";
+
 import { getLiveBundle } from "@/lib/cms/repo";
 import { siteUrl } from "@/lib/cms/metadata";
 import { pathForSlug } from "@/lib/cms/render";
+
+export const revalidate = 300;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const bundle = await getLiveBundle();
