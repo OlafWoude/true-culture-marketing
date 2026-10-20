@@ -1,3 +1,4 @@
+import MobileCarousel from "@/components/site/MobileCarousel";
 import { CheckIcon } from "@/lib/icons";
 
 export type ComparisonRow = { label: string; self: string; us: string };
@@ -7,9 +8,10 @@ type ComparisonProps = {
   selfLabel: string;
   usAccent: string;
   usLabel: string;
+  carousel?: boolean;
 };
 
-export default function Comparison({ rows, selfLabel, usAccent, usLabel }: ComparisonProps) {
+export default function Comparison({ rows, selfLabel, usAccent, usLabel, carousel = false }: ComparisonProps) {
   const last = rows.length - 1;
   const usTitle = [usAccent, usLabel].filter(Boolean).join(" ");
 
@@ -58,11 +60,11 @@ export default function Comparison({ rows, selfLabel, usAccent, usLabel }: Compa
         ))}
       </div>
 
-      <ul className="space-y-3 md:hidden">
+      <MobileCarousel as="ul" enabled={carousel} label="Vergelijking" className="space-y-3 md:hidden">
         {rows.map((row, i) => (
-          <li key={i} className="rounded-inner bg-white p-5 ring-1 ring-ink/10">
+          <li key={i} className={`rounded-inner bg-white p-5 ring-1 ring-ink/10 ${carousel ? "flex flex-col" : ""}`}>
             <p className="font-semibold text-ink">{row.label}</p>
-            <p className="mt-3 text-sm text-ink/50">
+            <p className={`mt-3 text-sm text-ink/50 ${carousel ? "flex-1" : ""}`}>
               <span className="font-medium text-ink/70">{selfLabel}:</span> {row.self}
             </p>
             <p className="mt-3 flex items-start gap-2.5 rounded-control bg-ink p-3 text-sm text-paper">
@@ -73,7 +75,7 @@ export default function Comparison({ rows, selfLabel, usAccent, usLabel }: Compa
             </p>
           </li>
         ))}
-      </ul>
+      </MobileCarousel>
     </>
   );
 }

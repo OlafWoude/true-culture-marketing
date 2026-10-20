@@ -6,6 +6,12 @@ const highlight: FieldDef = { key: "highlight", label: "Geel gemarkeerd deel van
 const intro: FieldDef = { key: "intro", label: "Introductietekst", type: "textarea", max: 600 };
 const watermark: FieldDef = { key: "showWatermark", label: "Gorilla als achtergrond tonen", type: "boolean" };
 const background: FieldDef = { key: "background", label: "Achtergrond", type: "select", options: backgroundOptions };
+const mobileCarousel: FieldDef = {
+  key: "mobileCarousel",
+  label: "Op mobiel naast elkaar tonen (swipen)",
+  type: "boolean",
+  help: "Op telefoons staan de kaarten dan naast elkaar en veeg je opzij. Op grotere schermen verandert er niets.",
+};
 
 export type BlockCategory = "Kop" | "Tekst" | "Media" | "Inhoud" | "Collecties" | "Oproep" | "Contact";
 
@@ -32,9 +38,10 @@ export const blockDefs = {
       { key: "secondaryCta", label: "Tweede knop", type: "cta" },
       { key: "showServiceTiles", label: "Dienstentegels onder de kop tonen", type: "boolean" },
       { key: "tileLinkLabel", label: "Linktekst op de dienstentegels", type: "text", max: 40 },
+      { ...mobileCarousel, label: "Dienstentegels op mobiel naast elkaar tonen (swipen)" },
       watermark,
     ],
-    defaults: { highlightNewLine: true, showServiceTiles: true, tileLinkLabel: "Meer weten", showWatermark: true },
+    defaults: { highlightNewLine: true, showServiceTiles: true, tileLinkLabel: "Meer weten", mobileCarousel: true, showWatermark: true },
   },
   pageHero: {
     label: "Paginakop",
@@ -66,15 +73,15 @@ export const blockDefs = {
     label: "Diensten (overzicht)",
     description: "Zwart paneel met alle gepubliceerde diensten in kaarten.",
     category: "Collecties",
-    fields: [eyebrow, title, intro, { key: "linkLabel", label: "Linktekst per dienst", type: "text", max: 40 }],
-    defaults: { linkLabel: "Lees meer" },
+    fields: [eyebrow, title, intro, { key: "linkLabel", label: "Linktekst per dienst", type: "text", max: 40 }, mobileCarousel],
+    defaults: { linkLabel: "Lees meer", mobileCarousel: true },
   },
   servicesDetailed: {
     label: "Diensten (uitgebreid)",
     description: "Alle gepubliceerde diensten onder elkaar, afwisselend wit en zwart.",
     category: "Collecties",
-    fields: [{ key: "pointsTitle", label: "Titel boven de opsomming", type: "text", max: 60 }],
-    defaults: { pointsTitle: "Wat je krijgt" },
+    fields: [{ key: "pointsTitle", label: "Titel boven de opsomming", type: "text", max: 60 }, mobileCarousel],
+    defaults: { pointsTitle: "Wat je krijgt", mobileCarousel: true },
   },
   comparison: {
     label: "Vergelijking",
@@ -97,8 +104,9 @@ export const blockDefs = {
         { key: "self", label: "Linkerkolom", type: "text", max: 120 },
         { key: "us", label: "Rechterkolom (met vinkje)", type: "text", max: 120 },
       ] },
+      mobileCarousel,
     ],
-    defaults: { layout: "split", background: "light", selfLabel: "Zelf doen", usAccent: "True", usLabel: "Culture" },
+    defaults: { layout: "split", background: "light", selfLabel: "Zelf doen", usAccent: "True", usLabel: "Culture", mobileCarousel: true },
   },
   steps: {
     label: "Stappen (overzicht)",
@@ -112,7 +120,9 @@ export const blockDefs = {
         { key: "title", label: "Titel", type: "text", max: 60 },
         { key: "description", label: "Omschrijving", type: "textarea", max: 400 },
       ] },
+      mobileCarousel,
     ],
+    defaults: { mobileCarousel: true },
   },
   stepsDetailed: {
     label: "Stappen (uitgebreid)",
@@ -125,8 +135,9 @@ export const blockDefs = {
         { key: "detail", label: "Uitleg", type: "textarea", max: 800 },
         { key: "outcome", label: "Resultaat", type: "text", max: 120 },
       ] },
+      mobileCarousel,
     ],
-    defaults: { resultLabel: "Resultaat" },
+    defaults: { resultLabel: "Resultaat", mobileCarousel: true },
   },
   cases: {
     label: "Cases",
@@ -144,8 +155,9 @@ export const blockDefs = {
       ] },
       { key: "placeholderTitle", label: "Tekst op lege kaarten", type: "text", max: 40 },
       { key: "placeholderText", label: "Ondertitel op lege kaarten", type: "text", max: 60 },
+      mobileCarousel,
     ],
-    defaults: { show: "featured", placeholderTitle: "Binnenkort", placeholderText: "Case in voorbereiding" },
+    defaults: { show: "featured", placeholderTitle: "Binnenkort", placeholderText: "Case in voorbereiding", mobileCarousel: true },
   },
   faq: {
     label: "Veelgestelde vragen",
@@ -189,7 +201,9 @@ export const blockDefs = {
       ] },
       { key: "secondaryCta", label: "Eerste knop (omlijnd)", type: "cta" },
       { key: "primaryCta", label: "Tweede knop (zwart)", type: "cta" },
+      mobileCarousel,
     ],
+    defaults: { mobileCarousel: true },
   },
   contactHero: {
     label: "Contact met formulier",
@@ -217,8 +231,9 @@ export const blockDefs = {
         { key: "title", label: "Titel", type: "text", max: 80 },
         { key: "text", label: "Tekst", type: "textarea", max: 400 },
       ] },
+      mobileCarousel,
     ],
-    defaults: { background: "light" },
+    defaults: { background: "light", mobileCarousel: true },
   },
   textCards: {
     label: "Tekstkaarten",
@@ -282,8 +297,8 @@ export const blockDefs = {
     label: "Testimonials",
     description: "Toont gepubliceerde testimonials. Wordt automatisch verborgen als er geen zijn.",
     category: "Collecties",
-    fields: [eyebrow, title, intro, { ...background, options: backgroundOptions }],
-    defaults: { background: "white" },
+    fields: [eyebrow, title, intro, { ...background, options: backgroundOptions }, mobileCarousel],
+    defaults: { background: "white", mobileCarousel: true },
   },
   contactDetails: {
     label: "Contactgegevens",

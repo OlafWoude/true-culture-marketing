@@ -40,9 +40,9 @@ export const containerWidths = {
 } as const;
 
 export const sectionSpacings = {
-  compact: { label: "Compact", mobile: "4.5rem", desktop: "6rem" },
-  normal: { label: "Normaal (standaard)", mobile: "7rem", desktop: "9rem" },
-  spacious: { label: "Ruim", mobile: "8rem", desktop: "11rem" },
+  compact: { label: "Compact", mobile: "3.5rem", desktop: "6rem" },
+  normal: { label: "Normaal (standaard)", mobile: "5rem", desktop: "9rem" },
+  spacious: { label: "Ruim", mobile: "6rem", desktop: "11rem" },
 } as const;
 
 export const shadowStyles = {

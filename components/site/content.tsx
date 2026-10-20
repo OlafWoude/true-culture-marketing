@@ -7,6 +7,7 @@ import GorillaMark from "@/components/GorillaMark";
 import Marquee from "@/components/Marquee";
 import type { CtaValue } from "@/lib/cms/fields";
 import { CheckIcon } from "@/lib/icons";
+import MobileCarousel from "./MobileCarousel";
 import { asBg, bgClass, list, MediaImage, pad, RichText, str, Title, type BlockProps } from "./shared";
 
 const nn = (i: number) => String(i + 1).padStart(2, "0");
@@ -99,6 +100,7 @@ export function ComparisonBlock({ data, layout }: BlockProps) {
               selfLabel={str(data.selfLabel)}
               usAccent={str(data.usAccent)}
               usLabel={str(data.usLabel)}
+              carousel={data.mobileCarousel !== false}
             />
           </div>
         </FadeIn>
@@ -109,6 +111,7 @@ export function ComparisonBlock({ data, layout }: BlockProps) {
 
 export function StepsBlock({ data, ctx, layout }: BlockProps) {
   const items = list<{ title: string; description: string }>(data.items);
+  const carousel = data.mobileCarousel !== false;
   return (
     <section className={`bg-paper ${pad(layout.spaceTop)}`}>
       <div className="mx-auto max-w-site px-6">
@@ -122,18 +125,18 @@ export function StepsBlock({ data, ctx, layout }: BlockProps) {
           </div>
         </FadeIn>
 
-        <ol className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <MobileCarousel as="ol" enabled={carousel} label="Stappen" className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((step, i) => (
             <FadeIn key={i} delay={i * 70}>
-              <li className="flex h-full flex-col rounded-card bg-mist p-8">
-                <span className="display text-7xl text-ink">{nn(i)}</span>
-                <span className="mt-6 h-1 w-10 rounded-full bg-accent" />
-                <h3 className="mt-6 text-xl font-semibold text-ink">{step.title}</h3>
+              <li className={`flex h-full flex-col rounded-card bg-mist p-8 ${carousel ? "max-md:p-6" : ""}`}>
+                <span className={`display text-7xl text-ink ${carousel ? "max-md:text-6xl" : ""}`}>{nn(i)}</span>
+                <span className={`mt-6 h-1 w-10 rounded-full bg-accent ${carousel ? "max-md:mt-5" : ""}`} />
+                <h3 className={`mt-6 text-xl font-semibold text-ink ${carousel ? "max-md:mt-5" : ""}`}>{step.title}</h3>
                 <p className="mt-3 leading-relaxed text-ink/60">{step.description}</p>
               </li>
             </FadeIn>
           ))}
-        </ol>
+        </MobileCarousel>
       </div>
     </section>
   );
@@ -141,20 +144,25 @@ export function StepsBlock({ data, ctx, layout }: BlockProps) {
 
 export function StepsDetailedBlock({ data, layout }: BlockProps) {
   const items = list<{ title: string; detail: string; outcome: string }>(data.items);
+  const carousel = data.mobileCarousel !== false;
   return (
     <section className={`bg-mist ${pad(layout.spaceTop, "sm")}`}>
       <div className="mx-auto max-w-site px-6">
-        <ol className="space-y-4">
+        <MobileCarousel as="ol" enabled={carousel} label="Stappen" className="space-y-4">
           {items.map((step, i) => (
             <FadeIn key={i} delay={i * 60}>
-              <li className="grid gap-8 rounded-box bg-white p-8 sm:p-10 md:grid-cols-[auto_1fr_0.8fr] md:items-start md:gap-14 md:p-12">
-                <span className="display text-8xl text-ink md:text-[calc(9rem*var(--tc-heading-scale))]">{nn(i)}</span>
+              <li
+                className={`grid gap-8 rounded-box bg-white p-8 sm:p-10 md:grid-cols-[auto_1fr_0.8fr] md:items-start md:gap-14 md:p-12 ${
+                  carousel ? "max-md:h-full max-md:content-start max-md:gap-5 max-md:p-6" : ""
+                }`}
+              >
+                <span className={`display text-8xl text-ink md:text-[calc(9rem*var(--tc-heading-scale))] ${carousel ? "max-md:text-6xl" : ""}`}>{nn(i)}</span>
                 <div>
-                  <h2 className="display text-5xl text-ink">{step.title}</h2>
-                  <p className="mt-5 text-lg leading-relaxed text-ink/65">{step.detail}</p>
+                  <h2 className={`display text-5xl text-ink ${carousel ? "max-md:text-[calc(2rem*var(--tc-heading-scale))]" : ""}`}>{step.title}</h2>
+                  <p className={`mt-5 text-lg leading-relaxed text-ink/65 ${carousel ? "max-md:mt-3 max-md:text-base" : ""}`}>{step.detail}</p>
                 </div>
                 {step.outcome && (
-                  <div className="rounded-inner bg-ink p-6 text-paper md:mt-2">
+                  <div className={`rounded-inner bg-ink p-6 text-paper md:mt-2 ${carousel ? "max-md:p-5" : ""}`}>
                     {str(data.resultLabel) && (
                       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">{str(data.resultLabel)}</p>
                     )}
@@ -169,7 +177,7 @@ export function StepsDetailedBlock({ data, layout }: BlockProps) {
               </li>
             </FadeIn>
           ))}
-        </ol>
+        </MobileCarousel>
       </div>
     </section>
   );
@@ -252,6 +260,7 @@ export function ValuesGridBlock({ data, ctx, layout }: BlockProps) {
   const secondary = data.secondaryCta as CtaValue;
   const primary = data.primaryCta as CtaValue;
   const hasButtons = Boolean(ctx.href(secondary?.link) || ctx.href(primary?.link));
+  const carousel = data.mobileCarousel !== false;
   return (
     <section className={`bg-paper ${pad(layout.spaceTop)}`}>
       <div className="mx-auto max-w-site px-6">
@@ -261,17 +270,17 @@ export function ValuesGridBlock({ data, ctx, layout }: BlockProps) {
             <h2 className="display mt-6 text-fluid-6xl text-ink md:text-7xl">{str(data.title)}</h2>
           </div>
         </FadeIn>
-        <div className="mt-16 grid gap-4 sm:grid-cols-2">
+        <MobileCarousel enabled={carousel} label="Principes" className="mt-16 grid gap-4 sm:grid-cols-2">
           {items.map((v, i) => (
             <FadeIn key={i} delay={i * 70}>
-              <div className="h-full rounded-card bg-mist p-8 md:p-10">
+              <div className={`h-full rounded-card bg-mist p-8 md:p-10 ${carousel ? "max-md:p-6" : ""}`}>
                 <span className="display text-2xl text-ink/25">{nn(i)}</span>
-                <h3 className="display mt-4 text-4xl text-ink">{v.title}</h3>
-                <p className="mt-4 text-lg leading-relaxed text-ink/65">{v.text}</p>
+                <h3 className={`display mt-4 text-4xl text-ink ${carousel ? "max-md:text-[calc(1.75rem*var(--tc-heading-scale))]" : ""}`}>{v.title}</h3>
+                <p className={`mt-4 text-lg leading-relaxed text-ink/65 ${carousel ? "max-md:mt-3 max-md:text-base" : ""}`}>{v.text}</p>
               </div>
             </FadeIn>
           ))}
-        </div>
+        </MobileCarousel>
         {hasButtons && (
           <FadeIn delay={200}>
             <div className="mt-12 flex flex-wrap gap-3">
@@ -288,6 +297,7 @@ export function ValuesGridBlock({ data, ctx, layout }: BlockProps) {
 export function NumberedCardsBlock({ data, layout }: BlockProps) {
   const bg = asBg(data.background, "light");
   const items = list<{ title: string; text: string }>(data.items);
+  const carousel = data.mobileCarousel !== false;
   return (
     <div className={bgClass[bg]}>
       <section className={`mx-auto max-w-site px-6 ${pad(layout.spaceTop, "sm")}`}>
@@ -295,10 +305,10 @@ export function NumberedCardsBlock({ data, layout }: BlockProps) {
           {str(data.eyebrow) && <Eyebrow tone="light">{str(data.eyebrow)}</Eyebrow>}
           <h2 className="display mt-6 text-fluid-6xl text-ink md:text-7xl">{str(data.title)}</h2>
         </FadeIn>
-        <ol className="mt-14 grid gap-4 md:grid-cols-3">
+        <MobileCarousel as="ol" enabled={carousel} label="Stappen" className="mt-14 grid gap-4 md:grid-cols-3">
           {items.map((e, i) => (
             <FadeIn key={i} delay={i * 70}>
-              <li className={`h-full rounded-card p-8 ${bg === "light" ? "bg-white" : "bg-mist"}`}>
+              <li className={`h-full rounded-card p-8 ${bg === "light" ? "bg-white" : "bg-mist"} ${carousel ? "max-md:p-6" : ""}`}>
                 <span className="display text-6xl text-ink">{nn(i)}</span>
                 <span className="mt-5 block h-1 w-10 rounded-full bg-accent" />
                 <h3 className="mt-5 text-xl font-semibold text-ink">{e.title}</h3>
@@ -306,7 +316,7 @@ export function NumberedCardsBlock({ data, layout }: BlockProps) {
               </li>
             </FadeIn>
           ))}
-        </ol>
+        </MobileCarousel>
       </section>
     </div>
   );

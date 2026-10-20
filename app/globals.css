@@ -31,9 +31,9 @@
   --tc-watermark: 1;
 
   --tc-container: 72rem;
-  --tc-section-y: 7rem;
+  --tc-section-y: 5rem;
   --tc-section-y-md: 9rem;
-  --tc-section-y-sm: 6rem;
+  --tc-section-y-sm: 4rem;
   --tc-section-y-sm-md: 8rem;
 }
 

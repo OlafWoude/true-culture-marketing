@@ -4,6 +4,7 @@ import ContactForm from "@/components/ContactForm";
 import Eyebrow from "@/components/Eyebrow";
 import FadeIn from "@/components/FadeIn";
 import GorillaMark from "@/components/GorillaMark";
+import MobileCarousel from "./MobileCarousel";
 import type { CtaValue } from "@/lib/cms/fields";
 import { ArrowRightIcon, CheckIcon } from "@/lib/icons";
 import { bgClass, list, str, Title, type BlockProps } from "./shared";
@@ -15,6 +16,7 @@ export function HeroBlock({ data, ctx, layout }: BlockProps) {
   const secondary = data.secondaryCta as CtaValue;
   const services = data.showServiceTiles ? ctx.bundle.services : [];
   const n = services.length;
+  const carousel = data.mobileCarousel !== false;
 
   return (
     <div className={layout.nextBg ? bgClass[layout.nextBg] : "bg-ink"}>
@@ -52,7 +54,12 @@ export function HeroBlock({ data, ctx, layout }: BlockProps) {
           </FadeIn>
 
           {n > 0 && (
-            <div className={`mt-20 grid gap-4 text-left sm:grid-cols-2 md:mt-28 ${tileCols[n] ?? "lg:grid-cols-4"}`}>
+            <MobileCarousel
+              enabled={carousel}
+              tone="dark"
+              label="Diensten"
+              className={`mt-20 grid gap-4 text-left sm:grid-cols-2 md:mt-28 ${tileCols[n] ?? "lg:grid-cols-4"}`}
+            >
               {services.map((s, i) => {
                 const href = ctx.serviceHref(s);
                 const inner = (
@@ -68,8 +75,9 @@ export function HeroBlock({ data, ctx, layout }: BlockProps) {
                     )}
                   </>
                 );
-                const cls =
-                  "group flex h-full flex-col rounded-tile border border-white/[0.07] bg-ink-2/80 p-7 backdrop-blur-sm transition-colors duration-300 hover:border-white/20";
+                const cls = `group flex h-full flex-col rounded-tile border border-white/[0.07] bg-ink-2/80 p-7 backdrop-blur-sm transition-colors duration-300 hover:border-white/20 ${
+                  carousel ? "max-md:p-6" : ""
+                }`;
                 return (
                   <FadeIn key={s.id} delay={300 + i * 70} className={i > 0 && i < n - 1 && n > 2 ? "lg:mt-10" : ""}>
                     {href ? (
@@ -82,7 +90,7 @@ export function HeroBlock({ data, ctx, layout }: BlockProps) {
                   </FadeIn>
                 );
               })}
-            </div>
+            </MobileCarousel>
           )}
         </div>
       </section>

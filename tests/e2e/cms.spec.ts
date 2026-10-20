@@ -329,6 +329,37 @@ test("public pages have no broken images, broken links, console errors or horizo
   }
 });
 
+test("card lists are swipeable carousels on phones, unchanged on desktop, and can be switched off per section", async ({ browser }) => {
+  const phone = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  const visitor = await phone.newPage();
+  await visitor.goto("/");
+  const steps = visitor.getByRole("group", { name: "Stappen: kies een kaart" });
+  await steps.scrollIntoViewIfNeeded();
+  const dots = steps.getByRole("button");
+  await expect(dots).toHaveCount(4);
+  await expect(dots.first()).toHaveAttribute("aria-current", "true");
+  await dots.last().click();
+  await expect(dots.last()).toHaveAttribute("aria-current", "true");
+  await phone.close();
+
+  const desktop = await publicPage(page, "/");
+  await expect(desktop.visitor.getByRole("group", { name: "Stappen: kies een kaart" })).toBeHidden();
+  await desktop.close();
+
+  await page.goto(`/admin/paginas/${HOME_ID}`);
+  await page.getByRole("button", { name: /Stappen \(overzicht\)/ }).click();
+  await page.getByRole("switch", { name: "Op mobiel naast elkaar tonen (swipen)" }).click();
+  await page.getByRole("button", { name: "Publiceren", exact: true }).click();
+  await expectToast(page, /Gepubliceerd/);
+
+  const phoneAfter = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const after = await phoneAfter.newPage();
+  await after.goto("/");
+  await expect(after.getByRole("group", { name: "Diensten: kies een kaart" }).first()).toBeAttached();
+  await expect(after.getByRole("group", { name: "Stappen: kies een kaart" })).toHaveCount(0);
+  await phoneAfter.close();
+});
+
 test("logging out everywhere ends other sessions", async ({ browser }) => {
   const other = await browser.newContext();
   const otherPage = await other.newPage();

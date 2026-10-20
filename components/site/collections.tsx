@@ -7,12 +7,14 @@ import type { CtaValue } from "@/lib/cms/fields";
 import type { RenderCtx } from "@/lib/cms/render";
 import type { Bundle } from "@/lib/cms/types";
 import { ArrowRightIcon, CheckIcon } from "@/lib/icons";
+import MobileCarousel from "./MobileCarousel";
 import { asBg, bgClass, MediaImage, pad, str, Title, type BlockProps } from "./shared";
 
 const nn = (i: number) => String(i + 1).padStart(2, "0");
 
 export function ServicesOverviewBlock({ data, ctx, layout }: BlockProps) {
   const services = ctx.bundle.services;
+  const carousel = data.mobileCarousel !== false;
   return (
     <section className={`bg-paper ${pad(layout.spaceTop)}`}>
       <div className="mx-auto max-w-site px-6">
@@ -29,18 +31,24 @@ export function ServicesOverviewBlock({ data, ctx, layout }: BlockProps) {
         <div className="mx-auto mt-16 max-w-site-wide px-3 sm:px-6">
           <div className="grain overflow-hidden rounded-panel bg-ink p-4 sm:p-6 md:p-8">
             <GorillaMark watermark className="absolute -right-40 top-1/2 w-[900px] max-w-none -translate-y-1/2 text-white/[0.03]" />
-            <div className="relative grid gap-4 md:grid-cols-2">
+            <MobileCarousel
+              enabled={carousel}
+              tone="dark"
+              label="Diensten"
+              className="relative grid gap-4 md:grid-cols-2"
+              bleed="max-md:-mx-4 max-md:px-4 max-md:scroll-px-4 sm:max-md:-mx-6 sm:max-md:px-6 sm:max-md:scroll-px-6"
+            >
               {services.map((s, i) => {
                 const href = ctx.serviceHref(s);
                 return (
                   <FadeIn key={s.id} delay={i * 70}>
-                    <article className="flex h-full flex-col rounded-card border border-white/[0.07] bg-ink-2 p-8 md:p-10">
+                    <article className={`flex h-full flex-col rounded-card border border-white/[0.07] bg-ink-2 p-8 md:p-10 ${carousel ? "max-md:p-6" : ""}`}>
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">{s.tag}</span>
                         <span className="display text-2xl text-paper/20">{nn(i)}</span>
                       </div>
-                      <h3 className="display mt-6 text-5xl text-paper">{s.title}</h3>
-                      <p className="mt-4 leading-relaxed text-paper/60">{s.description}</p>
+                      <h3 className={`display mt-6 text-5xl text-paper ${carousel ? "max-md:mt-5 max-md:text-[calc(2rem*var(--tc-heading-scale))]" : ""}`}>{s.title}</h3>
+                      <p className={`mt-4 leading-relaxed text-paper/60 ${carousel ? "max-md:text-[15px]" : ""}`}>{s.description}</p>
                       {s.points.length > 0 && (
                         <ul className="mt-6 space-y-2.5">
                           {s.points.map((p, j) => (
@@ -61,7 +69,7 @@ export function ServicesOverviewBlock({ data, ctx, layout }: BlockProps) {
                   </FadeIn>
                 );
               })}
-            </div>
+            </MobileCarousel>
           </div>
         </div>
       )}
@@ -71,19 +79,25 @@ export function ServicesOverviewBlock({ data, ctx, layout }: BlockProps) {
 
 export function ServicesDetailedBlock({ data, ctx }: BlockProps) {
   const services = ctx.bundle.services;
+  const carousel = data.mobileCarousel !== false;
   return (
     <div className="bg-mist py-6 md:py-10">
+      <MobileCarousel enabled={carousel} label="Diensten" bleed="max-md:px-3 max-md:scroll-px-3 sm:max-md:px-6 sm:max-md:scroll-px-6">
       {services.map((s, i) => {
         const even = i % 2 === 0;
         const image = ctx.media(s.image);
         const ctaHref = ctx.href(s.cta?.link);
         return (
-          <section key={s.id} id={s.anchor || undefined} className="mx-auto max-w-site-wide scroll-mt-28 px-3 py-3 sm:px-6">
-            <FadeIn>
+          <section
+            key={s.id}
+            id={s.anchor || undefined}
+            className={`mx-auto max-w-site-wide scroll-mt-28 px-3 py-3 sm:px-6 ${carousel ? "max-md:p-0" : ""}`}
+          >
+            <FadeIn className={carousel ? "max-md:h-full" : ""}>
               <div
                 className={`grid gap-10 rounded-panel p-8 sm:p-12 md:p-16 lg:grid-cols-[1.15fr_1fr] lg:gap-16 ${
                   even ? "bg-white" : "grain overflow-hidden bg-ink"
-                }`}
+                } ${carousel ? "max-md:h-full max-md:content-start max-md:gap-8 max-md:p-6" : ""}`}
               >
                 {!even && (
                   <GorillaMark watermark className="absolute -bottom-16 -left-16 w-[520px] text-white/[0.035]" />
@@ -93,8 +107,14 @@ export function ServicesDetailedBlock({ data, ctx }: BlockProps) {
                     <span className={`display text-2xl ${even ? "text-ink/25" : "text-paper/25"}`}>{nn(i)}</span>
                     <span className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">{s.tag}</span>
                   </div>
-                  <h2 className={`display mt-6 text-fluid-6xl md:text-7xl ${even ? "text-ink" : "text-paper"}`}>{s.title}</h2>
-                  <p className={`mt-6 max-w-xl text-lg leading-relaxed ${even ? "text-ink/65" : "text-paper/65"}`}>
+                  <h2
+                    className={`display mt-6 text-fluid-6xl md:text-7xl ${even ? "text-ink" : "text-paper"} ${
+                      carousel ? "max-md:mt-5 max-md:text-[calc(2.25rem*var(--tc-heading-scale))]" : ""
+                    }`}
+                  >
+                    {s.title}
+                  </h2>
+                  <p className={`mt-6 max-w-xl text-lg leading-relaxed ${even ? "text-ink/65" : "text-paper/65"} ${carousel ? "max-md:mt-4 max-md:text-base" : ""}`}>
                     {s.description}
                   </p>
                   {ctaHref && s.cta.label && (
@@ -113,17 +133,17 @@ export function ServicesDetailedBlock({ data, ctx }: BlockProps) {
                     </div>
                   )}
                   {s.points.length > 0 && (
-                    <div className={`rounded-card p-8 ${even ? "bg-mist" : "border border-white/[0.07] bg-ink-2"}`}>
+                    <div className={`rounded-card p-8 ${even ? "bg-mist" : "border border-white/[0.07] bg-ink-2"} ${carousel ? "max-md:p-5" : ""}`}>
                       {str(data.pointsTitle) && (
                         <p className={`text-sm font-semibold ${even ? "text-ink/50" : "text-paper/50"}`}>{str(data.pointsTitle)}</p>
                       )}
-                      <ul className="mt-6 space-y-5">
+                      <ul className={`mt-6 space-y-5 ${carousel ? "max-md:mt-4 max-md:space-y-3" : ""}`}>
                         {s.points.map((p, j) => (
                           <li key={j} className="flex items-start gap-4">
                             <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent text-on-accent">
                               <CheckIcon className="h-4 w-4" />
                             </span>
-                            <span className={`text-[17px] leading-snug ${even ? "text-ink" : "text-paper"}`}>{p}</span>
+                            <span className={`text-[17px] leading-snug ${even ? "text-ink" : "text-paper"} ${carousel ? "max-md:text-[15px]" : ""}`}>{p}</span>
                           </li>
                         ))}
                       </ul>
@@ -135,6 +155,7 @@ export function ServicesDetailedBlock({ data, ctx }: BlockProps) {
           </section>
         );
       })}
+      </MobileCarousel>
     </div>
   );
 }
@@ -148,7 +169,7 @@ function CaseCard({ c, ctx, offset }: { c: Bundle["cases"][number]; ctx: RenderC
   return (
     <Link
       href={`/cases/${c.slug}`}
-      className={`group relative flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-tile border border-white/[0.08] bg-ink-2 p-6 ${offset ? "sm:mt-12" : ""}`}
+      className={`group relative flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-tile border border-white/[0.08] bg-ink-2 p-6 ${offset ? "md:mt-12" : ""}`}
     >
       {image ? (
         <>
@@ -171,6 +192,8 @@ export function CasesBlock({ data, ctx, layout }: BlockProps) {
   const ctaValue = data.cta as CtaValue;
   const first = cases.slice(0, 2);
   const rest = cases.slice(2);
+  const carousel = data.mobileCarousel !== false;
+  const bleed = "max-md:-mx-8 max-md:px-8 max-md:scroll-px-8";
   return (
     <section className={`bg-paper ${pad(layout.spaceTop)}`}>
       <div className="mx-auto max-w-site-wide px-3 sm:px-6">
@@ -192,13 +215,14 @@ export function CasesBlock({ data, ctx, layout }: BlockProps) {
                   </div>
                 )}
               </div>
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="min-w-0">
+              <MobileCarousel enabled={carousel} tone="dark" label="Cases" bleed={bleed} className="grid gap-4 sm:grid-cols-2">
                 {first.length > 0
                   ? first.map((c, i) => <CaseCard key={c.id} c={c} ctx={ctx} offset={i === 1} />)
                   : [0, 1].map((i) => (
                       <div
                         key={i}
-                        className={`flex aspect-[4/5] flex-col justify-between rounded-tile border border-white/[0.08] bg-ink-2 p-6 ${i === 1 ? "sm:mt-12" : ""}`}
+                        className={`flex aspect-[4/5] flex-col justify-between rounded-tile border border-white/[0.08] bg-ink-2 p-6 ${i === 1 ? "md:mt-12" : ""}`}
                       >
                         <span className="text-xs font-semibold uppercase tracking-[0.18em] text-paper/40">Case {nn(i)}</span>
                         <div>
@@ -208,13 +232,16 @@ export function CasesBlock({ data, ctx, layout }: BlockProps) {
                         </div>
                       </div>
                     ))}
+              </MobileCarousel>
               </div>
             </div>
             {rest.length > 0 && (
-              <div className="relative mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {rest.map((c) => (
-                  <CaseCard key={c.id} c={c} ctx={ctx} offset={false} />
-                ))}
+              <div className="relative mt-12">
+                <MobileCarousel enabled={carousel} tone="dark" label="Meer cases" bleed={bleed} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                  {rest.map((c) => (
+                    <CaseCard key={c.id} c={c} ctx={ctx} offset={false} />
+                  ))}
+                </MobileCarousel>
               </div>
             )}
           </div>
@@ -229,6 +256,7 @@ export function TestimonialsBlock({ data, ctx, layout }: BlockProps) {
   if (!items.length) return null;
   const bg = asBg(data.background, "white");
   const dark = bg === "dark";
+  const carousel = data.mobileCarousel !== false;
   return (
     <section className={`${bgClass[bg]} ${dark ? "grain overflow-hidden" : ""} ${pad(layout.spaceTop)}`}>
       <div className="mx-auto max-w-site px-6">
@@ -241,13 +269,17 @@ export function TestimonialsBlock({ data, ctx, layout }: BlockProps) {
             {str(data.intro) && <p className={`mx-auto mt-6 max-w-xl text-lg ${dark ? "text-paper/65" : "text-ink/65"}`}>{str(data.intro)}</p>}
           </div>
         </FadeIn>
-        <div className="mt-16 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <MobileCarousel enabled={carousel} tone={dark ? "dark" : "light"} label="Testimonials" className="mt-16 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {items.map((t, i) => {
             const photo = ctx.media(t.photo);
             const logo = ctx.media(t.logo);
             return (
               <FadeIn key={t.id} delay={i * 70}>
-                <figure className={`flex h-full flex-col rounded-card p-8 ${dark ? "border border-white/[0.07] bg-ink-2" : bg === "light" ? "bg-white" : "bg-mist"}`}>
+                <figure
+                  className={`flex h-full flex-col rounded-card p-8 ${dark ? "border border-white/[0.07] bg-ink-2" : bg === "light" ? "bg-white" : "bg-mist"} ${
+                    carousel ? "max-md:p-6" : ""
+                  }`}
+                >
                   <span className="display text-6xl leading-none text-accent">“</span>
                   <blockquote className={`mt-2 flex-1 text-lg leading-relaxed ${dark ? "text-paper/85" : "text-ink/80"}`}>{t.quote}</blockquote>
                   <figcaption className="mt-8 flex items-center gap-4">
@@ -272,7 +304,7 @@ export function TestimonialsBlock({ data, ctx, layout }: BlockProps) {
               </FadeIn>
             );
           })}
-        </div>
+        </MobileCarousel>
       </div>
     </section>
   );
