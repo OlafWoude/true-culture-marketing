@@ -406,6 +406,14 @@ test("on phones the menu slides away while scrolling down and returns when scrol
   await menu.getByRole("button", { name: "Menu openen" }).click();
   await visitor.mouse.wheel(0, 600);
   await expect(menu.getByRole("link", { name: "Vacatures" })).toBeInViewport();
+  // Escape closes it and returns focus to the button; so does a tap outside the menu.
+  await visitor.keyboard.press("Escape");
+  await expect(menu.getByRole("link", { name: "Vacatures" })).toBeHidden();
+  await expect(menu.getByRole("button", { name: "Menu openen" })).toBeFocused();
+  await menu.getByRole("button", { name: "Menu openen" }).click();
+  await expect(menu.getByRole("link", { name: "Vacatures" })).toBeVisible();
+  await visitor.locator("footer").dispatchEvent("pointerdown");
+  await expect(menu.getByRole("link", { name: "Vacatures" })).toBeHidden();
   await phone.close();
 
   // On larger screens the menu stays fixed.

@@ -95,8 +95,33 @@ export default function Nav({ logo, items, cta, variant, homeHref = "/", offsetT
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const navRef = useRef<HTMLElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const [hidden, setHidden] = useHideOnScroll(navRef);
   const close = () => setOpen(false);
+
+  // The open menu closes with Escape (focus goes back to the menu button) or a tap anywhere outside it.
+  useEffect(() => {
+    if (!open) return;
+    const dismiss = () => {
+      setOpen(false);
+      setHidden(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      dismiss();
+      buttonRef.current?.focus();
+    };
+    const onPointer = (e: PointerEvent) => {
+      if (!navRef.current?.contains(e.target as Node)) dismiss();
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onPointer);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onPointer);
+    };
+  }, [open, setHidden]);
+
   const floating = variant === "floating";
   // An open menu stays put, also after closing it, until the visitor scrolls down again.
   const concealed = hidden && !open;
@@ -172,6 +197,7 @@ export default function Nav({ logo, items, cta, variant, homeHref = "/", offsetT
               </SmartLink>
             )}
             <button
+              ref={buttonRef}
               type="button"
               onClick={toggle}
               aria-expanded={open}
