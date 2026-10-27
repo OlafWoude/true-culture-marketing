@@ -22,29 +22,32 @@ export function HeroBlock({ data, ctx, layout }: BlockProps) {
 
   return (
     <div className={layout.nextBg ? bgClass[layout.nextBg] : "bg-ink"}>
-      <section className="grain overflow-hidden rounded-b-panel bg-ink md:rounded-b-hero-lg">
+      <section className="grain clip rounded-b-panel bg-ink md:rounded-b-hero-lg">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-[700px] bg-[radial-gradient(ellipse_at_top,color-mix(in_srgb,var(--tc-accent)_8%,transparent),transparent_55%)]" />
         {Boolean(data.showWatermark) && (
-          <GorillaMark watermark className="absolute left-1/2 top-24 w-[1150px] max-w-none -translate-x-[42%] text-white/[0.045]" />
+          <GorillaMark
+            watermark
+            className="absolute right-0 top-36 w-[120%] max-w-none text-white/[0.08] md:left-1/2 md:right-auto md:top-24 md:w-[min(1150px,86vw)] md:-translate-x-[42%] md:text-white/[0.045]"
+          />
         )}
 
         <div className="relative mx-auto max-w-site px-6 pb-20 pt-40 text-center md:pb-28 md:pt-52">
           {str(data.eyebrow) && (
-            <FadeIn>
+            <FadeIn immediate>
               <Eyebrow>{str(data.eyebrow)}</Eyebrow>
             </FadeIn>
           )}
-          <FadeIn delay={80}>
+          <FadeIn immediate delay={80}>
             <h1 className="display mx-auto mt-8 text-[calc(3.6rem*var(--tc-heading-scale))] text-paper sm:text-8xl md:text-[calc(8.5rem*var(--tc-heading-scale))]">
               <Title title={str(data.title)} highlight={str(data.highlight)} newLine={Boolean(data.highlightNewLine)} />
             </h1>
           </FadeIn>
           {str(data.intro) && (
-            <FadeIn delay={160}>
+            <FadeIn immediate delay={160}>
               <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-paper/65 md:text-xl">{str(data.intro)}</p>
             </FadeIn>
           )}
-          <FadeIn delay={240}>
+          <FadeIn immediate delay={240}>
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button href={ctx.href(primary?.link)} newTab={ctx.isExternal(primary?.link)} arrow>
                 {primary?.label}
@@ -55,7 +58,7 @@ export function HeroBlock({ data, ctx, layout }: BlockProps) {
             </div>
           </FadeIn>
           {trustPoints.length > 0 && (
-            <FadeIn delay={280}>
+            <FadeIn immediate delay={280}>
               <ul className="mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-2.5 text-sm text-paper/70">
                 {trustPoints.map((point, i) => (
                   <li key={i} className="flex items-center gap-2">
@@ -71,7 +74,7 @@ export function HeroBlock({ data, ctx, layout }: BlockProps) {
             <MobileCarousel
               enabled={carousel}
               tone="dark"
-              label="Vacatures"
+              label="Vacatures in het kort"
               className={`mt-20 grid gap-4 text-left sm:grid-cols-2 md:mt-28 ${tileCols[n] ?? "lg:grid-cols-4"}`}
             >
               {services.map((s, i) => {
@@ -93,7 +96,7 @@ export function HeroBlock({ data, ctx, layout }: BlockProps) {
                   carousel ? "max-md:p-6" : ""
                 }`;
                 return (
-                  <FadeIn key={s.id} delay={300 + i * 70} className={i > 0 && i < n - 1 && n > 2 ? "lg:mt-10" : ""}>
+                  <FadeIn immediate key={s.id} delay={300 + i * 70} className={i > 0 && i < n - 1 && n > 2 ? "lg:mt-10" : ""}>
                     {href ? (
                       <Link href={href} className={cls}>
                         {inner}
@@ -115,24 +118,24 @@ export function HeroBlock({ data, ctx, layout }: BlockProps) {
 export function PageHeroBlock({ data, layout }: BlockProps) {
   const Heading = layout.index === 0 ? "h1" : "h2";
   return (
-    <section className="grain overflow-hidden bg-ink">
+    <section className="grain clip bg-ink">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[480px] bg-[radial-gradient(ellipse_at_top,color-mix(in_srgb,var(--tc-accent)_7%,transparent),transparent_60%)]" />
       {Boolean(data.showWatermark) && (
-        <GorillaMark watermark className="absolute -right-24 bottom-0 hidden w-[680px] text-white/[0.045] md:block" />
+        <GorillaMark watermark className="absolute -right-[8%] bottom-0 w-[80%] text-white/[0.055] md:-right-24 md:w-[680px] md:text-white/[0.045]" />
       )}
       <div className="relative mx-auto max-w-site px-6 pb-20 pt-40 md:pb-28 md:pt-48">
         {str(data.eyebrow) && (
-          <FadeIn>
+          <FadeIn immediate>
             <Eyebrow>{str(data.eyebrow)}</Eyebrow>
           </FadeIn>
         )}
-        <FadeIn delay={80}>
+        <FadeIn immediate delay={80}>
           <Heading className="display mt-7 max-w-5xl text-fluid-6xl text-paper sm:text-7xl md:text-[calc(6.5rem*var(--tc-heading-scale))]">
             <Title title={str(data.title)} highlight={str(data.highlight)} />
           </Heading>
         </FadeIn>
         {str(data.intro) && (
-          <FadeIn delay={160}>
+          <FadeIn immediate delay={160}>
             <p className="mt-8 max-w-2xl text-lg leading-relaxed text-paper/65">{str(data.intro)}</p>
           </FadeIn>
         )}
@@ -147,29 +150,32 @@ export function ContactHeroBlock({ data, ctx, layout }: BlockProps) {
   const whatsappLabel = str(data.whatsappLabel);
   return (
     <div className={layout.nextBg ? bgClass[layout.nextBg] : "bg-ink"}>
-      <section className="grain overflow-hidden rounded-b-panel bg-ink md:rounded-b-hero-lg">
+      <section className="grain clip rounded-b-panel bg-ink md:rounded-b-hero-lg">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-[520px] bg-[radial-gradient(ellipse_at_top_left,color-mix(in_srgb,var(--tc-accent)_8%,transparent),transparent_55%)]" />
-        <GorillaMark watermark className="absolute -left-40 bottom-0 hidden w-[760px] text-white/[0.035] lg:block" />
+        <GorillaMark
+          watermark
+          className="absolute -right-[10%] top-24 w-[78%] max-w-[560px] text-white/[0.05] lg:-left-40 lg:bottom-0 lg:right-auto lg:top-auto lg:w-[760px] lg:max-w-none lg:text-white/[0.035]"
+        />
 
         <div className="relative mx-auto grid max-w-site gap-14 px-6 pb-20 pt-36 md:pb-24 md:pt-44 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
             {str(data.eyebrow) && (
-              <FadeIn>
+              <FadeIn immediate>
                 <Eyebrow>{str(data.eyebrow)}</Eyebrow>
               </FadeIn>
             )}
-            <FadeIn delay={80}>
+            <FadeIn immediate delay={80}>
               <Heading className="display mt-7 text-fluid-6xl text-paper sm:text-7xl md:text-8xl">
                 <Title title={str(data.title)} highlight={str(data.highlight)} />
               </Heading>
             </FadeIn>
             {str(data.intro) && (
-              <FadeIn delay={160}>
+              <FadeIn immediate delay={160}>
                 <p className="mt-7 max-w-md text-lg leading-relaxed text-paper/65">{str(data.intro)}</p>
               </FadeIn>
             )}
             {list<string>(data.bullets).length > 0 && (
-              <FadeIn delay={220}>
+              <FadeIn immediate delay={220}>
                 <ul className="mt-10 space-y-4">
                   {list<string>(data.bullets).map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-paper/85">
@@ -183,7 +189,7 @@ export function ContactHeroBlock({ data, ctx, layout }: BlockProps) {
               </FadeIn>
             )}
             {whatsapp && whatsappLabel && (
-              <FadeIn delay={260}>
+              <FadeIn immediate delay={260}>
                 <a
                   href={whatsapp}
                   target="_blank"
@@ -197,10 +203,10 @@ export function ContactHeroBlock({ data, ctx, layout }: BlockProps) {
             )}
           </div>
 
-          <FadeIn delay={120}>
+          <FadeIn immediate delay={120}>
             <div className="rounded-box bg-white p-7 shadow-card sm:p-10">
               {str(data.formTitle) && <h2 className="text-2xl font-semibold text-ink">{str(data.formTitle)}</h2>}
-              {str(data.formIntro) && <p className="mt-2 text-ink/55">{str(data.formIntro)}</p>}
+              {str(data.formIntro) && <p className="mt-2 text-ink/60">{str(data.formIntro)}</p>}
               <div className="mt-8">
                 <ContactForm
                   config={ctx.bundle.forms}

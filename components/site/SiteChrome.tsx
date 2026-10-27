@@ -54,7 +54,7 @@ export default function SiteChrome({ ctx, children, banner }: { ctx: RenderCtx; 
   const ctaHref = cta.visible ? ctx.href(cta.link) : null;
   const sticky = Boolean(ctaHref && cta.mobileSticky && (cta.mobileLabel || cta.label));
   const whatsapp = whatsappHref(ctx.bundle.settings.contact.whatsapp, "Hoi! Ik heb een vraag over werken bij True Culture Marketing.");
-  const logo = <Logo media={logoMedia} alt={ctx.bundle.settings.siteName} />;
+  const logo = <Logo media={logoMedia} alt={ctx.bundle.settings.siteName} eager />;
   const footerLogo = <Logo media={logoMedia} alt={ctx.bundle.settings.siteName} size="sm" />;
 
   return (

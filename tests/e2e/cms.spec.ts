@@ -261,11 +261,20 @@ test("the application form validates input and stores applications with their so
   await visitor.getByRole("button", { name: "Verstuur sollicitatie" }).click();
   await expect(visitor.getByText("Vul je naam in.")).toBeVisible();
   await expect(visitor.getByText("Vul een geldig telefoonnummer in, bijv. 06 12345678.")).toBeVisible();
+  // The first field with a problem gets the focus, and Enter moves on to the next field instead of sending.
+  await expect(visitor.getByLabel("Naam", { exact: true })).toBeFocused();
   await visitor.getByLabel("Naam", { exact: true }).fill("Eva Tester");
-  await visitor.getByLabel("Telefoonnummer").fill("06 12345678");
+  // A fixed field loses its error message straight away; the others keep theirs until they are fixed too.
+  await expect(visitor.getByText("Vul je naam in.")).toHaveCount(0);
+  await expect(visitor.getByText("Vul een geldig telefoonnummer in, bijv. 06 12345678.")).toBeVisible();
+  await visitor.keyboard.press("Enter");
+  await expect(visitor.getByLabel("Telefoonnummer")).toBeFocused();
+  await visitor.keyboard.type("06 12345678");
+  await expect(visitor.getByText("Vul een geldig telefoonnummer in, bijv. 06 12345678.")).toHaveCount(0);
   await visitor.getByLabel("E-mailadres").fill("eva@example.nl");
   await visitor.getByLabel("Woonplaats").fill("Groningen");
-  await visitor.getByLabel("Hoeveel dagen per week wil je werken?").selectOption("3 à 4 dagen per week");
+  await visitor.locator("label").filter({ hasText: "3 à 4 dagen per week" }).click();
+  await expect(visitor.getByRole("radio", { name: "3 à 4 dagen per week" })).toBeChecked();
   await visitor.getByRole("button", { name: "Verstuur sollicitatie" }).click();
   await expect(visitor.getByText("Gelukt!")).toBeVisible();
   await close();
@@ -381,6 +390,29 @@ test("phones get a fixed apply button after scrolling, except on the application
   await visitor.evaluate(() => window.scrollTo(0, 1600));
   await expect(visitor.locator("div.fixed").getByRole("link", { name: "Solliciteer in 2 minuten" })).toHaveCount(0);
   await phone.close();
+});
+
+test("on phones the menu slides away while scrolling down and returns when scrolling up", async ({ browser }) => {
+  const phone = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const visitor = await phone.newPage();
+  await visitor.goto("/");
+  const menu = visitor.getByRole("navigation", { name: "Hoofdmenu" });
+  await expect(menu).toBeInViewport();
+  await visitor.mouse.wheel(0, 900);
+  await expect(menu).not.toBeInViewport();
+  await visitor.mouse.wheel(0, -200);
+  await expect(menu).toBeInViewport();
+  // An open menu stays in place while the page behind it scrolls.
+  await menu.getByRole("button", { name: "Menu openen" }).click();
+  await visitor.mouse.wheel(0, 600);
+  await expect(menu.getByRole("link", { name: "Vacatures" })).toBeInViewport();
+  await phone.close();
+
+  // On larger screens the menu stays fixed.
+  const desktop = await publicPage(page, "/");
+  await desktop.visitor.mouse.wheel(0, 900);
+  await expect(desktop.visitor.getByRole("navigation", { name: "Hoofdmenu" })).toBeInViewport();
+  await desktop.close();
 });
 
 test("logging out everywhere ends other sessions", async ({ browser }) => {

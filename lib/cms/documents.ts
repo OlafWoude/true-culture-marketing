@@ -213,7 +213,7 @@ export const singletonDefs = {
         { key: "city", label: "Label woonplaats", type: "text", max: 60 },
         { key: "cityPlaceholder", label: "Voorbeeldtekst woonplaats", type: "text", max: 80 },
         { key: "availability", label: "Label beschikbaarheid", type: "text", max: 80 },
-        { key: "availabilityPlaceholder", label: "Eerste regel in de keuzelijst", type: "text", max: 60 },
+        { key: "availabilityPlaceholder", label: "Toelichting onder de vraag over beschikbaarheid", type: "text", max: 60, help: "Optioneel, bijvoorbeeld: Je kunt dit later nog aanpassen." },
         { key: "message", label: "Label bericht (optioneel veld)", type: "text", max: 80 },
         { key: "messagePlaceholder", label: "Voorbeeldtekst bericht", type: "text", max: 200 },
         { key: "submit", label: "Tekst op de knop", type: "text", max: 40 },

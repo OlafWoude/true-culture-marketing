@@ -4,6 +4,7 @@ import { getDb, isDbConfigured, schema } from "@/lib/db";
 import { clientIpKey, isRateLimited, recordHit } from "@/lib/auth/rate-limit";
 import { getLiveBundle } from "@/lib/cms/repo";
 import { isEmailConfigured, sendEmail } from "@/lib/email";
+import { applicationChecks } from "@/lib/application-checks";
 
 type Field = "name" | "phone" | "email" | "city" | "availability";
 
@@ -13,9 +14,6 @@ export type ContactFormState = {
   fieldErrors?: Partial<Record<Field, string>>;
   values?: { name: string; phone: string; email: string; city: string; availability: string; message: string };
 };
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_RE = /^\+?[0-9\s\-()]+$/;
 
 // Drops control characters (except tab and newlines) so stored applications and e-mails stay readable.
 const clean = (value: FormDataEntryValue | null, max: number) =>
@@ -48,13 +46,12 @@ export async function submitContactForm(_prevState: ContactFormState, formData: 
   };
   const source = clean(formData.get("source"), 300);
   const options = forms.availabilityOptions.filter(Boolean);
-  const phoneDigits = values.phone.replace(/\D/g, "");
 
   const fieldErrors: ContactFormState["fieldErrors"] = {};
-  if (values.name.length < 2) fieldErrors.name = m.nameError;
-  if (!PHONE_RE.test(values.phone) || phoneDigits.length < 9 || phoneDigits.length > 15) fieldErrors.phone = m.phoneError;
-  if (!EMAIL_RE.test(values.email)) fieldErrors.email = m.emailError;
-  if (values.city.length < 2) fieldErrors.city = m.cityError;
+  if (!applicationChecks.name(values.name)) fieldErrors.name = m.nameError;
+  if (!applicationChecks.phone(values.phone)) fieldErrors.phone = m.phoneError;
+  if (!applicationChecks.email(values.email)) fieldErrors.email = m.emailError;
+  if (!applicationChecks.city(values.city)) fieldErrors.city = m.cityError;
   if (options.length > 0 && !options.includes(values.availability)) fieldErrors.availability = m.availabilityError;
   if (Object.keys(fieldErrors).length > 0) {
     return { status: "error", message: m.invalid, fieldErrors, values };

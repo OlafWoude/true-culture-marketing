@@ -22,7 +22,7 @@ export default function Comparison({ rows, selfLabel, usAccent, usLabel, carouse
           <div role="columnheader">
             <span className="sr-only">Onderdeel</span>
           </div>
-          <div role="columnheader" className="px-6 pb-5 text-sm font-semibold text-ink/50">
+          <div role="columnheader" className="px-6 pb-5 text-sm font-semibold text-ink/60">
             {selfLabel}
           </div>
           <div role="columnheader" className="rounded-t-card bg-ink px-6 pb-5 pt-8 text-paper">
@@ -43,7 +43,7 @@ export default function Comparison({ rows, selfLabel, usAccent, usLabel, carouse
             </div>
             <div
               role="cell"
-              className={`flex items-center border-t border-ink/10 px-6 py-6 text-ink/55 ${i === last ? "border-b" : ""}`}
+              className={`flex items-center border-t border-ink/10 px-6 py-6 text-ink/60 ${i === last ? "border-b" : ""}`}
             >
               {row.self}
             </div>
@@ -64,7 +64,7 @@ export default function Comparison({ rows, selfLabel, usAccent, usLabel, carouse
         {rows.map((row, i) => (
           <li key={i} className={`rounded-inner bg-white p-5 ring-1 ring-ink/10 ${carousel ? "flex flex-col" : ""}`}>
             <p className="font-semibold text-ink">{row.label}</p>
-            <p className={`mt-3 text-sm text-ink/50 ${carousel ? "flex-1" : ""}`}>
+            <p className={`mt-3 text-sm text-ink/60 ${carousel ? "flex-1" : ""}`}>
               <span className="font-medium text-ink/70">{selfLabel}:</span> {row.self}
             </p>
             <p className="mt-3 flex items-start gap-2.5 rounded-control bg-ink p-3 text-sm text-paper">

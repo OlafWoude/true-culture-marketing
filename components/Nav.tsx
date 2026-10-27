@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 
 export type NavLink = { label: string; href: string; external: boolean; children: { label: string; href: string; external: boolean }[] };
 
@@ -30,24 +30,104 @@ function SmartLink({ href, external, className, children, onClick, current }: { 
   );
 }
 
+// Close to the top of the page the menu always shows; further down it follows the scroll direction.
+const ALWAYS_SHOWN_UNTIL = 80;
+// How far (px) someone scrolls in one direction before the menu reacts, so a resting thumb changes nothing.
+const HIDE_AFTER = 12;
+const SHOW_AFTER = 8;
+
+/**
+ * Hides the menu while the visitor scrolls down and brings it back as soon as they scroll up, so on a
+ * phone it never covers what they are reading. Only the classes for small screens use the result.
+ */
+function useHideOnScroll(nav: RefObject<HTMLElement | null>) {
+  const [hidden, setHidden] = useState(false);
+
+  useEffect(() => {
+    let lastY = window.scrollY;
+    let travel = 0;
+    let frame = 0;
+    let settleUntil = 0;
+    const update = () => {
+      frame = 0;
+      const y = window.scrollY;
+      const focused = document.activeElement;
+      // Someone moving through the menu with a keyboard must always see where they are.
+      const keyboardInMenu = focused instanceof HTMLElement && nav.current?.contains(focused) && focused.matches(":focus-visible");
+      if (y < ALWAYS_SHOWN_UNTIL || keyboardInMenu || performance.now() < settleUntil) {
+        setHidden(false);
+        lastY = y;
+        travel = 0;
+        return;
+      }
+      // iOS bounces past the end of the page; that is not the visitor scrolling back up.
+      if (y > document.documentElement.scrollHeight - window.innerHeight) return;
+      const step = y - lastY;
+      lastY = y;
+      if (step === 0) return;
+      travel = Math.sign(step) === Math.sign(travel) ? travel + step : step;
+      if (travel > HIDE_AFTER) setHidden(true);
+      else if (travel < -SHOW_AFTER) setHidden(false);
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    // Back and forward restore the old scroll position: show the menu rather than reading that jump as scrolling.
+    const onHistory = () => {
+      settleUntil = performance.now() + 500;
+      setHidden(false);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("popstate", onHistory);
+    window.addEventListener("pageshow", onHistory);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("popstate", onHistory);
+      window.removeEventListener("pageshow", onHistory);
+      cancelAnimationFrame(frame);
+    };
+  }, [nav]);
+
+  return [hidden, setHidden] as const;
+}
+
 export default function Nav({ logo, items, cta, variant, homeHref = "/", offsetTop = false }: NavProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const navRef = useRef<HTMLElement>(null);
+  const [hidden, setHidden] = useHideOnScroll(navRef);
   const close = () => setOpen(false);
   const floating = variant === "floating";
+  // An open menu stays put, also after closing it, until the visitor scrolls down again.
+  const concealed = hidden && !open;
+  const toggle = () => {
+    setOpen((v) => !v);
+    setHidden(false);
+  };
+  // Slides out quickly and comes back with a soft deceleration; with reduced motion it only fades in.
+  const motion = concealed
+    ? `${offsetTop ? "max-md:-translate-y-[calc(100%+5rem)]" : "max-md:-translate-y-[calc(100%+2rem)]"} max-md:opacity-0 duration-200 ease-in`
+    : "duration-[400ms] ease-[cubic-bezier(0.22,1,0.36,1)]";
 
   return (
-    <div className={`fixed inset-x-0 z-50 ${floating ? "px-4" : ""} ${offsetTop ? (floating ? "top-14" : "top-10") : floating ? "top-4" : "top-0"}`}>
+    <div
+      className={`pointer-events-none fixed inset-x-0 z-50 ${floating ? "px-4" : ""} ${offsetTop ? (floating ? "top-14" : "top-10") : floating ? "top-4" : "top-0"}`}
+    >
       <nav
+        ref={navRef}
         aria-label="Hoofdmenu"
-        className={
+        data-concealed={concealed || undefined}
+        onFocus={(e) => {
+          if (e.target.matches(":focus-visible")) setHidden(false);
+        }}
+        className={`pointer-events-auto transition-[translate,opacity] motion-reduce:transition-opacity ${motion} ${
           floating
             ? "mx-auto max-w-site rounded-inner border border-white/[0.06] bg-ink-2/90 shadow-nav backdrop-blur-md"
             : "border-b border-white/[0.06] bg-ink-2/95 shadow-nav backdrop-blur-md"
-        }
+        }`}
       >
         <div className={`flex items-center justify-between py-3 ${floating ? "px-4 sm:px-6" : "mx-auto max-w-site px-6"}`}>
-          <Link href={homeHref} className="shrink-0" aria-label="Naar de homepage">
+          <Link href={homeHref} className="-my-1 shrink-0 py-1" aria-label="Naar de homepage">
             {logo}
           </Link>
 
@@ -93,11 +173,11 @@ export default function Nav({ logo, items, cta, variant, homeHref = "/", offsetT
             )}
             <button
               type="button"
-              onClick={() => setOpen((v) => !v)}
+              onClick={toggle}
               aria-expanded={open}
               aria-controls="mobiel-menu"
               aria-label={open ? "Menu sluiten" : "Menu openen"}
-              className="flex h-10 w-10 items-center justify-center rounded-control bg-white/[0.06] md:hidden"
+              className="relative flex h-10 w-10 items-center justify-center rounded-control bg-white/[0.06] after:absolute after:-inset-1 md:hidden"
             >
               <span className="relative block h-3 w-5">
                 <span className={`absolute left-0 top-0 h-0.5 w-5 rounded bg-paper transition-transform duration-200 ${open ? "translate-y-[5px] rotate-45" : ""}`} />
@@ -108,11 +188,11 @@ export default function Nav({ logo, items, cta, variant, homeHref = "/", offsetT
         </div>
 
         {open && (
-          <div id="mobiel-menu" className="border-t border-white/[0.06] px-4 pb-5 pt-2 md:hidden">
+          <div id="mobiel-menu" className="max-h-[calc(100svh-7rem)] overflow-y-auto overscroll-contain border-t border-white/[0.06] px-4 pb-5 pt-2 md:hidden">
             <ul className="flex flex-col">
               {items.map((item) => (
                 <li key={item.label + item.href}>
-                  <SmartLink href={item.href} external={item.external} onClick={close} className="block border-b border-white/[0.06] py-4 text-lg text-paper/85">
+                  <SmartLink href={item.href} external={item.external} onClick={close} className="block border-b border-white/[0.06] py-4 text-lg text-paper/85 active:text-paper">
                     {item.label}
                   </SmartLink>
                   {item.children.length > 0 && (
@@ -134,7 +214,7 @@ export default function Nav({ logo, items, cta, variant, homeHref = "/", offsetT
                 href={cta.href}
                 external={cta.external}
                 onClick={close}
-                className="btn-text mt-5 flex justify-center rounded-control bg-accent px-5 py-3.5 font-semibold text-on-accent"
+                className="btn-text mt-5 flex justify-center rounded-control bg-accent px-5 py-3.5 font-semibold text-on-accent active:bg-accent-hover"
               >
                 {cta.mobileLabel || cta.label}
               </SmartLink>

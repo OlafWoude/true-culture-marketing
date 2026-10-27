@@ -1,48 +1,22 @@
-"use client";
-
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 type FadeInProps = {
   children: ReactNode;
+  /** Only for `immediate`: wait this long (ms) before animating, to stagger a group. */
   delay?: number;
   className?: string;
+  /** Animate on page load instead of on scroll. Use for content that is visible without scrolling. */
+  immediate?: boolean;
+  as?: "div" | "li";
 };
 
-export default function FadeIn({ children, delay = 0, className = "" }: FadeInProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 },
-    );
-    observer.observe(node);
-
-    // Some browsers report already-visible elements late; never leave content hidden.
-    const fallback = window.setTimeout(() => setVisible(true), 1500);
-
-    return () => {
-      observer.disconnect();
-      window.clearTimeout(fallback);
-    };
-  }, []);
-
+// Entrance animations are pure CSS (see `.rise` and `.fade-in` in globals.css): nothing waits for
+// JavaScript, so content paints as soon as the HTML arrives. Without browser support or with
+// reduced motion, the content is simply shown.
+export default function FadeIn({ children, delay = 0, className = "", immediate = false, as: Tag = "div" }: FadeInProps) {
   return (
-    <div
-      ref={ref}
-      className={`fade-in ${visible ? "is-visible" : ""} ${className}`}
-      style={{ transitionDelay: visible ? `${delay}ms` : "0ms" }}
-    >
+    <Tag className={`${immediate ? "rise" : "fade-in"} ${className}`} style={immediate && delay ? { animationDelay: `${delay}ms` } : undefined}>
       {children}
-    </div>
+    </Tag>
   );
 }

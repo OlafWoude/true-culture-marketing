@@ -29,8 +29,11 @@ export function ServicesOverviewBlock({ data, ctx, layout }: BlockProps) {
 
       {services.length > 0 && (
         <div className="mx-auto mt-16 max-w-site-wide px-3 sm:px-6">
-          <div className="grain overflow-hidden rounded-panel bg-ink p-4 sm:p-6 md:p-8">
-            <GorillaMark watermark className="absolute -right-40 top-1/2 w-[900px] max-w-none -translate-y-1/2 text-white/[0.03]" />
+          <div className="grain clip rounded-panel bg-ink p-4 sm:p-6 md:p-8">
+            <GorillaMark
+              watermark
+              className="absolute -right-[10%] top-1/2 w-[110%] max-w-none -translate-y-1/2 text-white/[0.04] md:-right-40 md:w-[900px] md:text-white/[0.03]"
+            />
             <MobileCarousel
               enabled={carousel}
               tone="dark"
@@ -45,7 +48,7 @@ export function ServicesOverviewBlock({ data, ctx, layout }: BlockProps) {
                     <article className={`flex h-full flex-col rounded-card border border-white/[0.07] bg-ink-2 p-8 md:p-10 ${carousel ? "max-md:p-6" : ""}`}>
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">{s.tag}</span>
-                        <span className="display text-2xl text-paper/20">{nn(i)}</span>
+                        <span className="display text-2xl text-paper/40">{nn(i)}</span>
                       </div>
                       <h3 className={`display mt-6 text-5xl text-paper ${carousel ? "max-md:mt-5 max-md:text-[calc(2rem*var(--tc-heading-scale))]" : ""}`}>{s.title}</h3>
                       <p className={`mt-4 leading-relaxed text-paper/60 ${carousel ? "max-md:text-[15px]" : ""}`}>{s.description}</p>
@@ -91,21 +94,29 @@ export function ServicesDetailedBlock({ data, ctx }: BlockProps) {
           <section
             key={s.id}
             id={s.anchor || undefined}
-            className={`mx-auto max-w-site-wide scroll-mt-28 px-3 py-3 sm:px-6 ${carousel ? "max-md:p-0" : ""}`}
+            className={`mx-auto max-w-site-wide px-3 py-3 sm:px-6 ${carousel ? "max-md:p-0" : ""}`}
           >
             <FadeIn className={carousel ? "max-md:h-full" : ""}>
               <div
                 className={`grid gap-10 rounded-panel p-8 sm:p-12 md:p-16 lg:grid-cols-[1.15fr_1fr] lg:gap-16 ${
-                  even ? "bg-white" : "grain overflow-hidden bg-ink"
+                  even ? "bg-white" : "grain clip bg-ink"
                 } ${carousel ? "max-md:h-full max-md:content-start max-md:gap-8 max-md:p-6" : ""}`}
               >
                 {!even && (
-                  <GorillaMark watermark className="absolute -bottom-16 -left-16 w-[520px] text-white/[0.035]" />
+                  <GorillaMark
+                    watermark
+                    className="absolute -bottom-8 -left-10 w-[300px] text-white/[0.045] sm:-bottom-16 sm:-left-16 sm:w-[520px] sm:text-white/[0.035]"
+                  />
                 )}
                 <div className="relative">
                   <div className="flex items-center gap-4">
-                    <span className={`display text-2xl ${even ? "text-ink/25" : "text-paper/25"}`}>{nn(i)}</span>
-                    <span className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">{s.tag}</span>
+                    <span className={`display text-2xl ${even ? "text-ink/45" : "text-paper/40"}`}>{nn(i)}</span>
+                    {/* Yellow text is unreadable on white, so light cards use a darker shade of the accent colour. */}
+                    <span
+                      className={`text-xs font-semibold uppercase tracking-[0.18em] ${even ? "text-[color-mix(in_srgb,var(--tc-accent)_45%,black)]" : "text-accent"}`}
+                    >
+                      {s.tag}
+                    </span>
                   </div>
                   <h2
                     className={`display mt-6 text-fluid-6xl md:text-7xl ${even ? "text-ink" : "text-paper"} ${
@@ -135,7 +146,7 @@ export function ServicesDetailedBlock({ data, ctx }: BlockProps) {
                   {s.points.length > 0 && (
                     <div className={`rounded-card p-8 ${even ? "bg-mist" : "border border-white/[0.07] bg-ink-2"} ${carousel ? "max-md:p-5" : ""}`}>
                       {str(data.pointsTitle) && (
-                        <p className={`text-sm font-semibold ${even ? "text-ink/50" : "text-paper/50"}`}>{str(data.pointsTitle)}</p>
+                        <p className={`text-sm font-semibold ${even ? "text-ink/60" : "text-paper/55"}`}>{str(data.pointsTitle)}</p>
                       )}
                       <ul className={`mt-6 space-y-5 ${carousel ? "max-md:mt-4 max-md:space-y-3" : ""}`}>
                         {s.points.map((p, j) => (
@@ -198,8 +209,8 @@ export function CasesBlock({ data, ctx, layout }: BlockProps) {
     <section className={`bg-paper ${pad(layout.spaceTop)}`}>
       <div className="mx-auto max-w-site-wide px-3 sm:px-6">
         <FadeIn>
-          <div className="grain overflow-hidden rounded-panel bg-ink px-8 py-14 sm:px-12 md:px-16 md:py-20">
-            <GorillaMark watermark className="absolute -bottom-24 -right-20 w-[620px] text-white/[0.04]" />
+          <div className="grain clip rounded-panel bg-ink px-8 py-14 sm:px-12 md:px-16 md:py-20">
+            <GorillaMark watermark className="absolute -bottom-10 -right-8 w-[340px] text-white/[0.05] sm:-bottom-24 sm:-right-20 sm:w-[620px] sm:text-white/[0.04]" />
             <div className="relative grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:items-center">
               <div>
                 {str(data.eyebrow) && <Eyebrow>{str(data.eyebrow)}</Eyebrow>}
@@ -224,11 +235,11 @@ export function CasesBlock({ data, ctx, layout }: BlockProps) {
                         key={i}
                         className={`flex aspect-[4/5] flex-col justify-between rounded-tile border border-white/[0.08] bg-ink-2 p-6 ${i === 1 ? "md:mt-12" : ""}`}
                       >
-                        <span className="text-xs font-semibold uppercase tracking-[0.18em] text-paper/40">Case {nn(i)}</span>
+                        <span className="text-xs font-semibold uppercase tracking-[0.18em] text-paper/55">Case {nn(i)}</span>
                         <div>
                           <GorillaMark className="w-16 text-white/10" />
                           <p className="display mt-5 text-3xl text-paper/80">{str(data.placeholderTitle)}</p>
-                          <p className="mt-1 text-sm text-paper/40">{str(data.placeholderText)}</p>
+                          <p className="mt-1 text-sm text-paper/55">{str(data.placeholderText)}</p>
                         </div>
                       </div>
                     ))}
@@ -258,7 +269,7 @@ export function TestimonialsBlock({ data, ctx, layout }: BlockProps) {
   const dark = bg === "dark";
   const carousel = data.mobileCarousel !== false;
   return (
-    <section className={`${bgClass[bg]} ${dark ? "grain overflow-hidden" : ""} ${pad(layout.spaceTop)}`}>
+    <section className={`${bgClass[bg]} ${dark ? "grain clip" : ""} ${pad(layout.spaceTop)}`}>
       <div className="mx-auto max-w-site px-6">
         <FadeIn>
           <div className="mx-auto max-w-3xl text-center">
@@ -290,7 +301,7 @@ export function TestimonialsBlock({ data, ctx, layout }: BlockProps) {
                     )}
                     <span className="min-w-0 flex-1">
                       <span className={`block font-semibold ${dark ? "text-paper" : "text-ink"}`}>{t.name}</span>
-                      <span className={`block text-sm ${dark ? "text-paper/55" : "text-ink/55"}`}>
+                      <span className={`block text-sm ${dark ? "text-paper/55" : "text-ink/60"}`}>
                         {[t.role, t.company].filter(Boolean).join(", ")}
                       </span>
                     </span>

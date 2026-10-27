@@ -57,13 +57,13 @@ export function MediaImage({
   media,
   className = "",
   sizes = "(min-width: 1024px) 50vw, 100vw",
-  priority = false,
+  preload = false,
   fill = true,
 }: {
   media: MediaInfo;
   className?: string;
   sizes?: string;
-  priority?: boolean;
+  preload?: boolean;
   fill?: boolean;
 }) {
   const position = `${media.focalX}% ${media.focalY}%`;
@@ -75,7 +75,7 @@ export function MediaImage({
         width={media.width}
         height={media.height}
         sizes={sizes}
-        priority={priority}
+        preload={preload}
         className={className}
         style={{ objectPosition: position }}
       />
@@ -87,7 +87,7 @@ export function MediaImage({
       alt={media.alt}
       fill
       sizes={sizes}
-      priority={priority}
+      preload={preload}
       className={`object-cover ${className}`}
       style={{ objectPosition: position }}
     />

@@ -36,6 +36,16 @@ export default function MobileCarousel({
   const count = Children.count(children);
   const on = enabled && count > 1;
   const [active, setActive] = useState(0);
+  const [scrollable, setScrollable] = useState(false);
+
+  // Only while the row actually scrolls sideways (phones) can keyboard users focus it and use the arrow keys.
+  useEffect(() => {
+    const el = ref.current;
+    if (!on || !el) return;
+    const observer = new ResizeObserver(() => setScrollable(el.scrollWidth > el.clientWidth + 1));
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [on]);
 
   useEffect(() => {
     const el = ref.current;
@@ -78,11 +88,17 @@ export default function MobileCarousel({
 
   return (
     <>
-      <Tag ref={ref} className={on ? `${className} ${SCROLLER} ${bleed}` : className}>
+      <Tag
+        ref={ref}
+        className={on ? `${className} ${SCROLLER} ${bleed} focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent` : className}
+        tabIndex={scrollable ? 0 : undefined}
+        role={scrollable && as === "div" ? "region" : undefined}
+        aria-label={scrollable ? label : undefined}
+      >
         {children}
       </Tag>
       {on && (
-        <div className="mt-4 flex justify-center md:hidden" role="group" aria-label={`${label}: kies een kaart`}>
+        <div className="mt-2.5 flex justify-center md:hidden" role="group" aria-label={`${label}: kies een kaart`}>
           {Array.from({ length: count }, (_, i) => (
             <button
               key={i}
@@ -90,7 +106,8 @@ export default function MobileCarousel({
               onClick={() => goTo(i)}
               aria-label={`Kaart ${i + 1} van ${count}`}
               aria-current={i === active ? "true" : undefined}
-              className="flex h-8 items-center px-1"
+              // At least 24 by 44 pixels to tap, while the dots themselves stay small.
+              className="flex h-11 items-center px-[9px]"
             >
               <span
                 className={`block h-1.5 rounded-full transition-all duration-300 ${i === active ? `w-6 ${colors.active}` : `w-1.5 ${colors.idle}`}`}

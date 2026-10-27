@@ -21,22 +21,22 @@ export default function CaseView({ bundle, slug }: { bundle: Bundle; slug: strin
 
   return (
     <>
-      <section className="grain overflow-hidden bg-ink">
-        <GorillaMark watermark className="absolute -right-24 bottom-0 hidden w-[680px] text-white/[0.045] md:block" />
+      <section className="grain clip bg-ink">
+        <GorillaMark watermark className="absolute -right-[8%] bottom-0 w-[80%] text-white/[0.055] md:-right-24 md:w-[680px] md:text-white/[0.045]" />
         <div className="relative mx-auto max-w-site px-6 pb-16 pt-40 md:pb-20 md:pt-48">
-          <FadeIn>
+          <FadeIn immediate>
             <Eyebrow>{item.client || "Case"}</Eyebrow>
           </FadeIn>
-          <FadeIn delay={80}>
+          <FadeIn immediate delay={80}>
             <h1 className="display mt-7 max-w-5xl text-fluid-6xl text-paper sm:text-7xl md:text-8xl">{item.title}</h1>
           </FadeIn>
           {item.summary && (
-            <FadeIn delay={160}>
+            <FadeIn immediate delay={160}>
               <p className="mt-8 max-w-2xl text-lg leading-relaxed text-paper/65">{item.summary}</p>
             </FadeIn>
           )}
           {item.results.length > 0 && (
-            <FadeIn delay={220}>
+            <FadeIn immediate delay={220}>
               <dl className="mt-12 grid gap-4 sm:grid-cols-3">
                 {item.results.map((r, i) => (
                   <div key={i} className="rounded-tile border border-white/[0.08] bg-ink-2 p-6">
@@ -55,7 +55,7 @@ export default function CaseView({ bundle, slug }: { bundle: Bundle; slug: strin
           {cover && (
             <FadeIn>
               <div className="relative aspect-[16/9] overflow-hidden rounded-panel bg-ink">
-                <MediaImage media={cover} priority sizes="(min-width: 1280px) 1152px, 100vw" />
+                <MediaImage media={cover} preload sizes="(min-width: 1280px) 1152px, 100vw" />
               </div>
             </FadeIn>
           )}

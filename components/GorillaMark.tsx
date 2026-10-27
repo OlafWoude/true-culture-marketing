@@ -11,8 +11,8 @@ export default function GorillaMark({ className = "", watermark = false }: Goril
       aria-hidden="true"
       className={`pointer-events-none aspect-[1228/940] bg-current ${watermark ? "tc-watermark" : ""} ${className}`}
       style={{
-        maskImage: "url(/brand/gorilla-mark.png)",
-        WebkitMaskImage: "url(/brand/gorilla-mark.png)",
+        maskImage: "url(/brand/gorilla-mark.webp)",
+        WebkitMaskImage: "url(/brand/gorilla-mark.webp)",
         maskSize: "contain",
         WebkitMaskSize: "contain",
         maskRepeat: "no-repeat",

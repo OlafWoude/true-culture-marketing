@@ -14,10 +14,10 @@ type ButtonProps = {
 };
 
 const variants: Record<Variant, string> = {
-  primary: "bg-accent text-on-accent hover:bg-accent-hover",
-  dark: "bg-ink text-paper hover:bg-ink-3",
-  "outline-light": "border border-white/20 text-paper hover:border-white/60",
-  "outline-dark": "border border-ink/20 text-ink hover:border-ink/60",
+  primary: "bg-accent text-on-accent hover:bg-accent-hover active:bg-accent-hover",
+  dark: "bg-ink text-paper hover:bg-ink-3 active:bg-ink-3",
+  "outline-light": "border border-white/20 text-paper hover:border-white/60 active:border-white/60",
+  "outline-dark": "border border-ink/20 text-ink hover:border-ink/60 active:border-ink/60",
 };
 
 const sizes = {
@@ -35,7 +35,7 @@ export default function Button({
   className = "",
 }: ButtonProps) {
   if (!href || !children) return null;
-  const classes = `group btn-text inline-flex items-center justify-center gap-2 rounded-btn font-semibold transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent ${variants[variant]} ${sizes[size]} ${className}`;
+  const classes = `group btn-text inline-flex items-center justify-center gap-2 rounded-btn font-semibold transition-[color,background-color,border-color,scale] duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent motion-safe:active:scale-[0.97] ${variants[variant]} ${sizes[size]} ${className}`;
   const content = (
     <>
       {children}

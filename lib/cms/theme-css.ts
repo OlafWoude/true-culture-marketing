@@ -22,13 +22,22 @@ function clamp(value: unknown, min: number, max: number, fallback: number) {
   return Math.min(max, Math.max(min, n));
 }
 
+function themeColor(theme: Theme, key: keyof Theme["colors"]): string {
+  return HEX.test(theme.colors?.[key] ?? "") ? theme.colors[key] : seedTheme().colors[key];
+}
+
+/** The page background, which phone browsers use to colour their address bar. */
+export function browserBarColor(theme: Theme): string {
+  return themeColor(theme, "ink");
+}
+
 /**
  * Turns the (already validated) theme into CSS custom properties. Every value is
  * re-checked here so no stored value can ever inject arbitrary CSS.
  */
 export function themeToCss(theme: Theme): string {
   const d = seedTheme();
-  const color = (key: keyof Theme["colors"]) => (HEX.test(theme.colors?.[key] ?? "") ? theme.colors[key] : d.colors[key]);
+  const color = (key: keyof Theme["colors"]) => themeColor(theme, key);
   const t = theme.typography ?? d.typography;
   const s = theme.shape ?? d.shape;
   const l = theme.layout ?? d.layout;

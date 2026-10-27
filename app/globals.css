@@ -153,7 +153,20 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Keeps anchors and focused fields clear of the fixed menu (and of the apply bar on phones). */
+  scroll-padding-top: 6rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (width < 48rem) {
+  html {
+    scroll-padding-bottom: 6.5rem;
+  }
 }
 
 body {
@@ -174,6 +187,18 @@ body {
 .grain {
   position: relative;
   isolation: isolate;
+}
+
+/* Clips decorations like `overflow: hidden`, but without making the element a scroll container,
+   so scroll-driven animations inside still follow the page scroll. */
+.clip {
+  overflow: hidden;
+}
+
+@supports (overflow: clip) {
+  .clip {
+    overflow: clip;
+  }
 }
 
 .grain::after {
@@ -250,27 +275,45 @@ body {
   animation: marquee 40s linear infinite;
 }
 
-.fade-in {
-  opacity: 0;
-  transform: translateY(16px);
-  transition:
-    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+/* Entrance animations without JavaScript: `.rise` plays on page load (content visible without
+   scrolling), `.fade-in` follows the scroll position where scroll-driven animations are supported.
+   Elsewhere, and with reduced motion, content is simply visible. */
+@keyframes tc-rise {
+  from {
+    /* Barely visible rather than invisible: browsers skip fully transparent text when they time how
+       fast the main content appears (LCP), which would then be measured on something else. */
+    opacity: 0.02;
+    transform: translateY(16px);
+  }
 }
 
-.fade-in.is-visible {
-  opacity: 1;
-  transform: none;
+@keyframes tc-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rise {
+    animation: tc-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @supports (animation-timeline: view()) {
+    .fade-in {
+      animation: tc-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 240px;
+    }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .marquee-track {
     animation: none;
-  }
-
-  .fade-in {
-    opacity: 1;
-    transform: none;
-    transition: none;
   }
 }
