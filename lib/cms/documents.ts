@@ -138,7 +138,7 @@ export const singletonDefs = {
     description: "Bedrijfsgegevens, contactgegevens en standaard SEO-instellingen.",
     fields: [
       { key: "siteName", label: "Naam van de website", type: "text", max: 80 },
-      { key: "siteUrl", label: "Hoofddomein", type: "text", max: 120, help: "Bijv. https://trueculture.nl. Gebruikt voor de sitemap en canonieke links." },
+      { key: "siteUrl", label: "Hoofddomein", type: "text", max: 120, help: "Vul pas in als je eigen domein aan de website is gekoppeld, bijv. https://www.jouwdomein.nl. Leeg = het adres waarop de site nu draait. Gebruikt voor de sitemap en canonieke links." },
       { key: "titleSuffix", label: "Achtervoegsel paginatitels", type: "text", max: 60, help: "Komt achter elke SEO-titel, bijv. ‘| True Culture Marketing’." },
       { key: "defaultDescription", label: "Standaard meta description", type: "textarea", max: 200, rows: 3, help: "Ideaal 120–160 tekens; Google kort langere teksten af." },
       { key: "ogImage", label: "Standaard afbeelding bij delen", type: "image", help: "Leeg = de huidige True Culture-banner." },

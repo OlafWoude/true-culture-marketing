@@ -1,0 +1,13 @@
+{
+  "backupNote": "Automatische back-up van vóór het leegmaken van het hoofddomein",
+  "singletons": {
+    "settings": {
+      "onlyIf": {
+        "siteUrl": "https://trueculture.nl"
+      },
+      "set": {
+        "siteUrl": ""
+      }
+    }
+  }
+}

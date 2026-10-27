@@ -34,9 +34,12 @@ try {
 }
 
 async function applyContentMigrations(sql) {
-  const files = (await readdir(CONTENT_DIR).catch(() => [])).filter((f) => f.endsWith(".json")).sort();
-  for (const file of files) {
-    const id = file.replace(/\.json$/, "");
+  const ids = (await readdir(CONTENT_DIR).catch(() => []))
+    .filter((f) => f.endsWith(".json"))
+    .map((f) => f.replace(/\.json$/, ""))
+    .sort();
+  for (const id of ids) {
+    const file = `${id}.json`;
     const [done] = await sql`select 1 from content_migrations where id = ${id}`;
     if (done) continue;
     const migration = JSON.parse(await readFile(path.join(CONTENT_DIR, file), "utf8"));
@@ -61,10 +64,10 @@ async function applyContentMigrations(sql) {
 async function applyContentMigration(tx, migration) {
   const now = new Date();
   const note = migration.backupNote;
-  for (const [i, page] of migration.pages.entries()) {
+  for (const [i, page] of (migration.pages ?? []).entries()) {
     await replaceDocument(tx, { ...page, type: "page", sortOrder: i }, note, now);
   }
-  for (const [i, service] of migration.services.entries()) {
+  for (const [i, service] of (migration.services ?? []).entries()) {
     await replaceDocument(tx, { ...service, type: "service", systemKey: null, sortOrder: i }, note, now);
   }
   for (const [key, change] of Object.entries(migration.singletons ?? {})) {
@@ -125,8 +128,12 @@ async function patchSingleton(tx, key, change, note, now) {
   const [row] = await tx`select * from documents where system_key = ${key} and type = ${key}`;
   // Without a stored row the site already uses the current built-in defaults.
   if (!row) return;
+  const current = row.published ?? row.draft;
+  // `onlyIf` limits a change to values the editor never touched (still the old built-in default).
+  const untouched = Object.entries(change.onlyIf ?? {}).every(([k, v]) => JSON.stringify(current[k]) === JSON.stringify(v));
+  if (!untouched) return;
   await backup(tx, row, note);
-  const next = change.replace ?? { ...(row.published ?? row.draft), ...change.set };
+  const next = change.replace ?? { ...current, ...change.set };
   await tx`
     update documents set
       draft = ${tx.json(next)}, published = ${tx.json(next)}, status = 'published',

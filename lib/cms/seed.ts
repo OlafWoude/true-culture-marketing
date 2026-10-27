@@ -489,7 +489,7 @@ export function seedTestimonials(): { id: string; doc: TestimonialDoc }[] {
 export function seedSettings(): Settings {
   return {
     siteName: "True Culture Marketing",
-    siteUrl: "https://trueculture.nl",
+    siteUrl: "",
     titleSuffix: "| True Culture Marketing",
     defaultDescription:
       "Verdien €300+ per dag als field marketeer in Groningen, Friesland of Drenthe. Geen ervaring of cv nodig: solliciteer in 2 minuten en we bellen je binnen 24 uur.",
