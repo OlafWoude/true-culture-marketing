@@ -49,7 +49,7 @@ test.afterAll(async () => {
 test("public site works before the CMS is set up (built-in content)", async () => {
   const { visitor, response, close } = await publicPage(page, "/");
   expect(response?.status()).toBe(200);
-  await expect(visitor.locator("h1")).toContainText("Meer afspraken");
+  await expect(visitor.locator("h1")).toContainText("Verdien €300+");
   await close();
 });
 
@@ -109,13 +109,13 @@ test("logout, failed logins with rate limiting, and login", async () => {
 test("text edits are saved as a draft, previewable, and only live after publishing", async () => {
   await page.goto(`/admin/paginas/${HOME_ID}`);
   await page.getByRole("button", { name: /Grote openingskop/ }).click();
-  await page.getByLabel("Kop", { exact: true }).fill("Meer afspraken e2e");
+  await page.getByLabel("Kop", { exact: true }).fill("Verdien e2e");
   await page.getByRole("button", { name: "Wijzigingen opslaan" }).click();
   await expectToast(page, "Concept opgeslagen.");
 
   await page.reload();
   await page.getByRole("button", { name: /Grote openingskop/ }).click();
-  await expect(page.getByLabel("Kop", { exact: true })).toHaveValue("Meer afspraken e2e");
+  await expect(page.getByLabel("Kop", { exact: true })).toHaveValue("Verdien e2e");
 
   const before = await publicPage(page, "/");
   await expect(before.visitor.locator("h1")).not.toContainText("e2e");
@@ -123,14 +123,14 @@ test("text edits are saved as a draft, previewable, and only live after publishi
 
   const preview = await context.newPage();
   await preview.goto(`/preview/${HOME_ID}`);
-  await expect(preview.locator("h1")).toContainText("Meer afspraken e2e");
+  await expect(preview.locator("h1")).toContainText("Verdien e2e");
   await expect(preview.getByText("Voorbeeldweergave")).toBeVisible();
   await preview.close();
 
   await page.getByRole("button", { name: "Publiceren", exact: true }).click();
   await expectToast(page, /Gepubliceerd/);
   const after = await publicPage(page, "/");
-  await expect(after.visitor.locator("h1")).toContainText("Meer afspraken e2e");
+  await expect(after.visitor.locator("h1")).toContainText("Verdien e2e");
   await after.close();
 });
 
@@ -222,7 +222,7 @@ test("theme colours apply site-wide after publishing and can be reset to the ori
   await page.getByRole("button", { name: "Publiceren", exact: true }).click();
   await expectToast(page, /Gepubliceerd/);
   let pub = await publicPage(page, "/");
-  const cta = () => pub.visitor.locator("main").getByRole("link", { name: /Plan een kennismakingsgesprek/ }).first();
+  const cta = () => pub.visitor.locator("main").getByRole("link", { name: /Solliciteer in 2 minuten/ }).first();
   await expect(cta()).toHaveCSS("background-color", "rgb(255, 85, 0)");
   await pub.close();
 
@@ -235,60 +235,68 @@ test("theme colours apply site-wide after publishing and can be reset to the ori
   await pub.close();
 });
 
-test("navigation items and services are editable", async () => {
+test("navigation items and vacancies are editable", async () => {
   await page.goto("/admin/navigatie");
-  await page.locator("main").getByRole("button", { name: /Werkwijze/ }).click();
+  await page.locator("main").getByRole("button", { name: /Zo werkt het/ }).click();
   await page.getByLabel("Tekst", { exact: true }).first().fill("Onze aanpak");
   await page.getByRole("button", { name: "Publiceren", exact: true }).click();
   await expectToast(page, /Gepubliceerd/);
 
-  await page.goto("/admin/diensten");
-  await page.getByRole("link", { name: /B2B leadgeneratie/ }).click();
-  await page.getByLabel("Naam van de dienst").fill("B2B leadgeneratie plus");
+  await page.goto("/admin/vacatures");
+  await page.getByRole("link", { name: /Deur-aan-deur/ }).click();
+  await page.getByLabel("Functienaam").fill("Deur-aan-deur plus");
   await page.getByRole("button", { name: "Publiceren", exact: true }).click();
   await expectToast(page, /Gepubliceerd/);
 
   const pub = await publicPage(page, "/");
   await expect(pub.visitor.getByRole("navigation", { name: "Hoofdmenu" }).getByRole("link", { name: "Onze aanpak" })).toBeVisible();
-  await expect(pub.visitor.getByText("B2B leadgeneratie plus").first()).toBeVisible();
+  await expect(pub.visitor.getByText("Deur-aan-deur plus").first()).toBeVisible();
   await pub.close();
 });
 
-test("contact form validates input and stores submissions for the dashboard", async () => {
-  const { visitor, close } = await publicPage(page, "/contact");
-  await visitor.getByRole("button", { name: "Verstuur aanvraag" }).click();
-  await expect(visitor.getByText("Vul je volledige naam in.")).toBeVisible();
+test("the application form validates input and stores applications with their source for the dashboard", async () => {
+  // Arrive through a campaign link first, like a visitor from an ad, then go to the application page.
+  const { visitor, close } = await publicPage(page, "/?utm_source=instagram&utm_campaign=najaar");
+  await visitor.goto("/solliciteren");
+  await visitor.getByRole("button", { name: "Verstuur sollicitatie" }).click();
+  await expect(visitor.getByText("Vul je naam in.")).toBeVisible();
+  await expect(visitor.getByText("Vul een geldig telefoonnummer in, bijv. 06 12345678.")).toBeVisible();
   await visitor.getByLabel("Naam", { exact: true }).fill("Eva Tester");
-  await visitor.getByLabel("Bedrijfsnaam").fill("Testbedrijf BV");
-  await visitor.getByLabel("E-mailadres").fill("eva@testbedrijf.nl");
-  await visitor.getByLabel("Waar kunnen we je mee helpen?").fill("Wij willen graag meer afspraken met beslissers inplannen.");
-  await visitor.getByRole("button", { name: "Verstuur aanvraag" }).click();
-  await expect(visitor.getByText("Bedankt!")).toBeVisible();
+  await visitor.getByLabel("Telefoonnummer").fill("06 12345678");
+  await visitor.getByLabel("E-mailadres").fill("eva@example.nl");
+  await visitor.getByLabel("Woonplaats").fill("Groningen");
+  await visitor.getByLabel("Hoeveel dagen per week wil je werken?").selectOption("3 à 4 dagen per week");
+  await visitor.getByRole("button", { name: "Verstuur sollicitatie" }).click();
+  await expect(visitor.getByText("Gelukt!")).toBeVisible();
   await close();
 
-  await page.goto("/admin/aanvragen");
-  await expect(page.getByText("Eva Tester · Testbedrijf BV")).toBeVisible();
+  await page.goto("/admin/sollicitaties");
+  await page.getByRole("button", { name: /Eva Tester · Groningen/ }).click();
+  await expect(page.getByText("3 à 4 dagen per week").first()).toBeVisible();
+  await expect(page.getByText(/source=instagram; campaign=najaar/)).toBeVisible();
+  await expect(page.getByRole("link", { name: "Bellen" })).toHaveAttribute("href", "tel:0612345678");
+  await expect(page.getByRole("link", { name: "WhatsApp" })).toHaveAttribute("href", /^https:\/\/wa\.me\/31612345678/);
 });
 
 test("SEO metadata, sitemap and robots.txt come from the CMS", async ({ request }) => {
-  const dienstenId = "6a1b7c00-0000-4000-8000-000000000002";
-  await page.goto(`/admin/paginas/${dienstenId}`);
+  const vacaturesId = "6a1b7c00-0000-4000-8000-000000000002";
+  await page.goto(`/admin/paginas/${vacaturesId}`);
   await page.getByRole("tab", { name: "SEO en delen" }).click();
-  await page.getByLabel("SEO-titel").fill("Diensten e2e");
+  await page.getByLabel("SEO-titel").fill("Vacatures e2e");
   await page.getByLabel("Meta description").fill("Beschrijving uit de e2e-test.");
   await page.getByRole("button", { name: "Publiceren", exact: true }).click();
   await expectToast(page, /Gepubliceerd/);
 
-  const { visitor, close } = await publicPage(page, "/diensten");
-  await expect(visitor).toHaveTitle("Diensten e2e | True Culture Marketing");
+  const { visitor, close } = await publicPage(page, "/vacatures");
+  await expect(visitor).toHaveTitle("Vacatures e2e | True Culture Marketing");
   await expect(visitor.locator('meta[name="description"]')).toHaveAttribute("content", "Beschrijving uit de e2e-test.");
-  await expect(visitor.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/diensten$/);
+  await expect(visitor.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/vacatures$/);
   await close();
 
   const robots = await (await request.get("/robots.txt")).text();
   expect(robots).toContain("Disallow: /admin");
   const sitemap = await (await request.get("/sitemap.xml")).text();
-  expect(sitemap).toContain("/diensten");
+  expect(sitemap).toContain("/vacatures");
 });
 
 test("public pages have no broken images, broken links, console errors or horizontal overflow", async ({ request }) => {
@@ -299,7 +307,7 @@ test("public pages have no broken images, broken links, console errors or horizo
     const errors: string[] = [];
     visitor.on("pageerror", (e) => errors.push(e.message));
     visitor.on("console", (m) => m.type() === "error" && errors.push(m.text()));
-    for (const url of ["/", "/diensten", "/werkwijze", "/over-ons", "/contact", "/privacy", "/testpagina-nieuw"]) {
+    for (const url of ["/", "/vacatures", "/zo-werkt-het", "/over-ons", "/solliciteren", "/privacy", "/testpagina-nieuw"]) {
       await visitor.goto(url, { waitUntil: "networkidle" });
       await visitor.evaluate(async () => {
         for (let y = 0; y < document.body.scrollHeight; y += 600) {
@@ -355,9 +363,24 @@ test("card lists are swipeable carousels on phones, unchanged on desktop, and ca
   const phoneAfter = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const after = await phoneAfter.newPage();
   await after.goto("/");
-  await expect(after.getByRole("group", { name: "Diensten: kies een kaart" }).first()).toBeAttached();
+  await expect(after.getByRole("group", { name: "Vacatures: kies een kaart" }).first()).toBeAttached();
   await expect(after.getByRole("group", { name: "Stappen: kies een kaart" })).toHaveCount(0);
   await phoneAfter.close();
+});
+
+test("phones get a fixed apply button after scrolling, except on the application page", async ({ browser }) => {
+  const phone = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const visitor = await phone.newPage();
+  await visitor.goto("/");
+  const sticky = visitor.locator("div.fixed").getByRole("link", { name: "Solliciteer in 2 minuten" });
+  await expect(sticky).not.toBeInViewport();
+  await visitor.evaluate(() => window.scrollTo(0, 1600));
+  await expect(sticky).toBeInViewport();
+  await sticky.click();
+  await expect(visitor).toHaveURL(/\/solliciteren$/);
+  await visitor.evaluate(() => window.scrollTo(0, 1600));
+  await expect(visitor.locator("div.fixed").getByRole("link", { name: "Solliciteer in 2 minuten" })).toHaveCount(0);
+  await phone.close();
 });
 
 test("logging out everywhere ends other sessions", async ({ browser }) => {

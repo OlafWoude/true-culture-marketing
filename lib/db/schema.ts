@@ -132,6 +132,12 @@ export const submissions = pgTable("submissions", {
   emailed: boolean("emailed").notNull().default(false),
 });
 
+/** One row per content migration (drizzle/content/*.json) that has been applied to this database. */
+export const contentMigrations = pgTable("content_migrations", {
+  id: text("id").primaryKey(),
+  appliedAt: timestamp("applied_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export type UserRow = typeof users.$inferSelect;
 export type DocumentRow = typeof documents.$inferSelect;
 export type MediaRow = typeof media.$inferSelect;

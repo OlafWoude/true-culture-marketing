@@ -11,6 +11,14 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [{ protocol: "https", hostname: "*.public.blob.vercel-storage.com" }],
   },
+  async redirects() {
+    // The admin sections were renamed when the site became a recruitment funnel; keep old bookmarks working.
+    return [
+      { source: "/admin/diensten", destination: "/admin/vacatures", permanent: false },
+      { source: "/admin/diensten/:id", destination: "/admin/vacatures/:id", permanent: false },
+      { source: "/admin/aanvragen", destination: "/admin/sollicitaties", permanent: false },
+    ];
+  },
   async headers() {
     return [
       {

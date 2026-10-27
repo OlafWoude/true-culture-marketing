@@ -16,9 +16,9 @@ export default function Page() {
           {email ? (
             <p className="text-zinc-600">E-mail is ingesteld. Afzender: <span className="font-mono text-xs">{emailFrom()}</span></p>
           ) : (
-            <p className="text-amber-800">E-mail is nog niet ingesteld (RESEND_API_KEY). Aanvragen worden alleen in het dashboard bewaard.</p>
+            <p className="text-amber-800">E-mail is nog niet ingesteld (RESEND_API_KEY). Sollicitaties worden alleen in het dashboard bewaard.</p>
           )}
-          <p className="text-zinc-600">Spam wordt beperkt met een onzichtbaar controleveld en een limiet van 5 aanvragen per 10 minuten per bezoeker.</p>
+          <p className="text-zinc-600">Spam wordt beperkt met een onzichtbaar controleveld en een limiet van 5 inzendingen per 10 minuten per bezoeker.</p>
         </Card>
       }
     />

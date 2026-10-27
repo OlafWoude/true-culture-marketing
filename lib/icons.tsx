@@ -71,3 +71,12 @@ export function ArrowRightIcon({ className = "h-4 w-4" }: IconProps) {
     </svg>
   );
 }
+
+export function WhatsAppIcon({ className = "h-5 w-5" }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} {...common}>
+      <path d="M3.5 20.5l1.3-3.9A8.5 8.5 0 1 1 8 19.6z" />
+      <path d="M9 8.6c0 3.4 3 6.4 6.4 6.4l1-1.6-2.1-1.1-1 .9a6 6 0 0 1-2.6-2.6l.9-1L10.5 7.6z" />
+    </svg>
+  );
+}

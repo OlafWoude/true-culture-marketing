@@ -14,7 +14,7 @@ import { useMediaRegistry } from "./MediaRegistry";
 
 const editHref: Partial<Record<DocType, string>> = {
   page: "/admin/paginas/",
-  service: "/admin/diensten/",
+  service: "/admin/vacatures/",
   case: "/admin/cases/",
   testimonial: "/admin/testimonials/",
 };

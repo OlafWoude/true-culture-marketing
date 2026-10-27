@@ -100,7 +100,11 @@ async function loadLiveBundle(): Promise<Bundle> {
   }
 }
 
-const cachedLiveBundle = unstable_cache(loadLiveBundle, ["cms-live-bundle"], { tags: [CMS_TAG] });
+// Each deployment starts with a fresh entry: content migrations run during the build, and a cache that
+// outlives the deployment would otherwise keep serving the pre-migration content.
+const DEPLOYMENT_KEY = process.env.VERCEL_DEPLOYMENT_ID ?? process.env.VERCEL_GIT_COMMIT_SHA ?? "local";
+
+const cachedLiveBundle = unstable_cache(loadLiveBundle, ["cms-live-bundle", DEPLOYMENT_KEY], { tags: [CMS_TAG] });
 
 export async function getLiveBundle(): Promise<Bundle> {
   return cachedLiveBundle();
@@ -126,7 +130,7 @@ export const getRedirect = unstable_cache(
       return null;
     }
   },
-  ["cms-redirect"],
+  ["cms-redirect", DEPLOYMENT_KEY],
   { tags: [CMS_TAG] },
 );
 

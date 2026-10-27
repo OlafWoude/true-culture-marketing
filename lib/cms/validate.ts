@@ -138,6 +138,7 @@ export function singletonSchema(type: SingletonType) {
       contact: z.object({
         email: z.union([z.literal(""), z.string().trim().email("Ongeldig e-mailadres")]),
         phone: z.string().trim().max(30).regex(/^[0-9+()\s-]*$/, "Ongeldig telefoonnummer"),
+        whatsapp: z.string().trim().max(30).regex(/^[0-9+()\s-]*$/, "Ongeldig WhatsApp-nummer"),
       }),
       socials: z
         .array(z.object({ platform: z.string().max(30), url: z.string().trim().max(300).refine((u) => /^https:\/\//.test(u), "Gebruik een volledige https://-link"), _key: z.string().optional() }))

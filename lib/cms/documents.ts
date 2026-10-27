@@ -72,19 +72,19 @@ export type TestimonialDoc = {
 
 export const collectionDefs = {
   service: {
-    label: "Diensten",
-    singular: "Dienst",
-    path: "diensten",
+    label: "Vacatures",
+    singular: "Vacature",
+    path: "vacatures",
     titleKey: "title",
     fields: [
-      { key: "title", label: "Naam van de dienst", type: "text", max: 80 },
-      { key: "anchor", label: "Ankernaam in de URL", type: "text", max: 60, help: "Gebruikt voor links als /diensten#leadgeneratie. Alleen kleine letters, cijfers en streepjes." },
+      { key: "title", label: "Functienaam", type: "text", max: 80 },
+      { key: "anchor", label: "Ankernaam in de URL", type: "text", max: 60, help: "Gebruikt voor links als /vacatures#deur-aan-deur. Alleen kleine letters, cijfers en streepjes." },
       { key: "tag", label: "Kort label (geel)", type: "text", max: 30 },
       { key: "short", label: "Korte omschrijving (tegels en overzicht)", type: "textarea", max: 220, rows: 3 },
       { key: "description", label: "Uitgebreide omschrijving", type: "textarea", max: 1200, rows: 5 },
-      { key: "points", label: "Wat je krijgt", type: "stringList", itemLabel: "Punt", max: 8 },
-      { key: "image", label: "Afbeelding (optioneel)", type: "image", help: "Wordt getoond op de uitgebreide dienstenpagina." },
-      { key: "cta", label: "Knop (optioneel)", type: "cta", help: "Laat leeg voor de standaardlink naar de dienstenpagina." },
+      { key: "points", label: "Opsomming (bijv. wat je doet)", type: "stringList", itemLabel: "Punt", max: 8 },
+      { key: "image", label: "Afbeelding (optioneel)", type: "image", help: "Wordt getoond op de vacaturepagina. Een echte foto van het team in actie werkt het best." },
+      { key: "cta", label: "Knop (optioneel)", type: "cta", help: "Bijv. ‘Solliciteer direct’ naar de sollicitatiepagina. De kaarten op de homepage gebruiken deze knop ook." },
     ] as FieldDef[],
   },
   case: {
@@ -115,11 +115,11 @@ export const collectionDefs = {
     titleKey: "name",
     fields: [
       { key: "name", label: "Naam", type: "text", max: 80 },
-      { key: "role", label: "Functie", type: "text", max: 80 },
-      { key: "company", label: "Bedrijfsnaam", type: "text", max: 80 },
-      { key: "quote", label: "Citaat", type: "textarea", max: 800, rows: 5 },
+      { key: "role", label: "Rol (bijv. Field marketeer)", type: "text", max: 80 },
+      { key: "company", label: "Extra regel (bijv. ‘Student, Groningen’ of ‘Sinds 2025’)", type: "text", max: 80 },
+      { key: "quote", label: "Citaat", type: "textarea", max: 800, rows: 5, help: "Echte woorden van een collega werken het best: wat vond je spannend, wat maakt het leuk?" },
       { key: "photo", label: "Profielfoto (optioneel)", type: "image" },
-      { key: "logo", label: "Bedrijfslogo (optioneel)", type: "image" },
+      { key: "logo", label: "Logo (optioneel)", type: "image" },
     ] as FieldDef[],
   },
 } as const;
@@ -152,6 +152,7 @@ export const singletonDefs = {
       { key: "contact", label: "Contactgegevens", type: "group", fields: [
         { key: "email", label: "E-mailadres", type: "text", max: 120 },
         { key: "phone", label: "Telefoonnummer", type: "text", max: 30 },
+        { key: "whatsapp", label: "WhatsApp-nummer (optioneel)", type: "text", max: 30, help: "Bijv. 06 12345678. Dan verschijnen er WhatsApp-knoppen voor sollicitanten met een vraag." },
       ] },
       { key: "socials", label: "Social media", type: "repeater", itemLabel: "Profiel", titleKey: "platform", max: 8, fields: [
         { key: "platform", label: "Platform", type: "select", options: [
@@ -179,6 +180,7 @@ export const singletonDefs = {
         { key: "mobileLabel", label: "Tekst in het mobiele menu", type: "text", max: 60 },
         { key: "link", label: "Link", type: "link" },
         { key: "visible", label: "Zichtbaar", type: "boolean" },
+        { key: "mobileSticky", label: "Op mobiel vast onderin het scherm tonen", type: "boolean", help: "Een vaste knop onderin, zodat bezoekers op elke pagina met één tik kunnen solliciteren." },
       ] },
     ] as FieldDef[],
   },
@@ -196,32 +198,38 @@ export const singletonDefs = {
   },
   forms: {
     label: "Formulieren",
-    description: "Teksten, meldingen en ontvanger van het contactformulier.",
+    description: "Teksten, meldingen en ontvanger van het sollicitatieformulier.",
     fields: [
-      { key: "recipientEmail", label: "Ontvanger van aanvragen (e-mail)", type: "text", max: 200, help: "Leeg = de ontvanger uit de serverinstelling CONTACT_TO_EMAIL." },
-      { key: "storeSubmissions", label: "Aanvragen ook opslaan in het dashboard", type: "boolean" },
-      { key: "retentionDays", label: "Opgeslagen aanvragen automatisch verwijderen na", type: "number", min: 30, max: 730, step: 30, unit: "dagen" },
+      { key: "recipientEmail", label: "Ontvanger van sollicitaties (e-mail)", type: "text", max: 200, help: "Leeg = de ontvanger uit de serverinstelling CONTACT_TO_EMAIL." },
+      { key: "storeSubmissions", label: "Sollicitaties ook opslaan in het dashboard", type: "boolean" },
+      { key: "retentionDays", label: "Opgeslagen sollicitaties automatisch verwijderen na", type: "number", min: 30, max: 730, step: 30, unit: "dagen", help: "Volgens de Autoriteit Persoonsgegevens bewaar je sollicitatiegegevens tot 4 weken na de procedure, of 1 jaar met toestemming." },
       { key: "labels", label: "Velden", type: "group", fields: [
         { key: "name", label: "Label naam", type: "text", max: 60 },
         { key: "namePlaceholder", label: "Voorbeeldtekst naam", type: "text", max: 80 },
-        { key: "company", label: "Label bedrijfsnaam", type: "text", max: 60 },
-        { key: "companyPlaceholder", label: "Voorbeeldtekst bedrijfsnaam", type: "text", max: 80 },
+        { key: "phone", label: "Label telefoonnummer", type: "text", max: 60 },
+        { key: "phonePlaceholder", label: "Voorbeeldtekst telefoonnummer", type: "text", max: 80 },
         { key: "email", label: "Label e-mailadres", type: "text", max: 60 },
         { key: "emailPlaceholder", label: "Voorbeeldtekst e-mailadres", type: "text", max: 80 },
-        { key: "message", label: "Label bericht", type: "text", max: 80 },
+        { key: "city", label: "Label woonplaats", type: "text", max: 60 },
+        { key: "cityPlaceholder", label: "Voorbeeldtekst woonplaats", type: "text", max: 80 },
+        { key: "availability", label: "Label beschikbaarheid", type: "text", max: 80 },
+        { key: "availabilityPlaceholder", label: "Eerste regel in de keuzelijst", type: "text", max: 60 },
+        { key: "message", label: "Label bericht (optioneel veld)", type: "text", max: 80 },
         { key: "messagePlaceholder", label: "Voorbeeldtekst bericht", type: "text", max: 200 },
         { key: "submit", label: "Tekst op de knop", type: "text", max: 40 },
         { key: "sending", label: "Tekst tijdens versturen", type: "text", max: 40 },
       ] },
+      { key: "availabilityOptions", label: "Keuzes bij beschikbaarheid", type: "stringList", itemLabel: "Keuze", max: 8, help: "Laat leeg om het veld te verbergen." },
       { key: "messages", label: "Meldingen", type: "group", fields: [
         { key: "successTitle", label: "Titel na versturen", type: "text", max: 60 },
         { key: "success", label: "Tekst na versturen", type: "textarea", max: 300, rows: 2 },
         { key: "invalid", label: "Melding bij fouten in velden", type: "text", max: 120 },
         { key: "nameError", label: "Fout: naam", type: "text", max: 120 },
-        { key: "companyError", label: "Fout: bedrijfsnaam", type: "text", max: 120 },
+        { key: "phoneError", label: "Fout: telefoonnummer", type: "text", max: 120 },
         { key: "emailError", label: "Fout: e-mailadres", type: "text", max: 120 },
-        { key: "messageError", label: "Fout: bericht", type: "text", max: 120 },
-        { key: "rateLimited", label: "Melding bij te veel aanvragen", type: "text", max: 200 },
+        { key: "cityError", label: "Fout: woonplaats", type: "text", max: 120 },
+        { key: "availabilityError", label: "Fout: beschikbaarheid", type: "text", max: 120 },
+        { key: "rateLimited", label: "Melding bij te veel sollicitaties", type: "text", max: 200 },
         { key: "failed", label: "Melding bij een technische fout", type: "text", max: 200 },
         { key: "notConfigured", label: "Melding als versturen nog niet is ingesteld", type: "text", max: 300 },
       ] },
@@ -281,7 +289,7 @@ export const singletonDefs = {
 export type SingletonType = keyof typeof singletonDefs;
 
 export type NavItem = { label: string; link: LinkValue; visible: boolean; children: { label: string; link: LinkValue; visible: boolean }[] };
-export type Navigation = { items: NavItem[]; cta: { label: string; mobileLabel: string; link: LinkValue; visible: boolean } };
+export type Navigation = { items: NavItem[]; cta: { label: string; mobileLabel: string; link: LinkValue; visible: boolean; mobileSticky: boolean } };
 export type FooterLink = { label: string; link: LinkValue; visible: boolean };
 export type Footer = { text: string; links: FooterLink[]; showContact: boolean; showSocials: boolean; legalLinks: FooterLink[]; copyright: string };
 export type Settings = {
@@ -292,15 +300,24 @@ export type Settings = {
   ogImage: string | null;
   allowIndexing: boolean;
   company: { legalName: string; kvk: string; vat: string; address: string };
-  contact: { email: string; phone: string };
+  contact: { email: string; phone: string; whatsapp: string };
   socials: { platform: string; url: string }[];
 };
 export type FormsConfig = {
   recipientEmail: string;
   storeSubmissions: boolean;
   retentionDays: number;
-  labels: Record<"name" | "namePlaceholder" | "company" | "companyPlaceholder" | "email" | "emailPlaceholder" | "message" | "messagePlaceholder" | "submit" | "sending", string>;
-  messages: Record<"successTitle" | "success" | "invalid" | "nameError" | "companyError" | "emailError" | "messageError" | "rateLimited" | "failed" | "notConfigured", string>;
+  labels: Record<
+    | "name" | "namePlaceholder" | "phone" | "phonePlaceholder" | "email" | "emailPlaceholder" | "city" | "cityPlaceholder"
+    | "availability" | "availabilityPlaceholder" | "message" | "messagePlaceholder" | "submit" | "sending",
+    string
+  >;
+  availabilityOptions: string[];
+  messages: Record<
+    | "successTitle" | "success" | "invalid" | "nameError" | "phoneError" | "emailError" | "cityError" | "availabilityError"
+    | "rateLimited" | "failed" | "notConfigured",
+    string
+  >;
   privacyNote: string;
 };
 export type Theme = {

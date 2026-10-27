@@ -13,7 +13,7 @@ const groups: { title: string; items: { href: string; label: string }[] }[] = [
     items: [
       { href: "/admin/paginas", label: "Pagina’s" },
       { href: "/admin/media", label: "Afbeeldingen" },
-      { href: "/admin/diensten", label: "Diensten" },
+      { href: "/admin/vacatures", label: "Vacatures" },
       { href: "/admin/cases", label: "Cases" },
       { href: "/admin/testimonials", label: "Testimonials" },
     ],
@@ -31,7 +31,7 @@ const groups: { title: string; items: { href: string; label: string }[] }[] = [
   {
     title: "Contact",
     items: [
-      { href: "/admin/aanvragen", label: "Aanvragen" },
+      { href: "/admin/sollicitaties", label: "Sollicitaties" },
       { href: "/admin/formulieren", label: "Formulieren" },
     ],
   },
@@ -66,7 +66,7 @@ export default function AdminShell({ user, unread, children }: { user: { name: s
                   }`}
                 >
                   {item.label}
-                  {item.href === "/admin/aanvragen" && unread > 0 && (
+                  {item.href === "/admin/sollicitaties" && unread > 0 && (
                     <span className={`rounded-full px-2 text-xs font-bold ${isActive(item.href) ? "bg-[#050505] text-white" : "bg-[#fece00] text-[#050505]"}`}>{unread}</span>
                   )}
                 </Link>

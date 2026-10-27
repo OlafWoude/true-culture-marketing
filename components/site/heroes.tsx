@@ -6,7 +6,8 @@ import FadeIn from "@/components/FadeIn";
 import GorillaMark from "@/components/GorillaMark";
 import MobileCarousel from "./MobileCarousel";
 import type { CtaValue } from "@/lib/cms/fields";
-import { ArrowRightIcon, CheckIcon } from "@/lib/icons";
+import { ArrowRightIcon, CheckIcon, WhatsAppIcon } from "@/lib/icons";
+import { whatsappHref } from "@/lib/whatsapp";
 import { bgClass, list, str, Title, type BlockProps } from "./shared";
 
 const tileCols: Record<number, string> = { 1: "lg:grid-cols-1", 2: "lg:grid-cols-2", 3: "lg:grid-cols-3" };
@@ -17,6 +18,7 @@ export function HeroBlock({ data, ctx, layout }: BlockProps) {
   const services = data.showServiceTiles ? ctx.bundle.services : [];
   const n = services.length;
   const carousel = data.mobileCarousel !== false;
+  const trustPoints = list<string>(data.trustPoints).filter(Boolean);
 
   return (
     <div className={layout.nextBg ? bgClass[layout.nextBg] : "bg-ink"}>
@@ -52,16 +54,28 @@ export function HeroBlock({ data, ctx, layout }: BlockProps) {
               </Button>
             </div>
           </FadeIn>
+          {trustPoints.length > 0 && (
+            <FadeIn delay={280}>
+              <ul className="mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-2.5 text-sm text-paper/70">
+                {trustPoints.map((point, i) => (
+                  <li key={i} className="flex items-center gap-2">
+                    <CheckIcon className="h-4 w-4 text-accent" />
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            </FadeIn>
+          )}
 
           {n > 0 && (
             <MobileCarousel
               enabled={carousel}
               tone="dark"
-              label="Diensten"
+              label="Vacatures"
               className={`mt-20 grid gap-4 text-left sm:grid-cols-2 md:mt-28 ${tileCols[n] ?? "lg:grid-cols-4"}`}
             >
               {services.map((s, i) => {
-                const href = ctx.serviceHref(s);
+                const href = ctx.serviceDetailHref(s);
                 const inner = (
                   <>
                     <span className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">{s.tag}</span>
@@ -129,6 +143,8 @@ export function PageHeroBlock({ data, layout }: BlockProps) {
 
 export function ContactHeroBlock({ data, ctx, layout }: BlockProps) {
   const Heading = layout.index === 0 ? "h1" : "h2";
+  const whatsapp = whatsappHref(ctx.bundle.settings.contact.whatsapp, "Hoi! Ik heb een vraag over werken bij True Culture Marketing.");
+  const whatsappLabel = str(data.whatsappLabel);
   return (
     <div className={layout.nextBg ? bgClass[layout.nextBg] : "bg-ink"}>
       <section className="grain overflow-hidden rounded-b-panel bg-ink md:rounded-b-hero-lg">
@@ -166,6 +182,19 @@ export function ContactHeroBlock({ data, ctx, layout }: BlockProps) {
                 </ul>
               </FadeIn>
             )}
+            {whatsapp && whatsappLabel && (
+              <FadeIn delay={260}>
+                <a
+                  href={whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-9 inline-flex items-center gap-2.5 rounded-btn border border-white/15 px-5 py-3 text-sm font-semibold text-paper transition-colors hover:border-white/40"
+                >
+                  <WhatsAppIcon className="h-5 w-5 text-accent" />
+                  {whatsappLabel}
+                </a>
+              </FadeIn>
+            )}
           </div>
 
           <FadeIn delay={120}>
@@ -173,7 +202,11 @@ export function ContactHeroBlock({ data, ctx, layout }: BlockProps) {
               {str(data.formTitle) && <h2 className="text-2xl font-semibold text-ink">{str(data.formTitle)}</h2>}
               {str(data.formIntro) && <p className="mt-2 text-ink/55">{str(data.formIntro)}</p>}
               <div className="mt-8">
-                <ContactForm config={ctx.bundle.forms} formStyle={ctx.bundle.theme.layout.formStyle} />
+                <ContactForm
+                  config={ctx.bundle.forms}
+                  formStyle={ctx.bundle.theme.layout.formStyle}
+                  whatsapp={whatsapp && whatsappLabel ? { href: whatsapp, label: whatsappLabel } : null}
+                />
               </div>
             </div>
           </FadeIn>

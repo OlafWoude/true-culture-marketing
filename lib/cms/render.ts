@@ -7,7 +7,10 @@ export type RenderCtx = {
   isExternal: (link: LinkValue | null | undefined) => boolean;
   media: (id: string | null | undefined) => MediaInfo | null;
   pagePath: (pageId: string) => string | null;
+  /** The vacancy's own button link, falling back to its section on the vacancies page. */
   serviceHref: (service: Bundle["services"][number]) => string | null;
+  /** Always the vacancy's section on the vacancies page (for "read more" style links). */
+  serviceDetailHref: (service: Bundle["services"][number]) => string | null;
 };
 
 export function pathForSlug(slug: string) {
@@ -35,6 +38,11 @@ export function createRenderCtx(bundle: Bundle): RenderCtx {
   const servicesPage = bundle.pages.find((p) =>
     p.sections.some((s) => s.type === "servicesDetailed" && !s.hidden),
   );
+  const serviceDetailHref = (service: Bundle["services"][number]) => {
+    if (!servicesPage) return null;
+    const base = bundle.mode === "preview" ? `/preview/${servicesPage.id}` : pathForSlug(servicesPage.slug);
+    return service.anchor ? `${base}#${service.anchor}` : base;
+  };
 
   return {
     bundle,
@@ -42,12 +50,7 @@ export function createRenderCtx(bundle: Bundle): RenderCtx {
     isExternal: (link) => link?.kind === "url" && (Boolean(link.newTab) || /^https?:\/\//.test(link.href)),
     media: (id) => (id ? (bundle.media[id] ?? null) : null),
     pagePath,
-    serviceHref: (service) => {
-      const own = href(service.cta?.link);
-      if (own) return own;
-      if (!servicesPage) return null;
-      const base = bundle.mode === "preview" ? `/preview/${servicesPage.id}` : pathForSlug(servicesPage.slug);
-      return service.anchor ? `${base}#${service.anchor}` : base;
-    },
+    serviceHref: (service) => href(service.cta?.link) ?? serviceDetailHref(service),
+    serviceDetailHref,
   };
 }

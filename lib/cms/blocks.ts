@@ -26,7 +26,7 @@ export type BlockDef = {
 export const blockDefs = {
   hero: {
     label: "Grote openingskop",
-    description: "De grote kop bovenaan de homepage, met knoppen en optioneel de dienstentegels.",
+    description: "De grote kop bovenaan de homepage, met knoppen en optioneel de vacaturetegels.",
     category: "Kop",
     fields: [
       eyebrow,
@@ -36,9 +36,10 @@ export const blockDefs = {
       intro,
       { key: "primaryCta", label: "Hoofdknop (geel)", type: "cta" },
       { key: "secondaryCta", label: "Tweede knop", type: "cta" },
-      { key: "showServiceTiles", label: "Dienstentegels onder de kop tonen", type: "boolean" },
-      { key: "tileLinkLabel", label: "Linktekst op de dienstentegels", type: "text", max: 40 },
-      { ...mobileCarousel, label: "Dienstentegels op mobiel naast elkaar tonen (swipen)" },
+      { key: "trustPoints", label: "Korte zekerheden onder de knoppen", type: "stringList", itemLabel: "Punt", max: 4, help: "Bijv. ‘Geen cv nodig’. Haalt drempels weg vlak bij de knop." },
+      { key: "showServiceTiles", label: "Vacaturetegels onder de kop tonen", type: "boolean" },
+      { key: "tileLinkLabel", label: "Linktekst op de vacaturetegels", type: "text", max: 40 },
+      { ...mobileCarousel, label: "Vacaturetegels op mobiel naast elkaar tonen (swipen)" },
       watermark,
     ],
     defaults: { highlightNewLine: true, showServiceTiles: true, tileLinkLabel: "Meer weten", mobileCarousel: true, showWatermark: true },
@@ -70,15 +71,15 @@ export const blockDefs = {
     ],
   },
   servicesOverview: {
-    label: "Diensten (overzicht)",
-    description: "Zwart paneel met alle gepubliceerde diensten in kaarten.",
+    label: "Vacatures (overzicht)",
+    description: "Zwart paneel met alle gepubliceerde vacatures in kaarten.",
     category: "Collecties",
-    fields: [eyebrow, title, intro, { key: "linkLabel", label: "Linktekst per dienst", type: "text", max: 40 }, mobileCarousel],
+    fields: [eyebrow, title, intro, { key: "linkLabel", label: "Linktekst per vacature (als die zelf geen knop heeft)", type: "text", max: 40 }, mobileCarousel],
     defaults: { linkLabel: "Lees meer", mobileCarousel: true },
   },
   servicesDetailed: {
-    label: "Diensten (uitgebreid)",
-    description: "Alle gepubliceerde diensten onder elkaar, afwisselend wit en zwart.",
+    label: "Vacatures (uitgebreid)",
+    description: "Alle gepubliceerde vacatures onder elkaar, afwisselend wit en zwart.",
     category: "Collecties",
     fields: [{ key: "pointsTitle", label: "Titel boven de opsomming", type: "text", max: 60 }, mobileCarousel],
     defaults: { pointsTitle: "Wat je krijgt", mobileCarousel: true },
@@ -206,8 +207,8 @@ export const blockDefs = {
     defaults: { mobileCarousel: true },
   },
   contactHero: {
-    label: "Contact met formulier",
-    description: "Zwarte kop met het contactformulier. Formulierteksten beheer je bij Formulieren.",
+    label: "Sollicitatieformulier",
+    description: "Zwarte kop met het sollicitatieformulier. Formulierteksten beheer je bij Formulieren.",
     category: "Contact",
     fields: [
       eyebrow,
@@ -215,9 +216,11 @@ export const blockDefs = {
       highlight,
       intro,
       { key: "bullets", label: "Voordelen onder de tekst", type: "stringList", itemLabel: "Voordeel", max: 6 },
+      { key: "whatsappLabel", label: "Tekst op de WhatsApp-knop", type: "text", max: 60, help: "De knop verschijnt alleen als bij Instellingen een WhatsApp-nummer staat." },
       { key: "formTitle", label: "Titel boven het formulier", type: "text", max: 80 },
       { key: "formIntro", label: "Tekst boven het formulier", type: "text", max: 200 },
     ],
+    defaults: { whatsappLabel: "Eerst een vraag? App ons" },
   },
   numberedCards: {
     label: "Genummerde kaarten",

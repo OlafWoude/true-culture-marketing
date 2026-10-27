@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { CollectionEditPage } from "@/components/admin/CollectionPages";
 
-export const metadata: Metadata = { title: "Diensten bewerken" };
+export const metadata: Metadata = { title: "Vacature bewerken" };
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

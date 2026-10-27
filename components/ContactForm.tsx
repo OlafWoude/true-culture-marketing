@@ -1,10 +1,11 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { useFormStatus } from "react-dom";
 import { submitContactForm, type ContactFormState } from "@/app/actions/contact";
 import type { FormsConfig } from "@/lib/cms/documents";
-import { ArrowRightIcon } from "@/lib/icons";
+import { ArrowRightIcon, WhatsAppIcon } from "@/lib/icons";
+import { readVisitSource } from "@/lib/visit-source";
 
 const initialState: ContactFormState = { status: "idle", message: "" };
 
@@ -22,14 +23,9 @@ function SubmitButton({ label, sending }: { label: string; sending: string }) {
   );
 }
 
-type FieldProps = {
-  id: "name" | "companyName" | "email" | "message";
-  label: string;
-  error?: string;
-  children: React.ReactNode;
-};
+type FieldId = "name" | "phone" | "email" | "city" | "availability" | "message";
 
-function Field({ id, label, error, children }: FieldProps) {
+function Field({ id, label, error, children }: { id: FieldId; label: string; error?: string; children: React.ReactNode }) {
   return (
     <div>
       <label htmlFor={id} className="mb-2 block text-sm font-semibold text-ink">
@@ -45,22 +41,50 @@ function Field({ id, label, error, children }: FieldProps) {
   );
 }
 
-export default function ContactForm({ config, formStyle = "filled" }: { config: FormsConfig; formStyle?: string }) {
+type ContactFormProps = {
+  config: FormsConfig;
+  formStyle?: string;
+  whatsapp?: { href: string; label: string } | null;
+};
+
+export default function ContactForm({ config, formStyle = "filled", whatsapp = null }: ContactFormProps) {
   const [state, formAction] = useActionState(submitContactForm, initialState);
+  const sourceRef = useRef<HTMLInputElement>(null);
   const errors = state.fieldErrors ?? {};
   const v = state.values;
   const { labels, messages } = config;
+  const options = config.availabilityOptions.filter(Boolean);
   const inputClasses = `w-full rounded-control border px-4 py-3.5 text-[15px] text-ink placeholder:text-ink/35 outline-none transition-colors aria-[invalid=true]:border-red-500 ${
     formStyle === "outlined"
       ? "border-ink/20 bg-white focus:border-ink/60"
       : "border-transparent bg-mist focus:border-ink/30 focus:bg-white"
   }`;
+  const invalid = (id: FieldId) => ({
+    "aria-invalid": Boolean(errors[id as keyof typeof errors]),
+    "aria-describedby": errors[id as keyof typeof errors] ? `${id}-error` : undefined,
+  });
+
+  // Where the visitor came from (campaign or referring site), so applications can be traced back to a channel.
+  useEffect(() => {
+    if (sourceRef.current) sourceRef.current.value = readVisitSource();
+  });
 
   if (state.status === "success") {
     return (
       <div role="status" className="py-10 text-center">
         <p className="display text-5xl text-ink">{messages.successTitle}</p>
         <p className="mx-auto mt-4 max-w-sm text-ink/65">{state.message}</p>
+        {whatsapp && (
+          <a
+            href={whatsapp.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-7 inline-flex items-center gap-2 rounded-btn border border-ink/15 px-5 py-3 text-sm font-semibold text-ink transition-colors hover:border-ink/40"
+          >
+            <WhatsAppIcon className="h-5 w-5" />
+            {whatsapp.label}
+          </a>
+        )}
       </div>
     );
   }
@@ -72,6 +96,7 @@ export default function ContactForm({ config, formStyle = "filled" }: { config: 
         <label htmlFor="website">Website</label>
         <input type="text" id="website" name="website" tabIndex={-1} autoComplete="off" />
       </div>
+      <input ref={sourceRef} type="hidden" name="source" defaultValue="" />
 
       <div className="grid gap-5 sm:grid-cols-2">
         <Field id="name" label={labels.name} error={errors.name}>
@@ -85,55 +110,93 @@ export default function ContactForm({ config, formStyle = "filled" }: { config: 
             maxLength={120}
             placeholder={labels.namePlaceholder}
             className={inputClasses}
-            aria-invalid={Boolean(errors.name)}
-            aria-describedby={errors.name ? "name-error" : undefined}
+            {...invalid("name")}
           />
         </Field>
-        <Field id="companyName" label={labels.company} error={errors.companyName}>
+        <Field id="phone" label={labels.phone} error={errors.phone}>
           <input
-            id="companyName"
-            name="companyName"
-            defaultValue={v?.companyName}
-            type="text"
-            autoComplete="organization"
+            id="phone"
+            name="phone"
+            defaultValue={v?.phone}
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
             required
-            maxLength={160}
-            placeholder={labels.companyPlaceholder}
+            maxLength={20}
+            placeholder={labels.phonePlaceholder}
             className={inputClasses}
-            aria-invalid={Boolean(errors.companyName)}
-            aria-describedby={errors.companyName ? "companyName-error" : undefined}
+            {...invalid("phone")}
           />
         </Field>
       </div>
 
-      <Field id="email" label={labels.email} error={errors.email}>
-        <input
-          id="email"
-          name="email"
-          defaultValue={v?.email}
-          type="email"
-          autoComplete="email"
-          required
-          maxLength={200}
-          placeholder={labels.emailPlaceholder}
-          className={inputClasses}
-          aria-invalid={Boolean(errors.email)}
-          aria-describedby={errors.email ? "email-error" : undefined}
-        />
-      </Field>
+      <div className="grid gap-5 sm:grid-cols-2">
+        <Field id="email" label={labels.email} error={errors.email}>
+          <input
+            id="email"
+            name="email"
+            defaultValue={v?.email}
+            type="email"
+            autoComplete="email"
+            required
+            maxLength={200}
+            placeholder={labels.emailPlaceholder}
+            className={inputClasses}
+            {...invalid("email")}
+          />
+        </Field>
+        <Field id="city" label={labels.city} error={errors.city}>
+          <input
+            id="city"
+            name="city"
+            defaultValue={v?.city}
+            type="text"
+            autoComplete="address-level2"
+            required
+            maxLength={80}
+            placeholder={labels.cityPlaceholder}
+            className={inputClasses}
+            {...invalid("city")}
+          />
+        </Field>
+      </div>
 
-      <Field id="message" label={labels.message} error={errors.message}>
+      {options.length > 0 && (
+        <Field id="availability" label={labels.availability} error={errors.availability}>
+          <div className="relative">
+            <select
+              id="availability"
+              name="availability"
+              defaultValue={v?.availability ?? ""}
+              required
+              className={`${inputClasses} appearance-none pr-11 invalid:text-ink/35 [&_option]:text-ink`}
+              {...invalid("availability")}
+            >
+              <option value="" disabled>
+                {labels.availabilityPlaceholder}
+              </option>
+              {options.map((o) => (
+                <option key={o} value={o}>
+                  {o}
+                </option>
+              ))}
+            </select>
+            <svg viewBox="0 0 24 24" className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/50" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </div>
+        </Field>
+      )}
+
+      <Field id="message" label={labels.message}>
         <textarea
           id="message"
           name="message"
           defaultValue={v?.message}
-          rows={5}
-          required
-          maxLength={5000}
+          rows={3}
+          maxLength={2000}
           placeholder={labels.messagePlaceholder}
           className={`${inputClasses} resize-none`}
-          aria-invalid={Boolean(errors.message)}
-          aria-describedby={errors.message ? "message-error" : undefined}
         />
       </Field>
 

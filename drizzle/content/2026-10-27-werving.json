@@ -1,0 +1,1045 @@
+{
+  "backupNote": "Automatische back-up van vóór de nieuwe wervingswebsite",
+  "pages": [
+    {
+      "id": "6a1b7c00-0000-4000-8000-000000000001",
+      "systemKey": "home",
+      "doc": {
+        "title": "Home",
+        "slug": "",
+        "seo": {
+          "title": "Bijbaan of fulltime als promotor in Noord-Nederland | True Culture",
+          "description": "Bijbaan of fulltime als field marketeer en promotor in Groningen, Friesland of Drenthe. Verdien €300+ per dag, zonder ervaring of cv. Solliciteer in 2 minuten.",
+          "ogTitle": "",
+          "ogDescription": "",
+          "ogImage": null,
+          "canonical": "",
+          "noindex": false
+        },
+        "sections": [
+          {
+            "id": "home-hero",
+            "type": "hero",
+            "hidden": false,
+            "data": {
+              "eyebrow": "Vacatures in Groningen, Friesland en Drenthe",
+              "title": "Verdien €300+",
+              "highlight": "per dag",
+              "highlightNewLine": true,
+              "intro": "Ontdek de mogelijkheden als field marketeer in Noord-Nederland. Je gaat met je team op pad, voert gesprekken aan de deur, op straat en op events, en verdient per resultaat. Geen ervaring nodig: wij leren je de rest.",
+              "primaryCta": {
+                "label": "Solliciteer in 2 minuten",
+                "link": {
+                  "kind": "page",
+                  "pageId": "6a1b7c00-0000-4000-8000-000000000005"
+                }
+              },
+              "secondaryCta": {
+                "label": "Bekijk de vacatures",
+                "link": {
+                  "kind": "page",
+                  "pageId": "6a1b7c00-0000-4000-8000-000000000002"
+                }
+              },
+              "trustPoints": [
+                "Geen cv nodig",
+                "Geen ervaring nodig",
+                "Binnen 24 uur een belletje"
+              ],
+              "showServiceTiles": true,
+              "tileLinkLabel": "Bekijk vacature",
+              "mobileCarousel": true,
+              "showWatermark": true
+            }
+          },
+          {
+            "id": "home-marquee",
+            "type": "marquee",
+            "hidden": false,
+            "data": {
+              "items": [
+                "Bijbaan of fulltime",
+                "Deur-aan-deur",
+                "Straatwerving",
+                "Events",
+                "In-store",
+                "Groningen",
+                "Friesland",
+                "Drenthe",
+                "Teamspirit",
+                "Doorgroeien"
+              ]
+            }
+          },
+          {
+            "id": "home-intro",
+            "type": "introSplit",
+            "hidden": false,
+            "data": {
+              "eyebrow": "Het werk",
+              "title": "Wat doe je als field marketeer?",
+              "body": "<p>Als field marketeer ga je in gesprek met mensen: bij hen aan de deur, op straat of op een event. Je vertelt over een product, dienst of organisatie van een van onze opdrachtgevers en je helpt mensen om klant te worden.</p><p>Je werkt nooit alleen. Je gaat met je team op pad, je krijgt coaching en samen vieren jullie de successen. Wat je verdient, bepaal je met je eigen inzet.</p>",
+              "cta": {
+                "label": "Solliciteer direct",
+                "link": {
+                  "kind": "page",
+                  "pageId": "6a1b7c00-0000-4000-8000-000000000005"
+                }
+              },
+              "cardTitle": "Wat je bij ons krijgt",
+              "cardItems": [
+                "Verdienen per resultaat, zonder plafond",
+                "Een training vanaf je eerste dag",
+                "Een hecht team om je heen",
+                "Kans om door te groeien naar teamleider"
+              ]
+            }
+          },
+          {
+            "id": "home-services",
+            "type": "servicesOverview",
+            "hidden": false,
+            "data": {
+              "eyebrow": "Vacatures",
+              "title": "Kies het werk dat bij je past",
+              "intro": "Aan de deur, op straat of op een event: overal werk je in een team en verdien je per resultaat. Heb je een voorkeur? Vertel het ons in je sollicitatie.",
+              "linkLabel": "Solliciteer direct",
+              "mobileCarousel": true
+            }
+          },
+          {
+            "id": "home-comparison",
+            "type": "comparison",
+            "hidden": false,
+            "data": {
+              "eyebrow": "Waarom True Culture",
+              "title": "Meer dan een gewone bijbaan",
+              "intro": "Bij een gewone bijbaan krijg je een vast uurloon. Bij True Culture bepaal je zelf wat je verdient, leer je skills waar je je hele leven iets aan hebt en werk je met een team dat je beter maakt.",
+              "layout": "split",
+              "background": "light",
+              "selfLabel": "Gewone bijbaan",
+              "usAccent": "True",
+              "usLabel": "Culture",
+              "rows": [
+                {
+                  "label": "Verdiensten",
+                  "self": "Vast uurloon, hoe hard je ook werkt",
+                  "us": "Verdienen per resultaat: €300+ per dag is mogelijk"
+                },
+                {
+                  "label": "Ervaring",
+                  "self": "Vaak ervaring of een diploma nodig",
+                  "us": "Geen ervaring nodig, je krijgt een training"
+                },
+                {
+                  "label": "Werkdag",
+                  "self": "Elke dag dezelfde plek en hetzelfde werk",
+                  "us": "Steeds andere locaties, gesprekken en mensen"
+                },
+                {
+                  "label": "Sfeer",
+                  "self": "Je collega's zie je alleen in de pauze",
+                  "us": "Elke dag samen met je team op pad"
+                },
+                {
+                  "label": "Groei",
+                  "self": "Weinig kans om door te groeien",
+                  "us": "Doorgroeien naar teamleider is mogelijk"
+                }
+              ],
+              "mobileCarousel": true
+            }
+          },
+          {
+            "id": "home-steps",
+            "type": "steps",
+            "hidden": false,
+            "data": {
+              "eyebrow": "Solliciteren",
+              "title": "Zo ga je aan de slag",
+              "cta": {
+                "label": "Zo werkt het",
+                "link": {
+                  "kind": "page",
+                  "pageId": "6a1b7c00-0000-4000-8000-000000000003"
+                }
+              },
+              "items": [
+                {
+                  "title": "Solliciteer in 2 minuten",
+                  "description": "Laat je naam, telefoonnummer en woonplaats achter. Een cv of motivatiebrief is niet nodig."
+                },
+                {
+                  "title": "We bellen je binnen 24 uur",
+                  "description": "We vertellen hoe het werk eruitziet en wat je kunt verdienen, en beantwoorden al je vragen."
+                },
+                {
+                  "title": "Kennismaken",
+                  "description": "We spreken af en kijken samen of het werk bij je past. Eerlijk en zonder verplichtingen."
+                },
+                {
+                  "title": "Training en je eerste dag",
+                  "description": "Je krijgt een training en gaat daarna samen met je team het veld in."
+                }
+              ],
+              "mobileCarousel": true
+            }
+          },
+          {
+            "id": "home-testimonials",
+            "type": "testimonials",
+            "hidden": false,
+            "data": {
+              "eyebrow": "Ervaringen",
+              "title": "Dit zegt ons team",
+              "intro": "Echte verhalen van collega's die je voorgingen.",
+              "background": "white",
+              "mobileCarousel": true
+            }
+          },
+          {
+            "id": "home-faq",
+            "type": "faq",
+            "hidden": false,
+            "data": {
+              "eyebrow": "Veelgestelde vragen",
+              "title": "Goed om te weten",
+              "text": "<p>Staat je vraag er niet tussen? Stel hem gerust in het eerste belletje. <a href=\"/solliciteren\">Solliciteer direct</a>, je zit nergens aan vast.</p>",
+              "background": "light",
+              "items": [
+                {
+                  "question": "Heb ik ervaring nodig?",
+                  "answer": "Nee. Je krijgt een training en je team helpt je op weg. Wat je wel meeneemt: energie, een open houding en zin om te leren."
+                },
+                {
+                  "question": "Hoeveel kan ik verdienen?",
+                  "answer": "Je verdient per resultaat. Hoe meer mensen je enthousiast maakt, hoe meer je verdient, en er zit geen plafond op: €300+ per dag is mogelijk. In het eerste gesprek rekenen we samen uit wat realistisch is voor jou."
+                },
+                {
+                  "question": "Wat voor werk is het precies?",
+                  "answer": "Je voert gesprekken met mensen: aan de deur, op straat, in winkelcentra of op events. Je vertelt over een product, dienst of organisatie van een van onze opdrachtgevers en helpt mensen om klant te worden."
+                },
+                {
+                  "question": "Voor welke opdrachtgevers werk ik?",
+                  "answer": "We werken voor verschillende opdrachtgevers. Welke projecten er nu lopen, hoor je in het eerste gesprek."
+                },
+                {
+                  "question": "Waar ga ik werken?",
+                  "answer": "In Groningen, Friesland en Drenthe. Je werkt met je team op wisselende locaties: in woonwijken, in winkelstraten en op evenementen."
+                },
+                {
+                  "question": "Kan ik dit als bijbaan doen?",
+                  "answer": "Ja, ook naast je studie of een andere baan. Geef in je sollicitatie aan hoeveel dagen per week je beschikbaar bent, dan kijken we samen wat past."
+                },
+                {
+                  "question": "Wat als mensen nee zeggen?",
+                  "answer": "Dat hoort erbij, ook bij de besten. Je leert om een nee niet persoonlijk op te vatten en je team houdt je scherp en gemotiveerd. Elk gesprek maakt je beter."
+                },
+                {
+                  "question": "Heb ik een cv nodig?",
+                  "answer": "Nee. Je naam, telefoonnummer, e-mailadres en woonplaats zijn genoeg. De rest bespreken we in het eerste gesprek."
+                },
+                {
+                  "question": "Hoe snel hoor ik iets?",
+                  "answer": "Binnen 24 uur bellen we je op het nummer dat je hebt opgegeven."
+                }
+              ]
+            }
+          },
+          {
+            "id": "home-closing",
+            "type": "closingCta",
+            "hidden": false,
+            "data": {
+              "title": "Zin om te",
+              "highlight": "beginnen?",
+              "text": "Solliciteer in 2 minuten. Geen cv, geen sollicitatiebrief: binnen 24 uur bellen we je.",
+              "cta": {
+                "label": "Solliciteer in 2 minuten",
+                "link": {
+                  "kind": "page",
+                  "pageId": "6a1b7c00-0000-4000-8000-000000000005"
+                }
+              },
+              "showWatermark": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "6a1b7c00-0000-4000-8000-000000000002",
+      "systemKey": null,
+      "doc": {
+        "title": "Vacatures",
+        "slug": "vacatures",
+        "seo": {
+          "title": "Vacatures promotor en field marketeer in Noord-Nederland",
+          "description": "Bijbaan of fulltime: deur-aan-deur, straatwerving of events in Groningen, Friesland en Drenthe. Verdien per resultaat, geen ervaring nodig.",
+          "ogTitle": "",
+          "ogDescription": "",
+          "ogImage": null,
+          "canonical": "",
+          "noindex": false
+        },
+        "sections": [
+          {
+            "id": "vacatures-hero",
+            "type": "pageHero",
+            "hidden": false,
+            "data": {
+              "eyebrow": "Vacatures",
+              "title": "Kies jouw plek",
+              "highlight": "in het veld",
+              "intro": "Aan de deur, op straat of op events in Groningen, Friesland en Drenthe. Overal werk je in een team, leer je mensen enthousiast maken en verdien je per resultaat.",
+              "showWatermark": true
+            }
+          },
+          {
+            "id": "vacatures-list",
+            "type": "servicesDetailed",
+            "hidden": false,
+            "data": {
+              "pointsTitle": "Wat je doet",
+              "mobileCarousel": true
+            }
+          },
+          {
+            "id": "vacatures-usps",
+            "type": "valuesGrid",
+            "hidden": false,
+            "data": {
+              "eyebrow": "Wat je krijgt",
+              "title": "Waarom bij ons werken?",
+              "items": [
+                {
+                  "title": "Verdienen zonder plafond",
+                  "text": "Je verdient per resultaat, dus jouw inzet bepaalt wat je verdient. €300+ per dag is mogelijk."
+                },
+                {
+                  "title": "Training en coaching",
+                  "text": "Je begint met een training en krijgt onderweg tips van ervaren collega's. Zo word je elke week beter in gesprekken voeren."
+                },
+                {
+                  "title": "Een team dat je beter maakt",
+                  "text": "Je gaat samen op pad, helpt elkaar en viert samen de successen."
+                },
+                {
+                  "title": "Skills voor later",
+                  "text": "Overtuigen, presenteren en tegen een stootje kunnen: daar heb je je hele carrière plezier van."
+                }
+              ],
+              "secondaryCta": {
+                "label": "Zo werkt het",
+                "link": {
+                  "kind": "page",
+                  "pageId": "6a1b7c00-0000-4000-8000-000000000003"
+                }
+              },
+              "primaryCta": {
+                "label": "Solliciteer direct",
+                "link": {
+                  "kind": "page",
+                  "pageId": "6a1b7c00-0000-4000-8000-000000000005"
+                }
+              },
+              "mobileCarousel": true
+            }
+          },
+          {
+            "id": "vacatures-closing",
+            "type": "closingCta",
+            "hidden": false,
+            "data": {
+              "title": "Zin om te",
+              "highlight": "beginnen?",
+              "text": "Solliciteer in 2 minuten. Geen cv, geen sollicitatiebrief: binnen 24 uur bellen we je.",
+              "cta": {
+                "label": "Solliciteer in 2 minuten",
+                "link": {
+                  "kind": "page",
+                  "pageId": "6a1b7c00-0000-4000-8000-000000000005"
+                }
+              },
+              "showWatermark": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "6a1b7c00-0000-4000-8000-000000000003",
+      "systemKey": null,
+      "doc": {
+        "title": "Zo werkt het",
+        "slug": "zo-werkt-het",
+        "seo": {
+          "title": "Zo werkt solliciteren",
+          "description": "Van sollicitatie tot eerste werkdag: zo werkt solliciteren bij True Culture Marketing. Geen cv nodig en binnen 24 uur een belletje.",
+          "ogTitle": "",
+          "ogDescription": "",
+          "ogImage": null,
+          "canonical": "",
+          "noindex": false
+        },
+        "sections": [
+          {
+            "id": "zo-werkt-het-hero",
+            "type": "pageHero",
+            "hidden": false,
+            "data": {
+              "eyebrow": "Zo werkt het",
+              "title": "Van sollicitatie",
+              "highlight": "tot eerste werkdag",
+              "intro": "Solliciteren bij True Culture is simpel. Geen cv en geen lange formulieren: binnen 24 uur heb je ons aan de lijn.",
+              "showWatermark": true
+            }
+          },
+          {
+            "id": "zo-werkt-het-steps",
+            "type": "stepsDetailed",
+            "hidden": false,
+            "data": {
+              "resultLabel": "Voor jou",
+              "items": [
+                {
+                  "title": "Solliciteer in 2 minuten",
+                  "detail": "Vul het korte formulier in met je naam, telefoonnummer, e-mailadres, woonplaats en beschikbaarheid. Een cv of motivatiebrief is niet nodig.",
+                  "outcome": "Je sollicitatie is binnen, zonder gedoe"
+                },
+                {
+                  "title": "We bellen je binnen 24 uur",
+                  "detail": "We vertellen je hoe het werk eruitziet, hoe je verdient en welke projecten er lopen. Je kunt al je vragen stellen.",
+                  "outcome": "Je weet precies waar je aan begint"
+                },
+                {
+                  "title": "Kennismaking",
+                  "detail": "We spreken af om kennis te maken en kijken samen of het werk en het team bij je passen.",
+                  "outcome": "Een eerlijke keuze, voor jou en voor ons"
+                },
+                {
+                  "title": "Training en je eerste dag",
+                  "detail": "Je krijgt een training over gesprekken voeren en over het project waar je aan werkt. Daarna ga je met je team het veld in.",
+                  "outcome": "Je eerste dag in het veld"
+                }
+              ],
+              "mobileCarousel": true
+            }
+          },
+          {
+            "id": "zo-werkt-het-day",
+            "type": "numberedCards",
+            "hidden": false,
+            "data": {
+              "eyebrow": "Een dag in het veld",
+              "title": "Zo ziet je werkdag eruit",
+              "background": "white",
+              "items": [
+                {
+                  "title": "Samen van start",
+                  "text": "Je begint de dag met je team. Je hoort waar jullie naartoe gaan en wat het plan voor vandaag is."
+                },
+                {
+                  "title": "In gesprek",
+                  "text": "Je voert gesprekken aan de deur, op straat of op een event. Niet iedereen zegt ja, en dat is normaal."
+                },
+                {
+                  "title": "Samen afsluiten",
+                  "text": "Aan het eind van de dag kijk je met je team terug: wat ging goed, wat kan beter en wat heb je verdiend?"
+                }
+              ],
+              "mobileCarousel": true
+            }
+          },
+          {
+            "id": "zo-werkt-het-faq",
+            "type": "faq",
+            "hidden": false,
+            "data": {
+              "eyebrow": "Veelgestelde vragen",
+              "title": "Goed om te weten",
+              "text": "<p>Staat je vraag er niet tussen? Stel hem gerust in het eerste belletje. <a href=\"/solliciteren\">Solliciteer direct</a>, je zit nergens aan vast.</p>",
+              "background": "light",
+              "items": [
+                {
+                  "question": "Heb ik ervaring nodig?",
+                  "answer": "Nee. Je krijgt een training en je team helpt je op weg. Wat je wel meeneemt: energie, een open houding en zin om te leren."
+                },
+                {
+                  "question": "Hoeveel kan ik verdienen?",
+                  "answer": "Je verdient per resultaat. Hoe meer mensen je enthousiast maakt, hoe meer je verdient, en er zit geen plafond op: €300+ per dag is mogelijk. In het eerste gesprek rekenen we samen uit wat realistisch is voor jou."
+                },
+                {
+                  "question": "Wat voor werk is het precies?",
+                  "answer": "Je voert gesprekken met mensen: aan de deur, op straat, in winkelcentra of op events. Je vertelt over een product, dienst of organisatie van een van onze opdrachtgevers en helpt mensen om klant te worden."
+                },
+                {
+                  "question": "Voor welke opdrachtgevers werk ik?",
+                  "answer": "We werken voor verschillende opdrachtgevers. Welke projecten er nu lopen, hoor je in het eerste gesprek."
+                },
+                {
+                  "question": "Waar ga ik werken?",
+                  "answer": "In Groningen, Friesland en Drenthe. Je werkt met je team op wisselende locaties: in woonwijken, in winkelstraten en op evenementen."
+                },
+                {
+                  "question": "Kan ik dit als bijbaan doen?",
+                  "answer": "Ja, ook naast je studie of een andere baan. Geef in je sollicitatie aan hoeveel dagen per week je beschikbaar bent, dan kijken we samen wat past."
+                },
+                {
+                  "question": "Wat als mensen nee zeggen?",
+                  "answer": "Dat hoort erbij, ook bij de besten. Je leert om een nee niet persoonlijk op te vatten en je team houdt je scherp en gemotiveerd. Elk gesprek maakt je beter."
+                },
+                {
+                  "question": "Heb ik een cv nodig?",
+                  "answer": "Nee. Je naam, telefoonnummer, e-mailadres en woonplaats zijn genoeg. De rest bespreken we in het eerste gesprek."
+                },
+                {
+                  "question": "Hoe snel hoor ik iets?",
+                  "answer": "Binnen 24 uur bellen we je op het nummer dat je hebt opgegeven."
+                }
+              ]
+            }
+          },
+          {
+            "id": "zo-werkt-het-closing",
+            "type": "closingCta",
+            "hidden": false,
+            "data": {
+              "title": "Zin om te",
+              "highlight": "beginnen?",
+              "text": "Solliciteer in 2 minuten. Geen cv, geen sollicitatiebrief: binnen 24 uur bellen we je.",
+              "cta": {
+                "label": "Solliciteer in 2 minuten",
+                "link": {
+                  "kind": "page",
+                  "pageId": "6a1b7c00-0000-4000-8000-000000000005"
+                }
+              },
+              "showWatermark": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "6a1b7c00-0000-4000-8000-000000000004",
+      "systemKey": null,
+      "doc": {
+        "title": "Over ons",
+        "slug": "over-ons",
+        "seo": {
+          "title": "Over ons",
+          "description": "True Culture Marketing is een face-to-face field marketingbureau in Noord-Nederland. We werven klanten voor verschillende opdrachtgevers, met een team waarin cultuur voorop staat.",
+          "ogTitle": "",
+          "ogDescription": "",
+          "ogImage": null,
+          "canonical": "",
+          "noindex": false
+        },
+        "sections": [
+          {
+            "id": "over-hero",
+            "type": "pageHero",
+            "hidden": false,
+            "data": {
+              "eyebrow": "Over ons",
+              "title": "De naam zegt het al:",
+              "highlight": "cultuur voorop.",
+              "intro": "True Culture Marketing is een face-to-face field marketingbureau uit Noord-Nederland. We werven klanten voor verschillende opdrachtgevers, met een team dat elkaar scherp houdt en elkaars successen viert.",
+              "showWatermark": true
+            }
+          },
+          {
+            "id": "over-story",
+            "type": "storySplit",
+            "hidden": false,
+            "data": {
+              "eyebrow": "Ons verhaal",
+              "title": "Gebouwd op mensen",
+              "body": "<p>Field marketing draait om gesprekken. Een goed gesprek voer je alleen als je energie hebt, als je weet waar je over praat en als je je gesteund voelt door je team.</p><p>Daarom investeren we in onze mensen: in training, in coaching en in een sfeer waarin je jezelf kunt zijn. Wie hard werkt, verdient bij ons goed en krijgt de ruimte om door te groeien.</p>",
+              "image": null
+            }
+          },
+          {
+            "id": "over-values",
+            "type": "valuesGrid",
+            "hidden": false,
+            "data": {
+              "eyebrow": "Waar we voor staan",
+              "title": "Onze principes",
+              "items": [
+                {
+                  "title": "Eerlijk",
+                  "text": "We zijn eerlijk tegen de mensen die we spreken en tegen elkaar. Geen mooie praatjes, wel duidelijke afspraken."
+                },
+                {
+                  "title": "Samen",
+                  "text": "Je staat er nooit alleen voor. We gaan samen op pad, helpen elkaar en vieren samen de successen."
+                },
+                {
+                  "title": "Groei",
+                  "text": "Iedereen begint ergens. Met training en coaching word je elke week beter, en wie wil, kan doorgroeien."
+                },
+                {
+                  "title": "Plezier",
+                  "text": "Hard werken mag leuk zijn. Een goede sfeer in het team is de basis van alles wat we doen."
+                }
+              ],
+              "secondaryCta": {
+                "label": "Bekijk de vacatures",
+                "link": {
+                  "kind": "page",
+                  "pageId": "6a1b7c00-0000-4000-8000-000000000002"
+                }
+              },
+              "primaryCta": {
+                "label": "Solliciteer direct",
+                "link": {
+                  "kind": "page",
+                  "pageId": "6a1b7c00-0000-4000-8000-000000000005"
+                }
+              },
+              "mobileCarousel": true
+            }
+          },
+          {
+            "id": "over-closing",
+            "type": "closingCta",
+            "hidden": false,
+            "data": {
+              "title": "Zin om te",
+              "highlight": "beginnen?",
+              "text": "Solliciteer in 2 minuten. Geen cv, geen sollicitatiebrief: binnen 24 uur bellen we je.",
+              "cta": {
+                "label": "Solliciteer in 2 minuten",
+                "link": {
+                  "kind": "page",
+                  "pageId": "6a1b7c00-0000-4000-8000-000000000005"
+                }
+              },
+              "showWatermark": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "6a1b7c00-0000-4000-8000-000000000005",
+      "systemKey": null,
+      "doc": {
+        "title": "Solliciteren",
+        "slug": "solliciteren",
+        "seo": {
+          "title": "Solliciteer in 2 minuten",
+          "description": "Solliciteer voor een bijbaan of fulltime baan als field marketeer bij True Culture Marketing. Geen cv nodig: vul je gegevens in en we bellen je binnen 24 uur.",
+          "ogTitle": "",
+          "ogDescription": "",
+          "ogImage": null,
+          "canonical": "",
+          "noindex": false
+        },
+        "sections": [
+          {
+            "id": "solliciteren-hero",
+            "type": "contactHero",
+            "hidden": false,
+            "data": {
+              "eyebrow": "Solliciteren",
+              "title": "Solliciteer in",
+              "highlight": "2 minuten",
+              "intro": "Laat je gegevens achter en we bellen je binnen 24 uur. In dat gesprek hoor je alles over het werk en wat je kunt verdienen.",
+              "bullets": [
+                "Geen cv of motivatiebrief nodig",
+                "Geen ervaring nodig",
+                "Binnen 24 uur een belletje"
+              ],
+              "whatsappLabel": "Eerst een vraag? App ons",
+              "formTitle": "Jouw gegevens",
+              "formIntro": "Het duurt maar 2 minuten en je zit nergens aan vast."
+            }
+          },
+          {
+            "id": "solliciteren-next",
+            "type": "numberedCards",
+            "hidden": false,
+            "data": {
+              "eyebrow": "Na je sollicitatie",
+              "title": "Zo gaat het verder",
+              "background": "light",
+              "items": [
+                {
+                  "title": "We bellen je binnen 24 uur",
+                  "text": "Houd je telefoon bij de hand. We vertellen je alles over het werk en beantwoorden je vragen."
+                },
+                {
+                  "title": "Kennismaking",
+                  "text": "We spreken af en kijken samen of het werk bij je past."
+                },
+                {
+                  "title": "Training en je eerste dag",
+                  "text": "Je krijgt een training en gaat met je team het veld in."
+                }
+              ],
+              "mobileCarousel": true
+            }
+          },
+          {
+            "id": "solliciteren-faq",
+            "type": "faq",
+            "hidden": false,
+            "data": {
+              "eyebrow": "Veelgestelde vragen",
+              "title": "Goed om te weten",
+              "text": "<p>Staat je vraag er niet tussen? Stel hem gerust in het eerste belletje. <a href=\"/solliciteren\">Solliciteer direct</a>, je zit nergens aan vast.</p>",
+              "background": "white",
+              "items": [
+                {
+                  "question": "Heb ik ervaring nodig?",
+                  "answer": "Nee. Je krijgt een training en je team helpt je op weg. Wat je wel meeneemt: energie, een open houding en zin om te leren."
+                },
+                {
+                  "question": "Hoeveel kan ik verdienen?",
+                  "answer": "Je verdient per resultaat. Hoe meer mensen je enthousiast maakt, hoe meer je verdient, en er zit geen plafond op: €300+ per dag is mogelijk. In het eerste gesprek rekenen we samen uit wat realistisch is voor jou."
+                },
+                {
+                  "question": "Wat voor werk is het precies?",
+                  "answer": "Je voert gesprekken met mensen: aan de deur, op straat, in winkelcentra of op events. Je vertelt over een product, dienst of organisatie van een van onze opdrachtgevers en helpt mensen om klant te worden."
+                },
+                {
+                  "question": "Voor welke opdrachtgevers werk ik?",
+                  "answer": "We werken voor verschillende opdrachtgevers. Welke projecten er nu lopen, hoor je in het eerste gesprek."
+                },
+                {
+                  "question": "Waar ga ik werken?",
+                  "answer": "In Groningen, Friesland en Drenthe. Je werkt met je team op wisselende locaties: in woonwijken, in winkelstraten en op evenementen."
+                },
+                {
+                  "question": "Kan ik dit als bijbaan doen?",
+                  "answer": "Ja, ook naast je studie of een andere baan. Geef in je sollicitatie aan hoeveel dagen per week je beschikbaar bent, dan kijken we samen wat past."
+                },
+                {
+                  "question": "Wat als mensen nee zeggen?",
+                  "answer": "Dat hoort erbij, ook bij de besten. Je leert om een nee niet persoonlijk op te vatten en je team houdt je scherp en gemotiveerd. Elk gesprek maakt je beter."
+                },
+                {
+                  "question": "Heb ik een cv nodig?",
+                  "answer": "Nee. Je naam, telefoonnummer, e-mailadres en woonplaats zijn genoeg. De rest bespreken we in het eerste gesprek."
+                },
+                {
+                  "question": "Hoe snel hoor ik iets?",
+                  "answer": "Binnen 24 uur bellen we je op het nummer dat je hebt opgegeven."
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "6a1b7c00-0000-4000-8000-000000000006",
+      "systemKey": null,
+      "doc": {
+        "title": "Privacyverklaring",
+        "slug": "privacy",
+        "seo": {
+          "title": "Privacyverklaring",
+          "description": "Lees hoe True Culture Marketing omgaat met de gegevens van sollicitanten en bezoekers.",
+          "ogTitle": "",
+          "ogDescription": "",
+          "ogImage": null,
+          "canonical": "",
+          "noindex": false
+        },
+        "sections": [
+          {
+            "id": "privacy-hero",
+            "type": "pageHero",
+            "hidden": false,
+            "data": {
+              "eyebrow": "Privacy",
+              "title": "Privacyverklaring",
+              "highlight": "",
+              "intro": "True Culture Marketing gaat zorgvuldig om met je persoonsgegevens. Hieronder lees je welke gegevens we verwerken als je solliciteert, waarom we dat doen en hoe lang we ze bewaren.",
+              "showWatermark": true
+            }
+          },
+          {
+            "id": "privacy-cards",
+            "type": "textCards",
+            "hidden": false,
+            "data": {
+              "items": [
+                {
+                  "title": "Welke gegevens verwerken we",
+                  "body": "<p>Als je solliciteert, verwerken we de gegevens die je zelf invult: je naam, telefoonnummer, e-mailadres, woonplaats, beschikbaarheid en eventueel je bericht. Ook slaan we op via welke campagne of website je bij ons terechtkwam, zodat we weten welke kanalen werken.</p>"
+                },
+                {
+                  "title": "Waarvoor gebruiken we ze",
+                  "body": "<p>We gebruiken je gegevens alleen voor je sollicitatie: om contact met je op te nemen, een kennismaking te plannen en te kijken of het werk bij je past. We delen ze niet met onze opdrachtgevers of andere derden, tenzij de wet ons daartoe verplicht. Voor het bewaren van de gegevens en het versturen van e-mail werken we met dienstverleners die je gegevens alleen in onze opdracht verwerken.</p>"
+                },
+                {
+                  "title": "Hoe lang bewaren we ze",
+                  "body": "<p>We bewaren je sollicitatie tot uiterlijk vier weken na afloop van de sollicitatieprocedure. Opgeslagen sollicitaties worden na twee maanden automatisch verwijderd. Willen we je gegevens langer bewaren voor een toekomstige vacature, dan vragen we je eerst om toestemming (maximaal een jaar). Kom je bij ons werken, dan nemen we je gegevens op in je personeelsdossier.</p>"
+                },
+                {
+                  "title": "Cookies",
+                  "body": "<p>Deze website gebruikt geen tracking- of marketingcookies. Kom je via een advertentie of link binnen, dan onthoudt je browser tijdelijk (alleen zolang het tabblad open is) via welke campagne je kwam. Die informatie sturen we alleen mee als je solliciteert.</p>"
+                },
+                {
+                  "title": "Jouw rechten",
+                  "body": "<p>Je hebt het recht om je gegevens in te zien, te laten corrigeren of te laten verwijderen. Neem daarvoor contact met ons op. Ben je het niet eens met hoe we met je gegevens omgaan, dan kun je een klacht indienen bij de Autoriteit Persoonsgegevens.</p>"
+                },
+                {
+                  "title": "Wijzigingen",
+                  "body": "<p>We kunnen deze privacyverklaring aanpassen. De meest actuele versie staat altijd op deze pagina.</p>"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "services": [
+    {
+      "id": "6a1b7c00-0000-4000-8000-000000000201",
+      "doc": {
+        "title": "Deur-aan-deur",
+        "anchor": "deur-aan-deur",
+        "tag": "In woonwijken",
+        "short": "Je belt aan bij mensen thuis en vertelt over het aanbod van onze opdrachtgever. Persoonlijk en één op één.",
+        "description": "Als field marketeer deur-aan-deur ga je met je team naar een woonwijk. Je belt aan, maakt een praatje en vertelt over een product, dienst of organisatie van een van onze opdrachtgevers. Je leert snel contact maken en mensen eerlijk informeren, zodat ze zelf een goede keuze maken.",
+        "points": [
+          "Gesprekken voeren bij mensen thuis",
+          "Met je team op pad in Noord-Nederland",
+          "Verdienen per resultaat, zonder plafond"
+        ],
+        "image": null,
+        "cta": {
+          "label": "Solliciteer direct",
+          "link": {
+            "kind": "page",
+            "pageId": "6a1b7c00-0000-4000-8000-000000000005"
+          }
+        }
+      }
+    },
+    {
+      "id": "6a1b7c00-0000-4000-8000-000000000202",
+      "doc": {
+        "title": "Straatwerving",
+        "anchor": "straatwerving",
+        "tag": "Op straat",
+        "short": "In winkelstraten, winkelcentra en op stations spreek je voorbijgangers aan. Elke dag een andere plek.",
+        "description": "Bij straatwerving sta je op drukke plekken: in winkelstraten, in winkelcentra of op stations. Je spreekt voorbijgangers aan, maakt ze nieuwsgierig en vertelt over het aanbod van onze opdrachtgever. Je werkt met een team om je heen en elke dag ziet er weer anders uit.",
+        "points": [
+          "Voorbijgangers aanspreken en enthousiast maken",
+          "Steeds wisselende locaties",
+          "Verdienen per resultaat, zonder plafond"
+        ],
+        "image": null,
+        "cta": {
+          "label": "Solliciteer direct",
+          "link": {
+            "kind": "page",
+            "pageId": "6a1b7c00-0000-4000-8000-000000000005"
+          }
+        }
+      }
+    },
+    {
+      "id": "6a1b7c00-0000-4000-8000-000000000203",
+      "doc": {
+        "title": "Events en in-store",
+        "anchor": "events-en-in-store",
+        "tag": "Op events",
+        "short": "Op evenementen, beurzen en in winkels sta je met een stand en vertel je bezoekers over het aanbod.",
+        "description": "Op evenementen, beurzen en in winkels sta je met een stand van een van onze opdrachtgevers. Bezoekers komen naar je toe of jij stapt op ze af. Je geeft uitleg, beantwoordt vragen en helpt mensen om klant te worden. Ideaal als je houdt van drukte en afwisseling.",
+        "points": [
+          "Bezoekers ontvangen bij een stand",
+          "Werken op evenementen en in winkels",
+          "Verdienen per resultaat, zonder plafond"
+        ],
+        "image": null,
+        "cta": {
+          "label": "Solliciteer direct",
+          "link": {
+            "kind": "page",
+            "pageId": "6a1b7c00-0000-4000-8000-000000000005"
+          }
+        }
+      }
+    },
+    {
+      "id": "6a1b7c00-0000-4000-8000-000000000204",
+      "doc": {
+        "title": "Teamleider",
+        "anchor": "teamleider",
+        "tag": "Doorgroeien",
+        "short": "Haal je mooie resultaten en help je graag anderen? Dan kun je doorgroeien naar teamleider.",
+        "description": "Ben je een tijd bij ons en haal je goede resultaten? Dan kun je doorgroeien naar teamleider. Je coacht je eigen team, helpt nieuwe collega's op weg en zorgt dat iedereen gemotiveerd het veld in gaat. Zo bouw je ervaring op in leidinggeven die je de rest van je carrière meeneemt.",
+        "points": [
+          "Je eigen team coachen",
+          "Nieuwe collega's inwerken",
+          "Ervaring opdoen in leidinggeven"
+        ],
+        "image": null,
+        "cta": {
+          "label": "Solliciteer direct",
+          "link": {
+            "kind": "page",
+            "pageId": "6a1b7c00-0000-4000-8000-000000000005"
+          }
+        }
+      }
+    }
+  ],
+  "singletons": {
+    "settings": {
+      "set": {
+        "defaultDescription": "Verdien €300+ per dag als field marketeer in Groningen, Friesland of Drenthe. Geen ervaring of cv nodig: solliciteer in 2 minuten en we bellen je binnen 24 uur."
+      }
+    },
+    "navigation": {
+      "replace": {
+        "items": [
+          {
+            "label": "Vacatures",
+            "link": {
+              "kind": "page",
+              "pageId": "6a1b7c00-0000-4000-8000-000000000002"
+            },
+            "visible": true,
+            "children": []
+          },
+          {
+            "label": "Zo werkt het",
+            "link": {
+              "kind": "page",
+              "pageId": "6a1b7c00-0000-4000-8000-000000000003"
+            },
+            "visible": true,
+            "children": []
+          },
+          {
+            "label": "Over ons",
+            "link": {
+              "kind": "page",
+              "pageId": "6a1b7c00-0000-4000-8000-000000000004"
+            },
+            "visible": true,
+            "children": []
+          }
+        ],
+        "cta": {
+          "label": "Solliciteer direct",
+          "mobileLabel": "Solliciteer in 2 minuten",
+          "link": {
+            "kind": "page",
+            "pageId": "6a1b7c00-0000-4000-8000-000000000005"
+          },
+          "visible": true,
+          "mobileSticky": true
+        }
+      }
+    },
+    "footer": {
+      "set": {
+        "text": "Face-to-face field marketing in Groningen, Friesland en Drenthe. We werven klanten voor verschillende opdrachtgevers.",
+        "links": [
+          {
+            "label": "Home",
+            "link": {
+              "kind": "page",
+              "pageId": "6a1b7c00-0000-4000-8000-000000000001"
+            },
+            "visible": true
+          },
+          {
+            "label": "Vacatures",
+            "link": {
+              "kind": "page",
+              "pageId": "6a1b7c00-0000-4000-8000-000000000002"
+            },
+            "visible": true
+          },
+          {
+            "label": "Zo werkt het",
+            "link": {
+              "kind": "page",
+              "pageId": "6a1b7c00-0000-4000-8000-000000000003"
+            },
+            "visible": true
+          },
+          {
+            "label": "Over ons",
+            "link": {
+              "kind": "page",
+              "pageId": "6a1b7c00-0000-4000-8000-000000000004"
+            },
+            "visible": true
+          },
+          {
+            "label": "Solliciteren",
+            "link": {
+              "kind": "page",
+              "pageId": "6a1b7c00-0000-4000-8000-000000000005"
+            },
+            "visible": true
+          }
+        ],
+        "legalLinks": [
+          {
+            "label": "Privacyverklaring",
+            "link": {
+              "kind": "page",
+              "pageId": "6a1b7c00-0000-4000-8000-000000000006"
+            },
+            "visible": true
+          }
+        ]
+      }
+    },
+    "forms": {
+      "set": {
+        "retentionDays": 60,
+        "labels": {
+          "name": "Naam",
+          "namePlaceholder": "Je voor- en achternaam",
+          "phone": "Telefoonnummer",
+          "phonePlaceholder": "06 12345678",
+          "email": "E-mailadres",
+          "emailPlaceholder": "naam@voorbeeld.nl",
+          "city": "Woonplaats",
+          "cityPlaceholder": "Bijv. Groningen",
+          "availability": "Hoeveel dagen per week wil je werken?",
+          "availabilityPlaceholder": "Kies wat bij je past",
+          "message": "Wil je nog iets kwijt? (optioneel)",
+          "messagePlaceholder": "Bijv. je voorkeur voor deur-aan-deur, straat of events.",
+          "submit": "Verstuur sollicitatie",
+          "sending": "Versturen…"
+        },
+        "availabilityOptions": [
+          "1 à 2 dagen per week",
+          "3 à 4 dagen per week",
+          "Fulltime",
+          "Weet ik nog niet"
+        ],
+        "messages": {
+          "successTitle": "Gelukt!",
+          "success": "Je sollicitatie is binnen. Binnen 24 uur bellen we je op het nummer dat je hebt opgegeven. Houd je telefoon bij de hand!",
+          "invalid": "Controleer de gemarkeerde velden.",
+          "nameError": "Vul je naam in.",
+          "phoneError": "Vul een geldig telefoonnummer in, bijv. 06 12345678.",
+          "emailError": "Vul een geldig e-mailadres in.",
+          "cityError": "Vul je woonplaats in.",
+          "availabilityError": "Kies hoeveel dagen je wilt werken.",
+          "rateLimited": "Je hebt het formulier net al een paar keer verstuurd. Probeer het over een paar minuten opnieuw.",
+          "failed": "Er ging iets mis bij het versturen. Probeer het later opnieuw.",
+          "notConfigured": "Het sollicitatieformulier is nog niet volledig ingesteld. Probeer het later opnieuw."
+        },
+        "privacyNote": "<p>We gebruiken je gegevens alleen voor je sollicitatie. Lees onze <a href=\"/privacy\">privacyverklaring</a>.</p>"
+      }
+    }
+  }
+}

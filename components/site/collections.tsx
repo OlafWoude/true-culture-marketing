@@ -34,7 +34,7 @@ export function ServicesOverviewBlock({ data, ctx, layout }: BlockProps) {
             <MobileCarousel
               enabled={carousel}
               tone="dark"
-              label="Diensten"
+              label="Vacatures"
               className="relative grid gap-4 md:grid-cols-2"
               bleed="max-md:-mx-4 max-md:px-4 max-md:scroll-px-4 sm:max-md:-mx-6 sm:max-md:px-6 sm:max-md:scroll-px-6"
             >
@@ -82,7 +82,7 @@ export function ServicesDetailedBlock({ data, ctx }: BlockProps) {
   const carousel = data.mobileCarousel !== false;
   return (
     <div className="bg-mist py-6 md:py-10">
-      <MobileCarousel enabled={carousel} label="Diensten" bleed="max-md:px-3 max-md:scroll-px-3 sm:max-md:px-6 sm:max-md:scroll-px-6">
+      <MobileCarousel enabled={carousel} label="Vacatures" bleed="max-md:px-3 max-md:scroll-px-3 sm:max-md:px-6 sm:max-md:scroll-px-6">
       {services.map((s, i) => {
         const even = i % 2 === 0;
         const image = ctx.media(s.image);

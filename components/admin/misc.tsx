@@ -15,6 +15,7 @@ import {
 import type { ActionResult } from "@/lib/cms/types";
 import { useConfirm, useToast } from "./feedback";
 import { AdminButton, Card, FieldLabel, formatDate, Input, Notice, Select, StatusBadge } from "./ui";
+import { whatsappHref } from "@/lib/whatsapp";
 
 function useRun() {
   const router = useRouter();
@@ -108,7 +109,18 @@ export function RedirectManager({ redirects }: { redirects: { id: string; fromPa
   );
 }
 
-export function SubmissionsList({ items }: { items: { id: string; createdAt: string; read: boolean; emailed: boolean; data: { name?: string; companyName?: string; email?: string; message?: string } }[] }) {
+type SubmissionData = {
+  name?: string;
+  phone?: string;
+  email?: string;
+  city?: string;
+  availability?: string;
+  message?: string;
+  source?: string;
+  companyName?: string;
+};
+
+export function SubmissionsList({ items }: { items: { id: string; createdAt: string; read: boolean; emailed: boolean; data: SubmissionData }[] }) {
   const { run, pending } = useRun();
   const confirm = useConfirm();
   const [open, setOpen] = useState<string | null>(null);
@@ -116,6 +128,18 @@ export function SubmissionsList({ items }: { items: { id: string; createdAt: str
     <ul className="divide-y divide-zinc-200 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
       {items.map((s) => {
         const isOpen = open === s.id;
+        const d = s.data;
+        const firstName = (d.name ?? "").split(" ")[0];
+        const whatsapp = whatsappHref(d.phone, `Hoi ${firstName}, bedankt voor je sollicitatie bij True Culture Marketing! Wanneer kunnen we je even bellen?`);
+        const details: [string, React.ReactNode][] = [
+          ["Naam", d.name],
+          ["Telefoon", d.phone && <a className="underline" href={`tel:${d.phone.replace(/[^0-9+]/g, "")}`}>{d.phone}</a>],
+          ["E-mail", d.email && <a className="underline" href={`mailto:${d.email}`}>{d.email}</a>],
+          ["Woonplaats", d.city],
+          ["Beschikbaar", d.availability],
+          ["Bedrijf", d.companyName],
+          ["Herkomst", d.source],
+        ];
         return (
           <li key={s.id}>
             <button
@@ -127,12 +151,12 @@ export function SubmissionsList({ items }: { items: { id: string; createdAt: str
               }}
               className="flex w-full flex-wrap items-center gap-3 px-4 py-3 text-left hover:bg-zinc-50"
             >
-              <span className={`h-2 w-2 rounded-full ${s.read ? "bg-transparent" : "bg-[#fece00]"}`} aria-label={s.read ? "Gelezen" : "Nieuw"} />
+              <span className={`h-2 w-2 rounded-full ${s.read ? "bg-transparent" : "bg-[#fece00]"}`} aria-label={s.read ? "Bekeken" : "Nieuw"} />
               <span className="min-w-0 flex-1">
                 <span className={`block truncate ${s.read ? "text-zinc-700" : "font-bold text-zinc-900"}`}>
-                  {s.data.name} · {s.data.companyName}
+                  {[d.name, d.city ?? d.companyName].filter(Boolean).join(" · ")}
                 </span>
-                <span className="block truncate text-xs text-zinc-500">{s.data.message}</span>
+                <span className="block truncate text-xs text-zinc-500">{[d.availability, d.phone].filter(Boolean).join(" · ") || d.message}</span>
               </span>
               <span className="text-xs text-zinc-500">{formatDate(s.createdAt)}</span>
               {!s.read && <StatusBadge status="new" />}
@@ -140,25 +164,47 @@ export function SubmissionsList({ items }: { items: { id: string; createdAt: str
             {isOpen && (
               <div className="space-y-4 border-t border-zinc-200 bg-zinc-50 px-4 py-4 text-sm">
                 <dl className="grid gap-3 sm:grid-cols-3">
-                  <div><dt className="font-semibold">Naam</dt><dd>{s.data.name}</dd></div>
-                  <div><dt className="font-semibold">Bedrijf</dt><dd>{s.data.companyName}</dd></div>
-                  <div><dt className="font-semibold">E-mail</dt><dd><a className="underline" href={`mailto:${s.data.email}`}>{s.data.email}</a></dd></div>
+                  {details
+                    .filter(([, value]) => Boolean(value))
+                    .map(([label, value]) => (
+                      <div key={label} className="min-w-0">
+                        <dt className="font-semibold">{label}</dt>
+                        <dd className="break-words">{value}</dd>
+                      </div>
+                    ))}
                 </dl>
-                <div>
-                  <p className="font-semibold">Bericht</p>
-                  <p className="mt-1 whitespace-pre-wrap text-zinc-800">{s.data.message}</p>
-                </div>
+                {d.message && (
+                  <div>
+                    <p className="font-semibold">Bericht</p>
+                    <p className="mt-1 whitespace-pre-wrap text-zinc-800">{d.message}</p>
+                  </div>
+                )}
                 <p className="text-xs text-zinc-500">{s.emailed ? "Ook per e-mail doorgestuurd." : "Niet per e-mail doorgestuurd (e-mail niet ingesteld of mislukt)."}</p>
-                <div className="flex gap-2">
-                  <a className="rounded-xl bg-[#050505] px-4 py-2 text-sm font-semibold text-white" href={`mailto:${s.data.email}?subject=${encodeURIComponent("Re: je aanvraag bij True Culture Marketing")}`}>
-                    Beantwoorden
-                  </a>
-                  <AdminButton onClick={() => run(() => markSubmissionAction(s.id, false))} disabled={pending}>Markeer als ongelezen</AdminButton>
+                <div className="flex flex-wrap gap-2">
+                  {d.phone && (
+                    <a className="rounded-xl bg-[#050505] px-4 py-2 text-sm font-semibold text-white" href={`tel:${d.phone.replace(/[^0-9+]/g, "")}`}>
+                      Bellen
+                    </a>
+                  )}
+                  {whatsapp && (
+                    <a className="rounded-xl bg-[#25d366] px-4 py-2 text-sm font-semibold text-[#050505]" href={whatsapp} target="_blank" rel="noopener noreferrer">
+                      WhatsApp
+                    </a>
+                  )}
+                  {d.email && (
+                    <a
+                      className="rounded-xl border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-900"
+                      href={`mailto:${d.email}?subject=${encodeURIComponent("Je sollicitatie bij True Culture Marketing")}`}
+                    >
+                      Mailen
+                    </a>
+                  )}
+                  <AdminButton onClick={() => run(() => markSubmissionAction(s.id, false))} disabled={pending}>Markeer als nieuw</AdminButton>
                   <AdminButton
                     variant="danger"
                     disabled={pending}
                     onClick={async () => {
-                      if (await confirm({ title: "Aanvraag verwijderen?", body: "De persoonsgegevens in deze aanvraag worden definitief verwijderd.", confirmLabel: "Verwijderen", danger: true })) run(() => deleteSubmissionAction(s.id));
+                      if (await confirm({ title: "Sollicitatie verwijderen?", body: "De persoonsgegevens in deze sollicitatie worden definitief verwijderd.", confirmLabel: "Verwijderen", danger: true })) run(() => deleteSubmissionAction(s.id));
                     }}
                   >
                     Verwijderen

@@ -23,7 +23,7 @@ const typeLabel: Record<string, string> = {
 };
 const editPath: Record<string, (id: string) => string> = {
   page: (id) => `/admin/paginas/${id}`,
-  service: (id) => `/admin/diensten/${id}`,
+  service: (id) => `/admin/vacatures/${id}`,
   case: (id) => `/admin/cases/${id}`,
   testimonial: (id) => `/admin/testimonials/${id}`,
   settings: () => "/admin/instellingen",
@@ -36,7 +36,7 @@ const editPath: Record<string, (id: string) => string> = {
 const shortcuts = [
   { href: "/admin/paginas", title: "Pagina’s", text: "Teksten, secties en SEO per pagina" },
   { href: "/admin/media", title: "Afbeeldingen", text: "Uploaden, vervangen en alt-teksten" },
-  { href: "/admin/diensten", title: "Diensten", text: "Omschrijvingen en volgorde" },
+  { href: "/admin/vacatures", title: "Vacatures", text: "Functies, omschrijvingen en volgorde" },
   { href: "/admin/huisstijl", title: "Huisstijl", text: "Kleuren, lettertypen en logo" },
   { href: "/admin/navigatie", title: "Navigatie", text: "Menu-items en de knop in het menu" },
   { href: "/admin/instellingen", title: "Instellingen", text: "Bedrijfs- en contactgegevens" },
@@ -79,8 +79,8 @@ export default async function Dashboard({ searchParams }: Props) {
         {[
           { label: "Pagina’s", value: count("page"), sub: `${count("page", "published")} gepubliceerd`, href: "/admin/paginas" },
           { label: "Afbeeldingen", value: media, sub: "in de mediabibliotheek", href: "/admin/media" },
-          { label: "Diensten en cases", value: count("service") + count("case"), sub: `${count("service")} diensten · ${count("case")} cases`, href: "/admin/diensten" },
-          { label: "Nieuwe aanvragen", value: unread, sub: "ongelezen", href: "/admin/aanvragen" },
+          { label: "Vacatures", value: count("service"), sub: `${count("service")} functies`, href: "/admin/vacatures" },
+          { label: "Nieuwe sollicitaties", value: unread, sub: "nog niet bekeken", href: "/admin/sollicitaties" },
         ].map((s) => (
           <Link key={s.label} href={s.href} className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-zinc-400">
             <p className="text-sm font-medium text-zinc-500">{s.label}</p>
@@ -134,19 +134,19 @@ export default async function Dashboard({ searchParams }: Props) {
           </Card>
           <Card flush>
             <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4">
-              <h2 className="text-lg font-bold">Laatste aanvragen</h2>
-              <Link href="/admin/aanvragen" className="text-sm font-semibold underline underline-offset-4">Alles</Link>
+              <h2 className="text-lg font-bold">Laatste sollicitaties</h2>
+              <Link href="/admin/sollicitaties" className="text-sm font-semibold underline underline-offset-4">Alles</Link>
             </div>
             {latest.length === 0 ? (
-              <p className="px-5 py-6 text-sm text-zinc-500">Nog geen aanvragen.</p>
+              <p className="px-5 py-6 text-sm text-zinc-500">Nog geen sollicitaties.</p>
             ) : (
               <ul className="divide-y divide-zinc-200">
                 {latest.map((s) => {
-                  const d = s.data as { name?: string; companyName?: string };
+                  const d = s.data as { name?: string; city?: string; companyName?: string };
                   return (
                     <li key={s.id} className="flex items-center gap-3 px-5 py-3 text-sm">
                       <span className={`h-2 w-2 rounded-full ${s.readAt ? "bg-zinc-200" : "bg-[#fece00]"}`} />
-                      <span className="min-w-0 flex-1 truncate">{d.name} · {d.companyName}</span>
+                      <span className="min-w-0 flex-1 truncate">{[d.name, d.city ?? d.companyName].filter(Boolean).join(" · ")}</span>
                       <span className="text-xs text-zinc-500">{formatDate(s.createdAt)}</span>
                     </li>
                   );

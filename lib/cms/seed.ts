@@ -1,7 +1,6 @@
-// The original, hand-written website content expressed in the CMS format.
-// Used to fill an empty database and as a fallback while no database is configured.
-import { comparison, marqueeItems, services, steps } from "@/lib/content";
-import { faqs } from "@/lib/faq";
+// The built-in website content in the CMS format: a recruitment funnel for new field marketers.
+// Used to fill an empty database and as a fallback while no database is configured. Databases filled
+// with an older version are brought up to date by a content migration (see drizzle/content).
 import { cta, pageLink } from "./fields";
 import type { Section } from "./blocks";
 import type {
@@ -19,10 +18,10 @@ import type {
 
 export const SEED_IDS = {
   home: "6a1b7c00-0000-4000-8000-000000000001",
-  diensten: "6a1b7c00-0000-4000-8000-000000000002",
-  werkwijze: "6a1b7c00-0000-4000-8000-000000000003",
+  vacatures: "6a1b7c00-0000-4000-8000-000000000002",
+  zoWerktHet: "6a1b7c00-0000-4000-8000-000000000003",
   overOns: "6a1b7c00-0000-4000-8000-000000000004",
-  contact: "6a1b7c00-0000-4000-8000-000000000005",
+  solliciteren: "6a1b7c00-0000-4000-8000-000000000005",
   privacy: "6a1b7c00-0000-4000-8000-000000000006",
   settings: "6a1b7c00-0000-4000-8000-000000000101",
   navigation: "6a1b7c00-0000-4000-8000-000000000102",
@@ -39,7 +38,9 @@ const serviceIds = [
 ];
 
 const P = SEED_IDS;
-const toContact = cta("Plan een kennismakingsgesprek", pageLink(P.contact));
+// One primary action everywhere: the short application form.
+const applyFast = cta("Solliciteer in 2 minuten", pageLink(P.solliciteren));
+const applyNow = cta("Solliciteer direct", pageLink(P.solliciteren));
 
 function seo(title: string, description: string): Seo {
   return { title, description, ogTitle: "", ogDescription: "", ogImage: null, canonical: "", noindex: false };
@@ -51,16 +52,67 @@ function section(id: string, type: Section["type"], data: Section["data"]): Sect
 
 const closing = (id: string) =>
   section(id, "closingCta", {
-    title: "Klaar voor een",
-    highlight: "volle agenda?",
-    text: "Plan een vrijblijvend kennismakingsgesprek. We bespreken jouw doelgroep, je doelen en wat wij voor jouw salesteam kunnen betekenen.",
-    cta: toContact,
+    title: "Zin om te",
+    highlight: "beginnen?",
+    text: "Solliciteer in 2 minuten. Geen cv, geen sollicitatiebrief: binnen 24 uur bellen we je.",
+    cta: applyFast,
     showWatermark: true,
   });
 
-const faqItems = faqs.map((f) => ({ question: f.q, answer: f.a }));
+// The questions candidates ask before they dare to apply, answered honestly.
+const faqItems = [
+  {
+    question: "Heb ik ervaring nodig?",
+    answer:
+      "Nee. Je krijgt een training en je team helpt je op weg. Wat je wel meeneemt: energie, een open houding en zin om te leren.",
+  },
+  {
+    question: "Hoeveel kan ik verdienen?",
+    answer:
+      "Je verdient per resultaat. Hoe meer mensen je enthousiast maakt, hoe meer je verdient, en er zit geen plafond op: €300+ per dag is mogelijk. In het eerste gesprek rekenen we samen uit wat realistisch is voor jou.",
+  },
+  {
+    question: "Wat voor werk is het precies?",
+    answer:
+      "Je voert gesprekken met mensen: aan de deur, op straat, in winkelcentra of op events. Je vertelt over een product, dienst of organisatie van een van onze opdrachtgevers en helpt mensen om klant te worden.",
+  },
+  {
+    question: "Voor welke opdrachtgevers werk ik?",
+    answer: "We werken voor verschillende opdrachtgevers. Welke projecten er nu lopen, hoor je in het eerste gesprek.",
+  },
+  {
+    question: "Waar ga ik werken?",
+    answer:
+      "In Groningen, Friesland en Drenthe. Je werkt met je team op wisselende locaties: in woonwijken, in winkelstraten en op evenementen.",
+  },
+  {
+    question: "Kan ik dit als bijbaan doen?",
+    answer:
+      "Ja, ook naast je studie of een andere baan. Geef in je sollicitatie aan hoeveel dagen per week je beschikbaar bent, dan kijken we samen wat past.",
+  },
+  {
+    question: "Wat als mensen nee zeggen?",
+    answer:
+      "Dat hoort erbij, ook bij de besten. Je leert om een nee niet persoonlijk op te vatten en je team houdt je scherp en gemotiveerd. Elk gesprek maakt je beter.",
+  },
+  {
+    question: "Heb ik een cv nodig?",
+    answer: "Nee. Je naam, telefoonnummer, e-mailadres en woonplaats zijn genoeg. De rest bespreken we in het eerste gesprek.",
+  },
+  {
+    question: "Hoe snel hoor ik iets?",
+    answer: "Binnen 24 uur bellen we je op het nummer dat je hebt opgegeven.",
+  },
+];
 
-const comparisonRows = comparison.map((r) => ({ label: r.label, self: r.self, us: r.us }));
+const faq = (id: string, background: "white" | "light") =>
+  section(id, "faq", {
+    eyebrow: "Veelgestelde vragen",
+    title: "Goed om te weten",
+    text: `<p>Staat je vraag er niet tussen? Stel hem gerust in het eerste belletje. <a href="/solliciteren">Solliciteer direct</a>, je zit nergens aan vast.</p>`,
+    background,
+    items: faqItems,
+  });
 
 export type SeedPage = { id: string; systemKey: string | null; doc: PageDoc };
 
@@ -69,147 +121,186 @@ export function seedPages(): SeedPage[] {
     title: "Home",
     slug: "",
     seo: seo(
-      "True Culture Marketing | B2B leadgeneratie en afspraken inplannen",
-      "True Culture Marketing is een B2B sales agency. Wij verzorgen leadgeneratie en plannen kwalitatieve afspraken met beslissers in, zodat jouw salesteam zich op de deal kan richten.",
+      "Bijbaan of fulltime als promotor in Noord-Nederland | True Culture",
+      "Bijbaan of fulltime als field marketeer en promotor in Groningen, Friesland of Drenthe. Verdien €300+ per dag, zonder ervaring of cv. Solliciteer in 2 minuten.",
     ),
     sections: [
       section("home-hero", "hero", {
-        eyebrow: "B2B sales agency",
-        title: "Meer afspraken",
-        highlight: "met beslissers",
+        eyebrow: "Vacatures in Groningen, Friesland en Drenthe",
+        title: "Verdien €300+",
+        highlight: "per dag",
         highlightNewLine: true,
         intro:
-          "True Culture Marketing genereert B2B-leads en plant gekwalificeerde afspraken in. Zo richt jouw salesteam zich op waar het om draait: deals sluiten.",
-        primaryCta: toContact,
-        secondaryCta: cta("Bekijk onze diensten", pageLink(P.diensten)),
+          "Ontdek de mogelijkheden als field marketeer in Noord-Nederland. Je gaat met je team op pad, voert gesprekken aan de deur, op straat en op events, en verdient per resultaat. Geen ervaring nodig: wij leren je de rest.",
+        primaryCta: applyFast,
+        secondaryCta: cta("Bekijk de vacatures", pageLink(P.vacatures)),
+        trustPoints: ["Geen cv nodig", "Geen ervaring nodig", "Binnen 24 uur een belletje"],
         showServiceTiles: true,
-        tileLinkLabel: "Meer weten",
+        tileLinkLabel: "Bekijk vacature",
+        mobileCarousel: true,
         showWatermark: true,
       }),
-      section("home-marquee", "marquee", { items: marqueeItems }),
+      section("home-marquee", "marquee", {
+        items: ["Bijbaan of fulltime", "Deur-aan-deur", "Straatwerving", "Events", "In-store", "Groningen", "Friesland", "Drenthe", "Teamspirit", "Doorgroeien"],
+      }),
       section("home-intro", "introSplit", {
-        eyebrow: "Over True Culture",
-        title: "Jouw salesteam verdient betere gesprekken",
+        eyebrow: "Het werk",
+        title: "Wat doe je als field marketeer?",
         body:
-          "<p>Prospecteren, bellen, opvolgen en plannen: het voortraject slokt tijd op die je salesteam liever in klantgesprekken steekt. Daar komen wij in beeld.</p>" +
-          "<p>Wij benaderen de juiste beslissers, kwalificeren de interesse en zetten de afspraak in jullie agenda. Geen losse acties, maar een doordacht proces dat voorspelbaar nieuwe kansen oplevert.</p>",
-        cta: cta("Meer over ons", pageLink(P.overOns)),
-        cardTitle: "Waar we voor staan",
+          "<p>Als field marketeer ga je in gesprek met mensen: bij hen aan de deur, op straat of op een event. Je vertelt over een product, dienst of organisatie van een van onze opdrachtgevers en je helpt mensen om klant te worden.</p>" +
+          "<p>Je werkt nooit alleen. Je gaat met je team op pad, je krijgt coaching en samen vieren jullie de successen. Wat je verdient, bepaal je met je eigen inzet.</p>",
+        cta: applyNow,
+        cardTitle: "Wat je bij ons krijgt",
         cardItems: [
-          "Gesprekken met beslissers, niet met poortwachters",
-          "Kwaliteit van een afspraak boven aantallen",
-          "Transparant in aanpak, voortgang en resultaat",
-          "Persoonlijke benadering, nooit massaal",
+          "Verdienen per resultaat, zonder plafond",
+          "Een training vanaf je eerste dag",
+          "Een hecht team om je heen",
+          "Kans om door te groeien naar teamleider",
         ],
       }),
       section("home-services", "servicesOverview", {
-        eyebrow: "Diensten",
-        title: "Van eerste contact tot afspraak in de agenda",
+        eyebrow: "Vacatures",
+        title: "Kies het werk dat bij je past",
         intro:
-          "Zet één dienst in of laat ons het complete voortraject verzorgen. Altijd afgestemd op jouw doelgroep en doelen.",
-        linkLabel: "Lees meer",
+          "Aan de deur, op straat of op een event: overal werk je in een team en verdien je per resultaat. Heb je een voorkeur? Vertel het ons in je sollicitatie.",
+        linkLabel: "Solliciteer direct",
+        mobileCarousel: true,
       }),
       section("home-comparison", "comparison", {
-        eyebrow: "Waarom uitbesteden",
-        title: "Jouw team aan tafel, wij aan de voorkant",
+        eyebrow: "Waarom True Culture",
+        title: "Meer dan een gewone bijbaan",
         intro:
-          "Een salesteam is het meest waardevol in het gesprek met de klant. Door het voortraject uit te besteden, besteedt jouw team zijn tijd daar waar het het verschil maakt.",
+          "Bij een gewone bijbaan krijg je een vast uurloon. Bij True Culture bepaal je zelf wat je verdient, leer je skills waar je je hele leven iets aan hebt en werk je met een team dat je beter maakt.",
         layout: "split",
         background: "light",
-        selfLabel: "Zelf doen",
+        selfLabel: "Gewone bijbaan",
         usAccent: "True",
         usLabel: "Culture",
-        rows: comparisonRows,
+        rows: [
+          { label: "Verdiensten", self: "Vast uurloon, hoe hard je ook werkt", us: "Verdienen per resultaat: €300+ per dag is mogelijk" },
+          { label: "Ervaring", self: "Vaak ervaring of een diploma nodig", us: "Geen ervaring nodig, je krijgt een training" },
+          { label: "Werkdag", self: "Elke dag dezelfde plek en hetzelfde werk", us: "Steeds andere locaties, gesprekken en mensen" },
+          { label: "Sfeer", self: "Je collega's zie je alleen in de pauze", us: "Elke dag samen met je team op pad" },
+          { label: "Groei", self: "Weinig kans om door te groeien", us: "Doorgroeien naar teamleider is mogelijk" },
+        ],
+        mobileCarousel: true,
       }),
       section("home-steps", "steps", {
-        eyebrow: "Werkwijze",
-        title: "Zo pakken we het aan",
-        cta: cta("Bekijk onze werkwijze", pageLink(P.werkwijze)),
-        items: steps.map((s) => ({ title: s.title, description: s.description })),
+        eyebrow: "Solliciteren",
+        title: "Zo ga je aan de slag",
+        cta: cta("Zo werkt het", pageLink(P.zoWerktHet)),
+        items: [
+          { title: "Solliciteer in 2 minuten", description: "Laat je naam, telefoonnummer en woonplaats achter. Een cv of motivatiebrief is niet nodig." },
+          { title: "We bellen je binnen 24 uur", description: "We vertellen hoe het werk eruitziet en wat je kunt verdienen, en beantwoorden al je vragen." },
+          { title: "Kennismaken", description: "We spreken af en kijken samen of het werk bij je past. Eerlijk en zonder verplichtingen." },
+          { title: "Training en je eerste dag", description: "Je krijgt een training en gaat daarna samen met je team het veld in." },
+        ],
+        mobileCarousel: true,
       }),
-      section("home-cases", "cases", {
-        eyebrow: "Cases",
-        title: "Word een van onze",
-        highlight: "eerste cases",
-        text:
-          "We bouwen op dit moment aan onze eerste klantverhalen. Binnenkort lees je hier concrete resultaten. Wil jij de organisatie zijn waar we die voor neerzetten?",
-        cta: toContact,
-        show: "featured",
-        placeholderTitle: "Binnenkort",
-        placeholderText: "Case in voorbereiding",
+      section("home-testimonials", "testimonials", {
+        eyebrow: "Ervaringen",
+        title: "Dit zegt ons team",
+        intro: "Echte verhalen van collega's die je voorgingen.",
+        background: "white",
+        mobileCarousel: true,
       }),
-      section("home-faq", "faq", {
-        eyebrow: "Veelgestelde vragen",
-        title: "Goed om te weten",
-        text: `<p>Staat je vraag er niet tussen? <a href="/contact">Neem contact op</a>.</p>`,
-        background: "light",
-        items: faqItems,
-      }),
+      faq("home-faq", "light"),
       closing("home-closing"),
     ],
   };
 
-  const diensten: PageDoc = {
-    title: "Diensten",
-    slug: "diensten",
+  const vacatures: PageDoc = {
+    title: "Vacatures",
+    slug: "vacatures",
     seo: seo(
-      "Diensten",
-      "B2B leadgeneratie, afspraken inplannen, outbound campagnes en sales strategie. Bekijk hoe True Culture Marketing jouw salesteam ontlast.",
+      "Vacatures promotor en field marketeer in Noord-Nederland",
+      "Bijbaan of fulltime: deur-aan-deur, straatwerving of events in Groningen, Friesland en Drenthe. Verdien per resultaat, geen ervaring nodig.",
     ),
     sections: [
-      section("diensten-hero", "pageHero", {
-        eyebrow: "Diensten",
-        title: "Sales-ondersteuning",
-        highlight: "die rendeert",
+      section("vacatures-hero", "pageHero", {
+        eyebrow: "Vacatures",
+        title: "Kies jouw plek",
+        highlight: "in het veld",
         intro:
-          "Zet één dienst in of laat ons het complete voortraject verzorgen. Elke dienst is afgestemd op jouw doelgroep, propositie en doelen.",
+          "Aan de deur, op straat of op events in Groningen, Friesland en Drenthe. Overal werk je in een team, leer je mensen enthousiast maken en verdien je per resultaat.",
         showWatermark: true,
       }),
-      section("diensten-list", "servicesDetailed", { pointsTitle: "Wat je krijgt" }),
-      section("diensten-comparison", "comparison", {
-        eyebrow: "Waarom uitbesteden",
-        title: "Zelf doen of uitbesteden?",
-        intro:
-          "Het voortraject vraagt tijd, discipline en een vaste aanpak. Zo verhoudt zelf doen zich tot werken met True Culture.",
-        layout: "stacked",
-        background: "white",
-        selfLabel: "Zelf doen",
-        usAccent: "True",
-        usLabel: "Culture",
-        rows: comparisonRows,
+      section("vacatures-list", "servicesDetailed", { pointsTitle: "Wat je doet", mobileCarousel: true }),
+      section("vacatures-usps", "valuesGrid", {
+        eyebrow: "Wat je krijgt",
+        title: "Waarom bij ons werken?",
+        items: [
+          { title: "Verdienen zonder plafond", text: "Je verdient per resultaat, dus jouw inzet bepaalt wat je verdient. €300+ per dag is mogelijk." },
+          { title: "Training en coaching", text: "Je begint met een training en krijgt onderweg tips van ervaren collega's. Zo word je elke week beter in gesprekken voeren." },
+          { title: "Een team dat je beter maakt", text: "Je gaat samen op pad, helpt elkaar en viert samen de successen." },
+          { title: "Skills voor later", text: "Overtuigen, presenteren en tegen een stootje kunnen: daar heb je je hele carrière plezier van." },
+        ],
+        secondaryCta: cta("Zo werkt het", pageLink(P.zoWerktHet)),
+        primaryCta: applyNow,
+        mobileCarousel: true,
       }),
-      closing("diensten-closing"),
+      closing("vacatures-closing"),
     ],
   };
 
-  const werkwijze: PageDoc = {
-    title: "Werkwijze",
-    slug: "werkwijze",
+  const zoWerktHet: PageDoc = {
+    title: "Zo werkt het",
+    slug: "zo-werkt-het",
     seo: seo(
-      "Werkwijze",
-      "Van kennismaking tot optimalisatie: zo pakt True Culture Marketing leadgeneratie en het inplannen van afspraken aan.",
+      "Zo werkt solliciteren",
+      "Van sollicitatie tot eerste werkdag: zo werkt solliciteren bij True Culture Marketing. Geen cv nodig en binnen 24 uur een belletje.",
     ),
     sections: [
-      section("werkwijze-hero", "pageHero", {
-        eyebrow: "Werkwijze",
-        title: "Geen verrassingen.",
-        highlight: "Wel structuur.",
+      section("zo-werkt-het-hero", "pageHero", {
+        eyebrow: "Zo werkt het",
+        title: "Van sollicitatie",
+        highlight: "tot eerste werkdag",
         intro:
-          "Elke samenwerking doorloopt dezelfde vier fases. Zo weet je altijd waar je staat, wat we doen en wat je van ons kunt verwachten.",
+          "Solliciteren bij True Culture is simpel. Geen cv en geen lange formulieren: binnen 24 uur heb je ons aan de lijn.",
         showWatermark: true,
       }),
-      section("werkwijze-steps", "stepsDetailed", {
-        resultLabel: "Resultaat",
-        items: steps.map((s) => ({ title: s.title, detail: s.detail, outcome: s.outcome })),
+      section("zo-werkt-het-steps", "stepsDetailed", {
+        resultLabel: "Voor jou",
+        items: [
+          {
+            title: "Solliciteer in 2 minuten",
+            detail:
+              "Vul het korte formulier in met je naam, telefoonnummer, e-mailadres, woonplaats en beschikbaarheid. Een cv of motivatiebrief is niet nodig.",
+            outcome: "Je sollicitatie is binnen, zonder gedoe",
+          },
+          {
+            title: "We bellen je binnen 24 uur",
+            detail:
+              "We vertellen je hoe het werk eruitziet, hoe je verdient en welke projecten er lopen. Je kunt al je vragen stellen.",
+            outcome: "Je weet precies waar je aan begint",
+          },
+          {
+            title: "Kennismaking",
+            detail: "We spreken af om kennis te maken en kijken samen of het werk en het team bij je passen.",
+            outcome: "Een eerlijke keuze, voor jou en voor ons",
+          },
+          {
+            title: "Training en je eerste dag",
+            detail:
+              "Je krijgt een training over gesprekken voeren en over het project waar je aan werkt. Daarna ga je met je team het veld in.",
+            outcome: "Je eerste dag in het veld",
+          },
+        ],
+        mobileCarousel: true,
       }),
-      section("werkwijze-faq", "faq", {
-        eyebrow: "Veelgestelde vragen",
-        title: "Goed om te weten",
-        text: "",
+      section("zo-werkt-het-day", "numberedCards", {
+        eyebrow: "Een dag in het veld",
+        title: "Zo ziet je werkdag eruit",
         background: "white",
-        items: faqItems,
+        items: [
+          { title: "Samen van start", text: "Je begint de dag met je team. Je hoort waar jullie naartoe gaan en wat het plan voor vandaag is." },
+          { title: "In gesprek", text: "Je voert gesprekken aan de deur, op straat of op een event. Niet iedereen zegt ja, en dat is normaal." },
+          { title: "Samen afsluiten", text: "Aan het eind van de dag kijk je met je team terug: wat ging goed, wat kan beter en wat heb je verdiend?" },
+        ],
+        mobileCarousel: true,
       }),
-      closing("werkwijze-closing"),
+      faq("zo-werkt-het-faq", "light"),
+      closing("zo-werkt-het-closing"),
     ],
   };
 
@@ -218,96 +309,111 @@ export function seedPages(): SeedPage[] {
     slug: "over-ons",
     seo: seo(
       "Over ons",
-      "True Culture Marketing is een B2B sales agency die gelooft dat sales voorspelbaar kan zijn. Lees waar we voor staan en hoe we werken.",
+      "True Culture Marketing is een face-to-face field marketingbureau in Noord-Nederland. We werven klanten voor verschillende opdrachtgevers, met een team waarin cultuur voorop staat.",
     ),
     sections: [
       section("over-hero", "pageHero", {
         eyebrow: "Over ons",
-        title: "Sales is geen kunst.",
-        highlight: "Het is een vak.",
+        title: "De naam zegt het al:",
+        highlight: "cultuur voorop.",
         intro:
-          "True Culture Marketing is opgericht vanuit één overtuiging: B2B sales kan voorspelbaar en schaalbaar zijn, mits je het voortraject serieus neemt.",
+          "True Culture Marketing is een face-to-face field marketingbureau uit Noord-Nederland. We werven klanten voor verschillende opdrachtgevers, met een team dat elkaar scherp houdt en elkaars successen viert.",
         showWatermark: true,
       }),
       section("over-story", "storySplit", {
         eyebrow: "Ons verhaal",
-        title: "Gebouwd voor salesteams die willen groeien",
+        title: "Gebouwd op mensen",
         body:
-          "<p>Veel B2B-bedrijven hebben een sterk product en een goed salesteam, maar te weinig gesprekken met de juiste mensen. Prospecteren schiet erbij in, opvolging is wisselend en de pijplijn golft mee.</p>" +
-          "<p>Daar richten wij ons op. Wij nemen het voortraject over met een vaste, doordachte aanpak, zodat jouw team doet waar het goed in is: gesprekken voeren en deals sluiten.</p>",
+          "<p>Field marketing draait om gesprekken. Een goed gesprek voer je alleen als je energie hebt, als je weet waar je over praat en als je je gesteund voelt door je team.</p>" +
+          "<p>Daarom investeren we in onze mensen: in training, in coaching en in een sfeer waarin je jezelf kunt zijn. Wie hard werkt, verdient bij ons goed en krijgt de ruimte om door te groeien.</p>",
         image: null,
       }),
       section("over-values", "valuesGrid", {
         eyebrow: "Waar we voor staan",
         title: "Onze principes",
         items: [
-          { title: "Resultaatgericht", text: "We sturen op wat telt: gesprekken met de juiste beslissers en kansen die daadwerkelijk doorstromen naar je salesteam." },
-          { title: "No-nonsense", text: "Direct, eerlijk en zonder omhaal. We zeggen wat werkt en wat niet, ook als dat niet is wat je wilt horen." },
-          { title: "Partnerschap", text: "We werken niet los van je team, maar als verlengstuk ervan. Jouw doelen zijn ons uitgangspunt." },
-          { title: "Vakmanschap", text: "Elke benadering is persoonlijk en goed voorbereid. Wij vertegenwoordigen jouw merk en dat nemen we serieus." },
+          { title: "Eerlijk", text: "We zijn eerlijk tegen de mensen die we spreken en tegen elkaar. Geen mooie praatjes, wel duidelijke afspraken." },
+          { title: "Samen", text: "Je staat er nooit alleen voor. We gaan samen op pad, helpen elkaar en vieren samen de successen." },
+          { title: "Groei", text: "Iedereen begint ergens. Met training en coaching word je elke week beter, en wie wil, kan doorgroeien." },
+          { title: "Plezier", text: "Hard werken mag leuk zijn. Een goede sfeer in het team is de basis van alles wat we doen." },
         ],
-        secondaryCta: cta("Bekijk onze werkwijze", pageLink(P.werkwijze)),
-        primaryCta: cta("Bekijk onze diensten", pageLink(P.diensten)),
+        secondaryCta: cta("Bekijk de vacatures", pageLink(P.vacatures)),
+        primaryCta: applyNow,
+        mobileCarousel: true,
       }),
       closing("over-closing"),
     ],
   };
 
-  const contact: PageDoc = {
-    title: "Contact",
-    slug: "contact",
+  const solliciteren: PageDoc = {
+    title: "Solliciteren",
+    slug: "solliciteren",
     seo: seo(
-      "Plan een kennismakingsgesprek",
-      "Plan een vrijblijvend kennismakingsgesprek met True Culture Marketing en ontdek wat wij voor jouw salesteam kunnen betekenen.",
+      "Solliciteer in 2 minuten",
+      "Solliciteer voor een bijbaan of fulltime baan als field marketeer bij True Culture Marketing. Geen cv nodig: vul je gegevens in en we bellen je binnen 24 uur.",
     ),
     sections: [
-      section("contact-hero", "contactHero", {
-        eyebrow: "Contact",
-        title: "Laten we",
-        highlight: "kennismaken",
+      section("solliciteren-hero", "contactHero", {
+        eyebrow: "Solliciteren",
+        title: "Solliciteer in",
+        highlight: "2 minuten",
         intro:
-          "Plan een vrijblijvend kennismakingsgesprek. We bespreken je doelgroep, je doelen en hoe wij jouw salesteam kunnen ontlasten.",
-        bullets: [
-          "Vrijblijvend en zonder verplichtingen",
-          "Concreet advies over jouw situatie",
-          "Direct inzicht in de mogelijkheden",
-        ],
-        formTitle: "Plan een kennismakingsgesprek",
-        formIntro: "Vul het formulier in, dan nemen we contact met je op.",
+          "Laat je gegevens achter en we bellen je binnen 24 uur. In dat gesprek hoor je alles over het werk en wat je kunt verdienen.",
+        bullets: ["Geen cv of motivatiebrief nodig", "Geen ervaring nodig", "Binnen 24 uur een belletje"],
+        whatsappLabel: "Eerst een vraag? App ons",
+        formTitle: "Jouw gegevens",
+        formIntro: "Het duurt maar 2 minuten en je zit nergens aan vast.",
       }),
-      section("contact-steps", "numberedCards", {
-        eyebrow: "Wat je kunt verwachten",
-        title: "In drie stappen aan tafel",
+      section("solliciteren-next", "numberedCards", {
+        eyebrow: "Na je sollicitatie",
+        title: "Zo gaat het verder",
         background: "light",
         items: [
-          { title: "Je laat je gegevens achter", text: "Vertel kort wie je bent en wat je wilt bereiken." },
-          { title: "We nemen contact op", text: "We plannen samen een moment dat jou uitkomt." },
-          { title: "Het kennismakingsgesprek", text: "We bespreken je doelgroep, doelen en de mogelijkheden. Vrijblijvend." },
+          { title: "We bellen je binnen 24 uur", text: "Houd je telefoon bij de hand. We vertellen je alles over het werk en beantwoorden je vragen." },
+          { title: "Kennismaking", text: "We spreken af en kijken samen of het werk bij je past." },
+          { title: "Training en je eerste dag", text: "Je krijgt een training en gaat met je team het veld in." },
         ],
+        mobileCarousel: true,
       }),
+      faq("solliciteren-faq", "white"),
     ],
   };
 
   const privacyItems = [
-    ["Welke gegevens verzamelen we", "Wanneer je het contactformulier invult, verwerken we de gegevens die je zelf invoert: je naam, bedrijfsnaam, e-mailadres en de inhoud van je bericht."],
-    ["Waarvoor gebruiken we deze gegevens", "We gebruiken deze gegevens uitsluitend om contact met je op te nemen naar aanleiding van je aanvraag. We delen ze niet met derden, tenzij dat nodig is om aan een wettelijke verplichting te voldoen. Voor het versturen van het formulier maken we gebruik van een e-maildienst die de gegevens alleen in onze opdracht verwerkt."],
-    ["Bewaartermijn", "We bewaren je gegevens niet langer dan nodig is om je aanvraag af te handelen, tenzij we wettelijk verplicht zijn ze langer te bewaren."],
-    ["Jouw rechten", "Je hebt het recht om je gegevens in te zien, te laten corrigeren of te laten verwijderen. Neem hiervoor contact met ons op via het contactformulier."],
-    ["Cookies", "Deze website plaatst geen tracking- of marketingcookies."],
+    [
+      "Welke gegevens verwerken we",
+      "Als je solliciteert, verwerken we de gegevens die je zelf invult: je naam, telefoonnummer, e-mailadres, woonplaats, beschikbaarheid en eventueel je bericht. Ook slaan we op via welke campagne of website je bij ons terechtkwam, zodat we weten welke kanalen werken.",
+    ],
+    [
+      "Waarvoor gebruiken we ze",
+      "We gebruiken je gegevens alleen voor je sollicitatie: om contact met je op te nemen, een kennismaking te plannen en te kijken of het werk bij je past. We delen ze niet met onze opdrachtgevers of andere derden, tenzij de wet ons daartoe verplicht. Voor het bewaren van de gegevens en het versturen van e-mail werken we met dienstverleners die je gegevens alleen in onze opdracht verwerken.",
+    ],
+    [
+      "Hoe lang bewaren we ze",
+      "We bewaren je sollicitatie tot uiterlijk vier weken na afloop van de sollicitatieprocedure. Opgeslagen sollicitaties worden na twee maanden automatisch verwijderd. Willen we je gegevens langer bewaren voor een toekomstige vacature, dan vragen we je eerst om toestemming (maximaal een jaar). Kom je bij ons werken, dan nemen we je gegevens op in je personeelsdossier.",
+    ],
+    [
+      "Cookies",
+      "Deze website gebruikt geen tracking- of marketingcookies. Kom je via een advertentie of link binnen, dan onthoudt je browser tijdelijk (alleen zolang het tabblad open is) via welke campagne je kwam. Die informatie sturen we alleen mee als je solliciteert.",
+    ],
+    [
+      "Jouw rechten",
+      "Je hebt het recht om je gegevens in te zien, te laten corrigeren of te laten verwijderen. Neem daarvoor contact met ons op. Ben je het niet eens met hoe we met je gegevens omgaan, dan kun je een klacht indienen bij de Autoriteit Persoonsgegevens.",
+    ],
     ["Wijzigingen", "We kunnen deze privacyverklaring aanpassen. De meest actuele versie staat altijd op deze pagina."],
   ];
 
   const privacy: PageDoc = {
     title: "Privacyverklaring",
     slug: "privacy",
-    seo: seo("Privacyverklaring", "Lees hoe True Culture Marketing omgaat met persoonsgegevens."),
+    seo: seo("Privacyverklaring", "Lees hoe True Culture Marketing omgaat met de gegevens van sollicitanten en bezoekers."),
     sections: [
       section("privacy-hero", "pageHero", {
         eyebrow: "Privacy",
         title: "Privacyverklaring",
         highlight: "",
         intro:
-          "True Culture Marketing gaat zorgvuldig om met je persoonsgegevens. Hieronder lees je welke gegevens we verwerken en waarom.",
+          "True Culture Marketing gaat zorgvuldig om met je persoonsgegevens. Hieronder lees je welke gegevens we verwerken als je solliciteert, waarom we dat doen en hoe lang we ze bewaren.",
         showWatermark: true,
       }),
       section("privacy-cards", "textCards", {
@@ -318,27 +424,57 @@ export function seedPages(): SeedPage[] {
 
   return [
     { id: P.home, systemKey: "home", doc: home },
-    { id: P.diensten, systemKey: null, doc: diensten },
-    { id: P.werkwijze, systemKey: null, doc: werkwijze },
+    { id: P.vacatures, systemKey: null, doc: vacatures },
+    { id: P.zoWerktHet, systemKey: null, doc: zoWerktHet },
     { id: P.overOns, systemKey: null, doc: overOns },
-    { id: P.contact, systemKey: null, doc: contact },
+    { id: P.solliciteren, systemKey: null, doc: solliciteren },
     { id: P.privacy, systemKey: null, doc: privacy },
   ];
 }
 
+const roles: Omit<ServiceDoc, "image" | "cta">[] = [
+  {
+    title: "Deur-aan-deur",
+    anchor: "deur-aan-deur",
+    tag: "In woonwijken",
+    short: "Je belt aan bij mensen thuis en vertelt over het aanbod van onze opdrachtgever. Persoonlijk en één op één.",
+    description:
+      "Als field marketeer deur-aan-deur ga je met je team naar een woonwijk. Je belt aan, maakt een praatje en vertelt over een product, dienst of organisatie van een van onze opdrachtgevers. Je leert snel contact maken en mensen eerlijk informeren, zodat ze zelf een goede keuze maken.",
+    points: ["Gesprekken voeren bij mensen thuis", "Met je team op pad in Noord-Nederland", "Verdienen per resultaat, zonder plafond"],
+  },
+  {
+    title: "Straatwerving",
+    anchor: "straatwerving",
+    tag: "Op straat",
+    short: "In winkelstraten, winkelcentra en op stations spreek je voorbijgangers aan. Elke dag een andere plek.",
+    description:
+      "Bij straatwerving sta je op drukke plekken: in winkelstraten, in winkelcentra of op stations. Je spreekt voorbijgangers aan, maakt ze nieuwsgierig en vertelt over het aanbod van onze opdrachtgever. Je werkt met een team om je heen en elke dag ziet er weer anders uit.",
+    points: ["Voorbijgangers aanspreken en enthousiast maken", "Steeds wisselende locaties", "Verdienen per resultaat, zonder plafond"],
+  },
+  {
+    title: "Events en in-store",
+    anchor: "events-en-in-store",
+    tag: "Op events",
+    short: "Op evenementen, beurzen en in winkels sta je met een stand en vertel je bezoekers over het aanbod.",
+    description:
+      "Op evenementen, beurzen en in winkels sta je met een stand van een van onze opdrachtgevers. Bezoekers komen naar je toe of jij stapt op ze af. Je geeft uitleg, beantwoordt vragen en helpt mensen om klant te worden. Ideaal als je houdt van drukte en afwisseling.",
+    points: ["Bezoekers ontvangen bij een stand", "Werken op evenementen en in winkels", "Verdienen per resultaat, zonder plafond"],
+  },
+  {
+    title: "Teamleider",
+    anchor: "teamleider",
+    tag: "Doorgroeien",
+    short: "Haal je mooie resultaten en help je graag anderen? Dan kun je doorgroeien naar teamleider.",
+    description:
+      "Ben je een tijd bij ons en haal je goede resultaten? Dan kun je doorgroeien naar teamleider. Je coacht je eigen team, helpt nieuwe collega's op weg en zorgt dat iedereen gemotiveerd het veld in gaat. Zo bouw je ervaring op in leidinggeven die je de rest van je carrière meeneemt.",
+    points: ["Je eigen team coachen", "Nieuwe collega's inwerken", "Ervaring opdoen in leidinggeven"],
+  },
+];
+
 export function seedServices(): { id: string; doc: ServiceDoc }[] {
-  return services.map((s, i) => ({
+  return roles.map((role, i) => ({
     id: serviceIds[i],
-    doc: {
-      title: s.title,
-      anchor: s.slug,
-      tag: s.tag,
-      short: s.short,
-      description: s.description,
-      points: [...s.points],
-      image: null,
-      cta: cta("", { kind: "none" }),
-    },
+    doc: { ...role, points: [...role.points], image: null, cta: applyNow },
   }));
 }
 
@@ -356,11 +492,11 @@ export function seedSettings(): Settings {
     siteUrl: "https://trueculture.nl",
     titleSuffix: "| True Culture Marketing",
     defaultDescription:
-      "True Culture Marketing is een B2B sales agency. Wij verzorgen leadgeneratie en plannen kwalitatieve afspraken met beslissers in, zodat jouw salesteam zich op de deal kan richten.",
+      "Verdien €300+ per dag als field marketeer in Groningen, Friesland of Drenthe. Geen ervaring of cv nodig: solliciteer in 2 minuten en we bellen je binnen 24 uur.",
     ogImage: null,
     allowIndexing: true,
     company: { legalName: "", kvk: "", vat: "", address: "" },
-    contact: { email: "", phone: "" },
+    contact: { email: "", phone: "", whatsapp: "" },
     socials: [],
   };
 }
@@ -368,26 +504,27 @@ export function seedSettings(): Settings {
 export function seedNavigation(): Navigation {
   const item = (label: string, pageId: string) => ({ label, link: pageLink(pageId), visible: true, children: [] });
   return {
-    items: [
-      item("Diensten", P.diensten),
-      item("Werkwijze", P.werkwijze),
-      item("Over ons", P.overOns),
-      item("Contact", P.contact),
-    ],
-    cta: { label: "Plan een gesprek", mobileLabel: "Plan een kennismakingsgesprek", link: pageLink(P.contact), visible: true },
+    items: [item("Vacatures", P.vacatures), item("Zo werkt het", P.zoWerktHet), item("Over ons", P.overOns)],
+    cta: {
+      label: "Solliciteer direct",
+      mobileLabel: "Solliciteer in 2 minuten",
+      link: pageLink(P.solliciteren),
+      visible: true,
+      mobileSticky: true,
+    },
   };
 }
 
 export function seedFooter(): Footer {
   const link = (label: string, pageId: string) => ({ label, link: pageLink(pageId), visible: true });
   return {
-    text: "",
+    text: "Face-to-face field marketing in Groningen, Friesland en Drenthe. We werven klanten voor verschillende opdrachtgevers.",
     links: [
       link("Home", P.home),
-      link("Diensten", P.diensten),
-      link("Werkwijze", P.werkwijze),
+      link("Vacatures", P.vacatures),
+      link("Zo werkt het", P.zoWerktHet),
       link("Over ons", P.overOns),
-      link("Contact", P.contact),
+      link("Solliciteren", P.solliciteren),
     ],
     showContact: true,
     showSocials: true,
@@ -400,33 +537,38 @@ export function seedForms(): FormsConfig {
   return {
     recipientEmail: "",
     storeSubmissions: true,
-    retentionDays: 180,
+    retentionDays: 60,
     labels: {
       name: "Naam",
-      namePlaceholder: "Je volledige naam",
-      company: "Bedrijfsnaam",
-      companyPlaceholder: "Naam van je bedrijf",
+      namePlaceholder: "Je voor- en achternaam",
+      phone: "Telefoonnummer",
+      phonePlaceholder: "06 12345678",
       email: "E-mailadres",
-      emailPlaceholder: "naam@bedrijf.nl",
-      message: "Waar kunnen we je mee helpen?",
-      messagePlaceholder: "Vertel kort over je bedrijf, je doelgroep en wat je wilt bereiken.",
-      submit: "Verstuur aanvraag",
+      emailPlaceholder: "naam@voorbeeld.nl",
+      city: "Woonplaats",
+      cityPlaceholder: "Bijv. Groningen",
+      availability: "Hoeveel dagen per week wil je werken?",
+      availabilityPlaceholder: "Kies wat bij je past",
+      message: "Wil je nog iets kwijt? (optioneel)",
+      messagePlaceholder: "Bijv. je voorkeur voor deur-aan-deur, straat of events.",
+      submit: "Verstuur sollicitatie",
       sending: "Versturen…",
     },
+    availabilityOptions: ["1 à 2 dagen per week", "3 à 4 dagen per week", "Fulltime", "Weet ik nog niet"],
     messages: {
-      successTitle: "Bedankt!",
-      success: "We hebben je aanvraag ontvangen en nemen zo snel mogelijk contact met je op.",
+      successTitle: "Gelukt!",
+      success: "Je sollicitatie is binnen. Binnen 24 uur bellen we je op het nummer dat je hebt opgegeven. Houd je telefoon bij de hand!",
       invalid: "Controleer de gemarkeerde velden.",
-      nameError: "Vul je volledige naam in.",
-      companyError: "Vul je bedrijfsnaam in.",
+      nameError: "Vul je naam in.",
+      phoneError: "Vul een geldig telefoonnummer in, bijv. 06 12345678.",
       emailError: "Vul een geldig e-mailadres in.",
-      messageError: "Vertel iets meer, minimaal 10 tekens.",
+      cityError: "Vul je woonplaats in.",
+      availabilityError: "Kies hoeveel dagen je wilt werken.",
       rateLimited: "Je hebt het formulier net al een paar keer verstuurd. Probeer het over een paar minuten opnieuw.",
       failed: "Er ging iets mis bij het versturen. Probeer het later opnieuw.",
-      notConfigured:
-        "Het contactformulier is nog niet volledig geconfigureerd (ontbrekende e-mailinstellingen). Neem voorlopig rechtstreeks contact op.",
+      notConfigured: "Het sollicitatieformulier is nog niet volledig ingesteld. Probeer het later opnieuw.",
     },
-    privacyNote: "",
+    privacyNote: `<p>We gebruiken je gegevens alleen voor je sollicitatie. Lees onze <a href="/privacy">privacyverklaring</a>.</p>`,
   };
 }
 

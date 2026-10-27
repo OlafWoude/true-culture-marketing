@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Zoeken" };
 
 const editPath: Record<string, (id: string) => string> = {
   page: (id) => `/admin/paginas/${id}`,
-  service: (id) => `/admin/diensten/${id}`,
+  service: (id) => `/admin/vacatures/${id}`,
   case: (id) => `/admin/cases/${id}`,
   testimonial: (id) => `/admin/testimonials/${id}`,
   settings: () => "/admin/instellingen",
