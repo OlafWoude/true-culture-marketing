@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import CaseView from "@/components/site/CaseView";
 import Sections from "@/components/site/Sections";
+import VacancyView from "@/components/site/VacancyView";
 import { requireAdmin } from "@/lib/auth/session";
 import { getDocRow, getPreviewBundle } from "@/lib/cms/repo";
 import { createRenderCtx } from "@/lib/cms/render";
@@ -17,6 +18,11 @@ export default async function PreviewPage({ params }: { params: Promise<{ id: st
     const item = bundle.cases.find((c) => c.id === id);
     if (!item) notFound();
     return <CaseView bundle={bundle} slug={item.slug} />;
+  }
+  if (row.type === "service") {
+    const service = bundle.services.find((s) => s.id === id);
+    if (!service) notFound();
+    return <VacancyView bundle={bundle} service={service} />;
   }
   const page = bundle.pages.find((p) => p.id === id);
   if (!page) notFound();

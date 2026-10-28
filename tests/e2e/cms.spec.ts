@@ -9,6 +9,7 @@ const TOKEN = process.env.E2E_SETUP_TOKEN ?? "e2e-setup-token-for-local-tests-on
 const ADMIN = { name: "Test Beheerder", email: "beheer@trueculture.test", password: "een-sterk-wachtwoord-voor-tests" };
 const HOME_ID = "6a1b7c00-0000-4000-8000-000000000001";
 const FIXTURE = path.join(__dirname, "..", "fixtures", "test-image.jpg");
+const VIDEO_FIXTURE = path.join(__dirname, "..", "fixtures", "test-video.webm");
 
 let context: BrowserContext;
 let page: Page;
@@ -191,13 +192,13 @@ test("images can be uploaded, described, used on a page, and are protected from 
   await page.locator("main ul button").first().click();
   await page.getByLabel("Alt-tekst").fill("Testafbeelding geel vlak");
   await page.getByRole("button", { name: "Opslaan", exact: true }).click();
-  await expectToast(page, "Afbeelding bijgewerkt.");
+  await expectToast(page, "Opgeslagen.");
 
   await page.goto(`/admin/paginas/${testPageId}`);
   await page.getByRole("button", { name: "+ Sectie toevoegen" }).click();
-  await openDialog(page).getByRole("button", { name: /Afbeelding met tekst/ }).click();
+  await openDialog(page).getByRole("button", { name: /Foto of video met tekst/ }).click();
   await page.getByLabel("Kop", { exact: true }).fill("Beeld en tekst");
-  await page.getByRole("button", { name: /Afbeelding: afbeelding kiezen/ }).click();
+  await page.getByRole("button", { name: "Foto: afbeelding kiezen" }).click();
   await openDialog(page).locator("ul button").first().click();
   await page.getByRole("button", { name: "Publiceren", exact: true }).click();
   await expectToast(page, /Gepubliceerd/);
@@ -287,6 +288,138 @@ test("the application form validates input and stores applications with their so
   await expect(page.getByRole("link", { name: "WhatsApp" })).toHaveAttribute("href", /^https:\/\/wa\.me\/31612345678/);
 });
 
+test("every vacancy has its own page with Google job data and a share image, and applying from it records the vacancy", async ({ request }) => {
+  const { visitor, response, close } = await publicPage(page, "/vacatures/straatwerving");
+  expect(response?.status()).toBe(200);
+  await expect(visitor.locator("h1")).toHaveText("Straatwerving");
+  await expect(visitor.getByRole("heading", { name: "Wat we vragen" })).toBeVisible();
+
+  const data = (await visitor.locator('script[type="application/ld+json"]').allTextContents()).map((t) => JSON.parse(t));
+  const job = data.find((d) => d["@type"] === "JobPosting");
+  expect(job).toMatchObject({ title: "Promotor straatwerving", directApply: true, employmentType: ["PART_TIME", "FULL_TIME"] });
+  expect(job.hiringOrganization.name).toBe("True Culture Marketing");
+  expect(job.jobLocation.map((l: { address: { addressRegion: string } }) => l.address.addressRegion)).toEqual(["Groningen", "Friesland", "Drenthe"]);
+  expect(job.datePosted).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  // No amount has been filled in, so Google gets no (estimated) salary.
+  expect(job.baseSalary).toBeUndefined();
+  expect(job.description).toContain("<li>Je durft voorbijgangers aan te spreken</li>");
+  expect(data.some((d) => d["@type"] === "BreadcrumbList")).toBe(true);
+
+  const shareImage = new URL((await visitor.locator('meta[property="og:image"]').getAttribute("content"))!);
+  const image = await request.get(shareImage.pathname + shareImage.search);
+  expect(image.status()).toBe(200);
+  expect(image.headers()["content-type"]).toBe("image/png");
+  expect((await image.body()).length).toBeGreaterThan(10_000);
+
+  // The apply button takes the vacancy along to the form, which records it with the application.
+  await visitor.getByRole("main").getByRole("link", { name: "Solliciteer direct" }).first().click();
+  await expect(visitor).toHaveURL(/\/solliciteren\?vacature=straatwerving$/);
+  await expect(visitor.getByLabel("Welke vacature spreekt je het meest aan?")).toHaveValue("straatwerving");
+  await visitor.getByLabel("Naam", { exact: true }).fill("Sam Straat");
+  await visitor.getByLabel("Telefoonnummer").fill("0687654321");
+  await visitor.getByLabel("E-mailadres").fill("sam@example.nl");
+  await visitor.getByLabel("Woonplaats").fill("Assen");
+  await visitor.locator("label").filter({ hasText: "Fulltime" }).click();
+  await visitor.getByRole("button", { name: "Verstuur sollicitatie" }).click();
+  await expect(visitor.getByText("Gelukt!")).toBeVisible();
+  await close();
+
+  await page.goto("/admin/sollicitaties");
+  const application = page.getByRole("button", { name: /Sam Straat · Assen/ });
+  await expect(application).toContainText("Straatwerving");
+  await application.click();
+  await expect(page.locator("dt", { hasText: "Vacature" }).locator("xpath=following-sibling::dd")).toHaveText("Straatwerving");
+});
+
+test("a vacancy's address can change, the old address forwards, and two vacancies cannot share one", async ({ request }) => {
+  await page.goto("/admin/vacatures");
+  await page.getByRole("link", { name: /Events en in-store/ }).click();
+  await page.getByLabel("URL-naam").fill("events");
+  await page.getByRole("button", { name: "Publiceren", exact: true }).click();
+  await expectToast(page, /Gepubliceerd/);
+  const old = await request.get("/vacatures/events-en-in-store", { maxRedirects: 0 });
+  expect(old.status()).toBe(308);
+  expect(old.headers().location).toMatch(/\/vacatures\/events$/);
+  expect((await request.get("/vacatures/events")).status()).toBe(200);
+
+  await page.goto("/admin/vacatures");
+  await page.getByRole("link", { name: /Teamleider/ }).click();
+  await page.getByLabel("URL-naam").fill("events");
+  await page.getByRole("button", { name: "Publiceren", exact: true }).click();
+  await expectToast(page, /al in gebruik/);
+  await page.getByLabel("URL-naam").fill("teamleider");
+  await page.getByRole("button", { name: "Publiceren", exact: true }).click();
+  await expectToast(page, /Gepubliceerd/);
+});
+
+test("videos can be uploaded and played; empty photo and video spots show placeholders that can be switched off", async () => {
+  let pub = await publicPage(page, "/");
+  await expect(pub.visitor.getByText("Foto volgt")).toHaveCount(4);
+  await expect(pub.visitor.getByText("Video volgt")).toHaveCount(3);
+  await pub.close();
+
+  await page.goto("/admin/media");
+  await page.locator('input[type="file"]').first().setInputFiles(VIDEO_FIXTURE);
+  await expectToast(page, "Video geüpload.");
+  await page.getByRole("button", { name: "Video’s", exact: true }).click();
+  const tile = page.locator("main ul button").first();
+  // The length is read in the browser and a still is taken from the video for the thumbnail.
+  await expect(tile).toContainText("0:02");
+  await expect.poll(() => tile.locator("img").evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
+  await tile.click();
+  await page.getByLabel("Omschrijving").fill("Sanne vertelt over deur-aan-deur");
+  await page.getByRole("button", { name: "Opslaan", exact: true }).click();
+  await expectToast(page, "Opgeslagen.");
+
+  await page.goto(`/admin/paginas/${HOME_ID}`);
+  await page.getByRole("button", { name: /Video's van collega's/ }).click();
+  await page.getByRole("button", { name: "Deur-aan-deur", exact: true }).click();
+  await page.getByLabel("Naam", { exact: true }).fill("Sanne");
+  await page.getByRole("button", { name: "Video: video kiezen" }).click();
+  // The picker only offers videos for a video field.
+  await expect(openDialog(page).getByRole("heading", { name: "Kies een video" })).toBeVisible();
+  await expect(openDialog(page).locator("ul button")).toHaveCount(1);
+  await openDialog(page).locator("ul button").first().click();
+  await page.getByRole("button", { name: "Publiceren", exact: true }).click();
+  await expectToast(page, /Gepubliceerd/);
+
+  pub = await publicPage(page, "/");
+  await expect(pub.visitor.getByText("Video volgt")).toHaveCount(2);
+  const play = pub.visitor.getByRole("button", { name: "Speel de video af: Sanne, Deur-aan-deur" });
+  await play.scrollIntoViewIfNeeded();
+  await expect.poll(() => play.locator("img").evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
+  const video = pub.visitor.locator("figure", { has: pub.visitor.getByText("Sanne", { exact: true }) }).locator("video");
+  await expect(video).toHaveAttribute("preload", "none");
+  await play.click();
+  await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.currentTime)).toBeGreaterThan(0);
+  await expect(video).toHaveAttribute("controls", "");
+  await pub.close();
+
+  await page.goto("/admin/media");
+  await page.getByRole("button", { name: "Video’s", exact: true }).click();
+  await page.locator("main ul button").first().click();
+  await expect(page.getByRole("link", { name: "Home" })).toBeVisible();
+
+  await page.goto("/admin/instellingen");
+  await page.getByRole("switch", { name: "Lege foto- en videoplekken tonen" }).click();
+  await page.getByRole("button", { name: "Publiceren", exact: true }).click();
+  await expectToast(page, /Gepubliceerd/);
+  pub = await publicPage(page, "/");
+  await expect(pub.visitor.getByText("Foto volgt")).toHaveCount(0);
+  await expect(pub.visitor.getByText("Video volgt")).toHaveCount(0);
+  // Without any photo the photo row disappears; the video row keeps its one real video.
+  await expect(pub.visitor.getByRole("heading", { name: "Zo ziet het werk eruit" })).toHaveCount(0);
+  await expect(pub.visitor.getByRole("button", { name: /Speel de video af/ })).toHaveCount(1);
+  await pub.visitor.goto("/vacatures/deur-aan-deur");
+  await expect(pub.visitor.locator("h1")).toBeVisible();
+  await expect(pub.visitor.getByText(/Foto volgt|Video volgt/)).toHaveCount(0);
+  await pub.close();
+
+  await page.getByRole("switch", { name: "Lege foto- en videoplekken tonen" }).click();
+  await page.getByRole("button", { name: "Publiceren", exact: true }).click();
+  await expectToast(page, /Gepubliceerd/);
+});
+
 test("SEO metadata, sitemap and robots.txt come from the CMS", async ({ request }) => {
   const vacaturesId = "6a1b7c00-0000-4000-8000-000000000002";
   await page.goto(`/admin/paginas/${vacaturesId}`);
@@ -316,7 +449,7 @@ test("public pages have no broken images, broken links, console errors or horizo
     const errors: string[] = [];
     visitor.on("pageerror", (e) => errors.push(e.message));
     visitor.on("console", (m) => m.type() === "error" && errors.push(m.text()));
-    for (const url of ["/", "/vacatures", "/zo-werkt-het", "/over-ons", "/solliciteren", "/privacy", "/testpagina-nieuw"]) {
+    for (const url of ["/", "/vacatures", "/vacatures/straatwerving", "/zo-werkt-het", "/over-ons", "/solliciteren", "/privacy", "/testpagina-nieuw"]) {
       await visitor.goto(url, { waitUntil: "networkidle" });
       await visitor.evaluate(async () => {
         for (let y = 0; y < document.body.scrollHeight; y += 600) {

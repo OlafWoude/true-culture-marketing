@@ -3,14 +3,16 @@ import DocEditor from "@/components/admin/editor/DocEditor";
 import { CollectionList } from "@/components/admin/lists";
 import { PageHeader } from "@/components/admin/ui";
 import { requireAdmin } from "@/lib/auth/session";
-import { collectionDefs, type CollectionType } from "@/lib/cms/documents";
+import { collectionDefs, type CollectionType, type ServiceDoc } from "@/lib/cms/documents";
 import type { FieldDef } from "@/lib/cms/fields";
 import { normalizeCollection } from "@/lib/cms/normalize";
+import { vacancyPath } from "@/lib/cms/render";
 import { getDocRow, listDocs } from "@/lib/cms/repo";
+import type { DocumentRow } from "@/lib/db/schema";
 import type { DocStatus } from "@/lib/cms/types";
 
 const descriptions: Record<CollectionType, string> = {
-  service: "De diensten verschijnen automatisch in de dienstentegels, het dienstenoverzicht en op de dienstenpagina. Gebruik de pijltjes om de volgorde te bepalen.",
+  service: "Elke vacature krijgt een eigen pagina op /vacatures/<url-naam>, die ook in de vacatureresultaten van Google kan verschijnen. Daarnaast staan de vacatures in de tegels op de homepage en in het vacatureoverzicht. Gebruik de pijltjes om de volgorde te bepalen.",
   case: "Cases verschijnen in de Cases-sectie en krijgen een eigen pagina op /cases/<url-naam>. Zet ‘Tonen op de homepage’ aan om een case op de homepage te laten zien.",
   testimonial: "Testimonials verschijnen in elke Testimonials-sectie die je aan een pagina toevoegt. Zonder gepubliceerde testimonials blijft die sectie verborgen.",
 };
@@ -25,6 +27,13 @@ export async function CollectionListPage({ type }: { type: CollectionType }) {
       <CollectionList key={items.map((i) => `${i.id}:${i.status}:${i.updatedAt}`).join("|")} type={type} items={items} basePath={`/admin/${def.path}`} singular={def.singular} />
     </>
   );
+}
+
+function liveHref(type: CollectionType, row: DocumentRow) {
+  if (row.status !== "published" || !row.published) return null;
+  if (type === "case") return `/cases/${row.slug}`;
+  if (type === "service") return vacancyPath(normalizeCollection<ServiceDoc>("service", row.published));
+  return null;
 }
 
 export async function CollectionEditPage({ type, id }: { type: CollectionType; id: string }) {
@@ -47,8 +56,8 @@ export async function CollectionEditPage({ type, id }: { type: CollectionType; i
         status={row.status as DocStatus}
         serverHasChanges={!row.published || JSON.stringify(row.draft) !== JSON.stringify(row.published)}
         listHref={`/admin/${def.path}`}
-        previewHref={type === "case" ? `/preview/${row.id}` : undefined}
-        liveHref={type === "case" && row.status === "published" ? `/cases/${row.slug}` : null}
+        previewHref={type === "case" || type === "service" ? `/preview/${row.id}` : undefined}
+        liveHref={liveHref(type, row)}
       />
     </>
   );

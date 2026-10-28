@@ -7,6 +7,7 @@ import GorillaMark from "@/components/GorillaMark";
 import Marquee from "@/components/Marquee";
 import type { CtaValue } from "@/lib/cms/fields";
 import { CheckIcon } from "@/lib/icons";
+import { MediaSlot } from "./media";
 import MobileCarousel from "./MobileCarousel";
 import { asBg, bgClass, list, MediaImage, pad, RichText, str, Title, type BlockProps } from "./shared";
 
@@ -230,7 +231,7 @@ export function ClosingCtaBlock({ data, ctx }: BlockProps) {
 }
 
 export function StorySplitBlock({ data, ctx, layout }: BlockProps) {
-  const image = ctx.media(data.image as string | null);
+  const placeholderText = str(data.placeholderText);
   return (
     <section className={`bg-mist ${pad(layout.spaceTop)}`}>
       <div className="mx-auto grid max-w-site items-center gap-12 px-6 lg:grid-cols-2 lg:gap-20">
@@ -240,16 +241,22 @@ export function StorySplitBlock({ data, ctx, layout }: BlockProps) {
           <RichText html={str(data.body)} className="mt-8 text-lg leading-relaxed text-ink/70" />
         </FadeIn>
         <FadeIn delay={120}>
-          {image ? (
-            <div className="relative aspect-square overflow-hidden rounded-panel bg-ink">
-              <MediaImage media={image} />
-            </div>
-          ) : (
-            <div className="grain relative flex aspect-square items-center justify-center overflow-hidden rounded-panel bg-ink">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_40%,color-mix(in_srgb,var(--tc-accent)_12%,transparent),transparent_60%)]" />
-              <GorillaMark className="relative w-[78%] text-accent" />
-            </div>
-          )}
+          <MediaSlot
+            ctx={ctx}
+            kind="photo"
+            image={data.image}
+            text={placeholderText}
+            aspect="1/1"
+            sizes="(min-width: 1024px) 50vw, 100vw"
+            className="rounded-panel"
+            allowPlaceholder={Boolean(placeholderText)}
+            fallback={
+              <div className="grain relative flex aspect-square items-center justify-center overflow-hidden rounded-panel bg-ink">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_40%,color-mix(in_srgb,var(--tc-accent)_12%,transparent),transparent_60%)]" />
+                <GorillaMark className="relative w-[78%] text-accent" />
+              </div>
+            }
+          />
         </FadeIn>
       </div>
     </section>
@@ -364,9 +371,11 @@ export function RichTextBlock({ data, layout }: BlockProps) {
 export function ImageTextBlock({ data, ctx, layout }: BlockProps) {
   const bg = asBg(data.background, "white");
   const t = textOn(bg);
-  const image = ctx.media(data.image as string | null);
   const left = data.imagePosition === "left";
   const ctaValue = data.cta as CtaValue;
+  const aspect = str(data.mediaAspect) || "4/3";
+  // Upright photos and phone videos stay narrow, so they do not tower over the text next to them.
+  const upright = aspect === "9/16" || aspect === "4/5";
   return (
     <section className={`${bgClass[bg]} ${bg === "dark" ? "grain clip" : ""} ${pad(layout.spaceTop)}`}>
       <div className="mx-auto grid max-w-site items-center gap-12 px-6 lg:grid-cols-2 lg:gap-20">
@@ -381,15 +390,25 @@ export function ImageTextBlock({ data, ctx, layout }: BlockProps) {
           )}
         </FadeIn>
         <FadeIn delay={120} className={left ? "lg:order-1" : ""}>
-          {image ? (
-            <div className="relative aspect-[4/3] overflow-hidden rounded-panel bg-ink">
-              <MediaImage media={image} />
-            </div>
-          ) : (
-            <div className="grain relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-panel bg-ink">
-              <GorillaMark className="relative w-[60%] text-white/10" />
-            </div>
-          )}
+          <div className={upright ? "mx-auto w-full max-w-[18rem] sm:max-w-sm" : ""}>
+            <MediaSlot
+              ctx={ctx}
+              kind={data.placeholder === "video" ? "video" : "photo"}
+              image={data.image}
+              video={data.video}
+              poster={data.poster}
+              text={str(data.placeholderText)}
+              label={str(data.title)}
+              aspect={aspect}
+              sizes={upright ? "(min-width: 640px) 384px, 100vw" : "(min-width: 1024px) 50vw, 100vw"}
+              className="rounded-panel"
+              fallback={
+                <div className="grain relative flex items-center justify-center overflow-hidden rounded-panel bg-ink" style={{ aspectRatio: aspect }}>
+                  <GorillaMark className="relative w-[60%] text-white/10" />
+                </div>
+              }
+            />
+          </div>
         </FadeIn>
       </div>
     </section>

@@ -4,11 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArrowRightIcon, WhatsAppIcon } from "@/lib/icons";
+import { vacancyFromPath, withVacancy } from "@/lib/vacancy-link";
 
 type StickyApplyProps = {
   label: string;
   href: string;
   external: boolean;
+  /** The button leads to the application form, so on a vacancy page it says which vacancy. */
+  form: boolean;
   whatsapp: string | null;
 };
 
@@ -16,7 +19,7 @@ const applyClasses =
   "btn-text flex flex-1 items-center justify-center gap-2 rounded-btn bg-accent px-5 py-3.5 font-semibold text-on-accent transition-[background-color,scale] duration-150 active:bg-accent-hover motion-safe:active:scale-[0.98]";
 
 /** A fixed apply button at the bottom of the screen on phones, shown once the visitor scrolls past the hero. */
-export default function StickyApply({ label, href, external, whatsapp }: StickyApplyProps) {
+export default function StickyApply({ label, href, external, form, whatsapp }: StickyApplyProps) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [typing, setTyping] = useState(false);
@@ -41,6 +44,8 @@ export default function StickyApply({ label, href, external, whatsapp }: StickyA
   // On the application page itself the form is the call to action.
   if (pathname === href.split("#")[0]) return null;
   const shown = scrolled && !typing;
+  const vacancy = vacancyFromPath(pathname);
+  const target = form && vacancy ? withVacancy(href, vacancy) : href;
 
   return (
     <div
@@ -51,12 +56,12 @@ export default function StickyApply({ label, href, external, whatsapp }: StickyA
     >
       <div className="flex items-center gap-2 rounded-panel bg-ink-2/95 p-2 shadow-nav ring-1 ring-white/10 backdrop-blur">
         {external ? (
-          <a href={href} target="_blank" rel="noopener noreferrer" className={applyClasses}>
+          <a href={target} target="_blank" rel="noopener noreferrer" className={applyClasses}>
             {label}
             <ArrowRightIcon className="h-4 w-4" />
           </a>
         ) : (
-          <Link href={href} className={applyClasses}>
+          <Link href={target} className={applyClasses}>
             {label}
             <ArrowRightIcon className="h-4 w-4" />
           </Link>

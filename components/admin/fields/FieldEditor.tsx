@@ -3,7 +3,7 @@
 import { useId, useState } from "react";
 import { defaultsFor, type CtaValue, type FieldDef, type LinkValue, type Values } from "@/lib/cms/fields";
 import { useAdminData } from "../AdminContext";
-import { ImageInput, ImagesInput } from "../media/MediaPicker";
+import { ImageInput, ImagesInput, VideoInput } from "../media/MediaPicker";
 import { FieldLabel, Input, Select, Switch, Textarea } from "../ui";
 import RichTextEditor from "./RichTextEditor";
 
@@ -124,7 +124,7 @@ function Repeater({ field, value, onChange }: { field: Extract<FieldDef, { type:
           <div key={String(item._key ?? i)} className="rounded-xl border border-zinc-200 bg-white">
             <div className="flex items-center gap-1 px-3 py-2">
               <button type="button" onClick={() => setOpen(isOpen ? null : i)} aria-expanded={isOpen} className="flex flex-1 items-center gap-2 truncate text-left text-sm font-semibold text-zinc-800">
-                <span className={`inline-block text-xs transition-transform ${isOpen ? "rotate-90" : ""}`}>▶</span>
+                <span aria-hidden="true" className={`inline-block text-xs transition-transform ${isOpen ? "rotate-90" : ""}`}>▶</span>
                 <span className="truncate">{title}</span>
                 {item.visible === false && <span className="rounded bg-zinc-100 px-1.5 text-xs font-normal text-zinc-500">verborgen</span>}
               </button>
@@ -160,6 +160,25 @@ function Repeater({ field, value, onChange }: { field: Extract<FieldDef, { type:
 }
 
 function NumberInput({ field, value, onChange, id }: { field: Extract<FieldDef, { type: "number" }>; value: number; onChange: (v: number) => void; id: string }) {
+  // Amounts are typed in; a slider only suits small ranges such as sizes and percentages.
+  if (field.control === "input") {
+    return (
+      <div className="flex items-center gap-3">
+        <Input
+          id={id}
+          type="number"
+          inputMode="numeric"
+          min={field.min}
+          max={field.max}
+          step={field.step}
+          value={value}
+          onChange={(e) => onChange(Math.min(field.max, Math.max(field.min, Number(e.target.value) || 0)))}
+          className="w-40"
+        />
+        {field.unit && <span className="text-sm text-zinc-600">{field.unit}</span>}
+      </div>
+    );
+  }
   return (
     <div className="flex items-center gap-3">
       <input id={id} type="range" min={field.min} max={field.max} step={field.step} value={value} onChange={(e) => onChange(Number(e.target.value))} className="flex-1 accent-[#050505]" />
@@ -229,6 +248,12 @@ function Field({ field, value, onChange }: { field: FieldDef; value: unknown; on
       return (
         <FieldLabel label={field.label} help={field.help}>
           <ImageInput value={(value as string | null) ?? null} onChange={onChange} label={field.label} />
+        </FieldLabel>
+      );
+    case "video":
+      return (
+        <FieldLabel label={field.label} help={field.help}>
+          <VideoInput value={(value as string | null) ?? null} onChange={onChange} label={field.label} />
         </FieldLabel>
       );
     case "images":

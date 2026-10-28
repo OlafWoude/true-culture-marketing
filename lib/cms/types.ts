@@ -18,22 +18,30 @@ export type DocStatus = "draft" | "published" | "offline";
 
 export type MediaInfo = {
   id: string;
+  kind: "image" | "video";
+  mimeType: string;
   url: string;
   alt: string;
   width: number;
   height: number;
   focalX: number;
   focalY: number;
+  /** Videos: a still taken from the video when it was uploaded. */
+  posterUrl: string | null;
+  /** Videos: length in seconds. */
+  duration: number | null;
 };
 
 export type BundlePage = PageDoc & { id: string; systemKey: string | null; updatedAt: string };
 export type WithId<T> = T & { id: string };
+/** A vacancy, with the dates Google needs for its job listings. */
+export type BundleService = WithId<ServiceDoc> & { createdAt: string; updatedAt: string };
 
 export type Bundle = {
   mode: "live" | "preview";
   source: "database" | "seed";
   pages: BundlePage[];
-  services: WithId<ServiceDoc>[];
+  services: BundleService[];
   cases: WithId<CaseDoc>[];
   testimonials: WithId<TestimonialDoc>[];
   settings: Settings;

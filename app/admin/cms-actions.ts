@@ -210,7 +210,7 @@ export async function updateMediaAction(mediaId: string, input: { alt: string; f
     if (!parsed.success || !id.safeParse(mediaId).success) return { ok: false, error: "Ongeldige invoer." };
     await updateMediaMeta(mediaId, parsed.data);
     revalidatePublicSite();
-    return { ok: true, message: "Afbeelding bijgewerkt." };
+    return { ok: true, message: "Opgeslagen." };
   });
 }
 
@@ -220,10 +220,10 @@ export async function mediaUsageAction(mediaId: string) {
 
 export async function deleteMediaAction(mediaId: string) {
   return guard(async () => {
-    if (!id.safeParse(mediaId).success) return { ok: false, error: "Ongeldige afbeelding." };
+    if (!id.safeParse(mediaId).success) return { ok: false, error: "Ongeldig bestand." };
     await deleteMedia(mediaId);
     revalidatePublicSite();
-    return { ok: true, message: "Afbeelding verwijderd." };
+    return { ok: true, message: "Verwijderd." };
   });
 }
 

@@ -13,6 +13,7 @@ import {
   type TestimonialDoc,
 } from "./documents";
 import { normalizeCollection, normalizePage, normalizeSingleton, seedSingleton } from "./normalize";
+import { serviceSlug } from "./render";
 import { SEED_IDS, seedCases, seedPages, seedServices, seedTestimonials } from "./seed";
 import type { Bundle, BundlePage, DocStatus, DocSummary, DocType, MediaInfo } from "./types";
 
@@ -27,7 +28,7 @@ function seedBundle(): Bundle {
     mode: "live",
     source: "seed",
     pages: seedPages().map((p) => ({ ...normalizePage(p.doc), id: p.id, systemKey: p.systemKey, updatedAt: now })),
-    services: seedServices().map((s) => ({ ...s.doc, id: s.id })),
+    services: seedServices().map((s) => ({ ...s.doc, id: s.id, createdAt: now, updatedAt: now })),
     cases: seedCases().map((c) => ({ ...c.doc, id: c.id })),
     testimonials: seedTestimonials().map((t) => ({ ...t.doc, id: t.id })),
     settings: normalizeSingleton("settings", {}),
@@ -44,7 +45,19 @@ async function loadMedia(): Promise<Record<string, MediaInfo>> {
   return Object.fromEntries(
     rows.map((m) => [
       m.id,
-      { id: m.id, url: m.url, alt: m.alt, width: m.width, height: m.height, focalX: m.focalX, focalY: m.focalY },
+      {
+        id: m.id,
+        kind: m.mimeType.startsWith("video/") ? "video" : "image",
+        mimeType: m.mimeType,
+        url: m.url,
+        alt: m.alt,
+        width: m.width,
+        height: m.height,
+        focalX: m.focalX,
+        focalY: m.focalY,
+        posterUrl: m.posterUrl,
+        duration: m.duration,
+      } satisfies MediaInfo,
     ]),
   );
 }
@@ -72,7 +85,12 @@ function rowsToBundle(rows: DocumentRow[], mode: "live" | "preview", media: Reco
         updatedAt: r.updatedAt.toISOString(),
       }),
     ),
-    services: ofType("service").map((r) => ({ ...normalizeCollection<ServiceDoc>("service", pick(r)), id: r.id })),
+    services: ofType("service").map((r) => ({
+      ...normalizeCollection<ServiceDoc>("service", pick(r)),
+      id: r.id,
+      createdAt: r.createdAt.toISOString(),
+      updatedAt: r.updatedAt.toISOString(),
+    })),
     cases: ofType("case").map((r) => ({ ...normalizeCollection<CaseDoc>("case", pick(r)), id: r.id })),
     testimonials: ofType("testimonial").map((r) => ({
       ...normalizeCollection<TestimonialDoc>("testimonial", pick(r)),
@@ -349,11 +367,39 @@ async function upsertSlugRedirect(oldSlug: string, newSlug: string) {
     .onConflictDoUpdate({ target: schema.redirects.fromPath, set: { toPath: to, permanent: true, automatic: true } });
 }
 
+const vacancySlugOf = (doc: unknown) => {
+  const d = (doc ?? {}) as { anchor?: unknown; title?: unknown };
+  return serviceSlug({ anchor: String(d.anchor ?? ""), title: String(d.title ?? "") });
+};
+
+async function assertVacancySlugFree(id: string, slug: string) {
+  if (!slug) throw new CmsError("Geef de vacature een functienaam of URL-naam.");
+  const rows = await getDb()
+    .select()
+    .from(schema.documents)
+    .where(and(eq(schema.documents.type, "service"), isNull(schema.documents.deletedAt), ne(schema.documents.id, id)));
+  const clash = rows.find((r) => [r.draft, r.published].some((d) => d && vacancySlugOf(d) === slug));
+  if (clash) {
+    throw new CmsError(
+      `Het adres /vacatures/${slug} is al in gebruik door de vacature ‘${docTitle("service", clash.draft)}’. Kies een andere URL-naam.`,
+    );
+  }
+}
+
 export async function publishDoc(id: string, userId: string) {
   const row = await getDocRow(id);
   if (!row || row.deletedAt) throw new CmsError("Dit item bestaat niet meer.");
   const db = getDb();
   let slug = row.slug;
+
+  if (row.type === "service") {
+    const nextSlug = vacancySlugOf(row.draft);
+    await assertVacancySlugFree(id, nextSlug);
+    // The vacancy page moves with its URL name; the old address forwards so links and Google keep working.
+    const previous = row.status !== "draft" && row.published ? vacancySlugOf(row.published) : null;
+    if (previous && previous !== nextSlug) await upsertSlugRedirect(`vacatures/${previous}`, `vacatures/${nextSlug}`);
+    slug = nextSlug;
+  }
 
   if (row.type === "page" || row.type === "case") {
     const nextSlug = String((row.draft as { slug?: string }).slug ?? "");

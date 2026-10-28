@@ -3,13 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
+import { vacancyFromPath, withVacancy } from "@/lib/vacancy-link";
 
 export type NavLink = { label: string; href: string; external: boolean; children: { label: string; href: string; external: boolean }[] };
 
 type NavProps = {
   logo: ReactNode;
   items: NavLink[];
-  cta: { label: string; mobileLabel: string; href: string; external: boolean } | null;
+  /** `form`: the button leads to the application form, so on a vacancy page it says which vacancy. */
+  cta: { label: string; mobileLabel: string; href: string; external: boolean; form?: boolean } | null;
   variant: "floating" | "bar";
   homeHref?: string;
   offsetTop?: boolean;
@@ -122,6 +124,8 @@ export default function Nav({ logo, items, cta, variant, homeHref = "/", offsetT
     };
   }, [open, setHidden]);
 
+  const vacancy = vacancyFromPath(pathname);
+  const ctaHref = cta?.form && vacancy ? withVacancy(cta.href, vacancy) : cta?.href;
   const floating = variant === "floating";
   // An open menu stays put, also after closing it, until the visitor scrolls down again.
   const concealed = hidden && !open;
@@ -189,7 +193,7 @@ export default function Nav({ logo, items, cta, variant, homeHref = "/", offsetT
           <div className="flex items-center gap-2">
             {cta && (
               <SmartLink
-                href={cta.href}
+                href={ctaHref ?? cta.href}
                 external={cta.external}
                 className="btn-text hidden rounded-control bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-hover sm:inline-flex"
               >
@@ -237,7 +241,7 @@ export default function Nav({ logo, items, cta, variant, homeHref = "/", offsetT
             </ul>
             {cta && (
               <SmartLink
-                href={cta.href}
+                href={ctaHref ?? cta.href}
                 external={cta.external}
                 onClick={close}
                 className="btn-text mt-5 flex justify-center rounded-control bg-accent px-5 py-3.5 font-semibold text-on-accent active:bg-accent-hover"

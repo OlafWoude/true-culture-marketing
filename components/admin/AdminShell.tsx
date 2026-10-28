@@ -12,7 +12,7 @@ const groups: { title: string; items: { href: string; label: string }[] }[] = [
     title: "Inhoud",
     items: [
       { href: "/admin/paginas", label: "Pagina’s" },
-      { href: "/admin/media", label: "Afbeeldingen" },
+      { href: "/admin/media", label: "Foto’s en video’s" },
       { href: "/admin/vacatures", label: "Vacatures" },
       { href: "/admin/cases", label: "Cases" },
       { href: "/admin/testimonials", label: "Testimonials" },
@@ -106,7 +106,7 @@ export default function AdminShell({ user, unread, children }: { user: { name: s
                 id="admin-search"
                 name="q"
                 type="search"
-                placeholder="Zoek in pagina’s, diensten, cases…"
+                placeholder="Zoek in pagina’s, vacatures, cases…"
                 className="w-full max-w-md rounded-xl border border-zinc-300 bg-zinc-50 px-3.5 py-2 text-sm outline-none focus:border-zinc-900 focus:bg-white"
               />
             </form>

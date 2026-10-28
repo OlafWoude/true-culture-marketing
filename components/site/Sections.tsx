@@ -24,7 +24,8 @@ import {
   ValuesGridBlock,
 } from "./content";
 import { ContactHeroBlock, HeroBlock, PageHeroBlock } from "./heroes";
-import { asBg, type BlockProps, type Bg, type SpaceTop } from "./shared";
+import { hasMedia, PhotoStripBlock, VideoStoriesBlock } from "./media";
+import { asBg, list, type BlockProps, type Bg, type SpaceTop } from "./shared";
 
 const renderers: Record<BlockType, (props: BlockProps) => React.ReactNode> = {
   hero: HeroBlock,
@@ -49,6 +50,8 @@ const renderers: Record<BlockType, (props: BlockProps) => React.ReactNode> = {
   image: ImageBlock,
   testimonials: TestimonialsBlock,
   contactDetails: ContactDetailsBlock,
+  photoStrip: PhotoStripBlock,
+  videoStories: VideoStoriesBlock,
 };
 
 /** The background colour a section starts with, used to avoid double spacing between equal sections. */
@@ -74,7 +77,10 @@ function backgroundOf(section: Section): Bg {
     case "faq":
     case "numberedCards":
     case "contactDetails":
+    case "photoStrip":
       return asBg(section.data.background, "light");
+    case "videoStories":
+      return asBg(section.data.background, "dark");
     default:
       return asBg(section.data.background, "white");
   }
@@ -83,6 +89,15 @@ function backgroundOf(section: Section): Bg {
 function hasContent(section: Section, ctx: RenderCtx) {
   if (section.type === "testimonials") return ctx.bundle.testimonials.length > 0;
   if (section.type === "image") return Boolean(ctx.media(section.data.image as string | null));
+  // Photo and video rows without any real media only show while placeholders are switched on.
+  if (section.type === "photoStrip") {
+    const photos = list<{ image?: unknown }>(section.data.photos);
+    return photos.some((p) => hasMedia(ctx, p.image, "image")) || (ctx.showPlaceholders && photos.length > 0);
+  }
+  if (section.type === "videoStories") {
+    const items = list<{ video?: unknown }>(section.data.items);
+    return items.some((v) => hasMedia(ctx, v.video, "video")) || (ctx.showPlaceholders && items.length > 0);
+  }
   return true;
 }
 

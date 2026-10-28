@@ -3,13 +3,16 @@ import MediaLibrary from "@/components/admin/media/MediaLibrary";
 import { PageHeader } from "@/components/admin/ui";
 import { requireAdmin } from "@/lib/auth/session";
 
-export const metadata: Metadata = { title: "Afbeeldingen" };
+export const metadata: Metadata = { title: "Foto’s en video’s" };
 
 export default async function MediaPage() {
   await requireAdmin();
   return (
     <>
-      <PageHeader title="Afbeeldingen" description="Upload, beschrijf en beheer alle afbeeldingen. Een afbeelding kun je op meerdere plekken gebruiken; vervang je haar hier, dan verandert ze overal." />
+      <PageHeader
+        title="Foto’s en video’s"
+        description="Upload, beschrijf en beheer alle foto’s en video’s. Je kunt ze op meerdere plekken gebruiken; vervang je er hier een, dan verandert die overal."
+      />
       <MediaLibrary />
     </>
   );

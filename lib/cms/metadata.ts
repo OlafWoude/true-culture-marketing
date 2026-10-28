@@ -19,7 +19,15 @@ export function siteIcons(bundle: Bundle): Metadata["icons"] {
 
 export function buildMetadata(
   bundle: Bundle,
-  input: { title: string; seo: Seo; path: string; isHome?: boolean; type?: "website" | "article" },
+  input: {
+    title: string;
+    seo: Seo;
+    path: string;
+    isHome?: boolean;
+    type?: "website" | "article";
+    /** The page has its own generated share image (an opengraph-image file next to it). */
+    generatedImage?: boolean;
+  },
 ): Metadata {
   const { settings } = bundle;
   const baseTitle = input.seo.title || input.title || settings.siteName;
@@ -51,13 +59,14 @@ export function buildMetadata(
       url: input.path,
       title: input.seo.ogTitle || title,
       description: input.seo.ogDescription || description,
-      images: [ogImage],
+      // Without an `images` key Next.js fills in the generated image.
+      ...(input.generatedImage ? {} : { images: [ogImage] }),
     },
     twitter: {
       card: "summary_large_image",
       title: input.seo.ogTitle || title,
       description: input.seo.ogDescription || description,
-      images: [ogImage.url],
+      ...(input.generatedImage ? {} : { images: [ogImage.url] }),
     },
   };
 }

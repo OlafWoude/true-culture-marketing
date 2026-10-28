@@ -5,7 +5,7 @@ import { ConfirmProvider, ToastProvider } from "@/components/admin/feedback";
 import { MediaRegistryProvider } from "@/components/admin/media/MediaRegistry";
 import { requireAdmin } from "@/lib/auth/session";
 import { allPageOptions, ensureSeeded } from "@/lib/cms/repo";
-import { listMedia, storageMode } from "@/lib/cms/media";
+import { listMedia, storageMode, toMediaItem } from "@/lib/cms/media";
 import { getDb, schema } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -26,9 +26,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     <ToastProvider>
       <ConfirmProvider>
         <AdminDataProvider value={{ pages, storage: storageMode() }}>
-          <MediaRegistryProvider
-            initial={media.map((m) => ({ id: m.id, url: m.url, alt: m.alt, width: m.width, height: m.height, filename: m.filename, focalX: m.focalX, focalY: m.focalY }))}
-          >
+          <MediaRegistryProvider initial={media.map(toMediaItem)}>
             <AdminShell user={{ name: user.name, email: user.email }} unread={unread}>
               {children}
             </AdminShell>

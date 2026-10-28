@@ -70,7 +70,11 @@ export default function SiteChrome({ ctx, children, banner }: { ctx: RenderCtx; 
       <Nav
         logo={logo}
         items={navItems(ctx)}
-        cta={ctaHref && cta.label ? { label: cta.label, mobileLabel: cta.mobileLabel, href: ctaHref, external: ctx.isExternal(cta.link) } : null}
+        cta={
+          ctaHref && cta.label
+            ? { label: cta.label, mobileLabel: cta.mobileLabel, href: ctaHref, external: ctx.isExternal(cta.link), form: ctx.isFormLink(cta.link) }
+            : null
+        }
         variant={ctx.bundle.theme.layout.navStyle === "bar" ? "bar" : "floating"}
         homeHref={homeHref}
         offsetTop={Boolean(banner)}
@@ -81,7 +85,13 @@ export default function SiteChrome({ ctx, children, banner }: { ctx: RenderCtx; 
         <>
           {/* Keeps the end of the footer reachable above the fixed button on phones. */}
           <div className="h-24 bg-ink md:hidden" aria-hidden="true" />
-          <StickyApply label={cta.mobileLabel || cta.label} href={ctaHref} external={ctx.isExternal(cta.link)} whatsapp={whatsapp} />
+          <StickyApply
+            label={cta.mobileLabel || cta.label}
+            href={ctaHref}
+            external={ctx.isExternal(cta.link)}
+            form={ctx.isFormLink(cta.link)}
+            whatsapp={whatsapp}
+          />
         </>
       )}
       <VisitSourceTracker />

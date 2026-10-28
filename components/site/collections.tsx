@@ -43,6 +43,8 @@ export function ServicesOverviewBlock({ data, ctx, layout }: BlockProps) {
             >
               {services.map((s, i) => {
                 const href = ctx.serviceHref(s);
+                const detail = ctx.serviceDetailHref(s);
+                const detailLabel = str(data.detailLabel);
                 return (
                   <FadeIn key={s.id} delay={i * 70}>
                     <article className={`flex h-full flex-col rounded-card border border-white/[0.07] bg-ink-2 p-8 md:p-10 ${carousel ? "max-md:p-6" : ""}`}>
@@ -50,7 +52,15 @@ export function ServicesOverviewBlock({ data, ctx, layout }: BlockProps) {
                         <span className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">{s.tag}</span>
                         <span className="display text-2xl text-paper/40">{nn(i)}</span>
                       </div>
-                      <h3 className={`display mt-6 text-5xl text-paper ${carousel ? "max-md:mt-5 max-md:text-[calc(2rem*var(--tc-heading-scale))]" : ""}`}>{s.title}</h3>
+                      <h3 className={`display mt-6 text-5xl text-paper ${carousel ? "max-md:mt-5 max-md:text-[calc(2rem*var(--tc-heading-scale))]" : ""}`}>
+                        {detailLabel ? (
+                          <Link href={detail} className="transition-colors hover:text-accent">
+                            {s.title}
+                          </Link>
+                        ) : (
+                          s.title
+                        )}
+                      </h3>
                       <p className={`mt-4 leading-relaxed text-paper/60 ${carousel ? "max-md:text-[15px]" : ""}`}>{s.description}</p>
                       {s.points.length > 0 && (
                         <ul className="mt-6 space-y-2.5">
@@ -62,11 +72,23 @@ export function ServicesOverviewBlock({ data, ctx, layout }: BlockProps) {
                           ))}
                         </ul>
                       )}
-                      {href && str(data.linkLabel) && (
-                        <Link href={href} className="group mt-auto inline-flex items-center gap-2 pt-8 text-sm font-semibold text-paper">
-                          {s.cta?.label || str(data.linkLabel)}
-                          <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
-                        </Link>
+                      {((href && str(data.linkLabel)) || (detailLabel && detail !== href)) && (
+                        <div className="mt-auto flex flex-wrap items-center gap-x-7 gap-y-1 pt-5">
+                          {href && str(data.linkLabel) && (
+                            <Link href={href} className="group inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-paper">
+                              {s.cta?.label || str(data.linkLabel)}
+                              <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+                            </Link>
+                          )}
+                          {detailLabel && detail !== href && (
+                            <Link
+                              href={detail}
+                              className="inline-flex min-h-11 items-center text-sm font-medium text-paper/70 underline decoration-white/25 underline-offset-4 transition-colors hover:text-paper hover:decoration-accent"
+                            >
+                              {detailLabel}
+                            </Link>
+                          )}
+                        </div>
                       )}
                     </article>
                   </FadeIn>
@@ -89,7 +111,7 @@ export function ServicesDetailedBlock({ data, ctx }: BlockProps) {
       {services.map((s, i) => {
         const even = i % 2 === 0;
         const image = ctx.media(s.image);
-        const ctaHref = ctx.href(s.cta?.link);
+        const ctaHref = ctx.serviceHref(s) === ctx.serviceDetailHref(s) ? null : ctx.serviceHref(s);
         return (
           <section
             key={s.id}
@@ -128,11 +150,23 @@ export function ServicesDetailedBlock({ data, ctx }: BlockProps) {
                   <p className={`mt-6 max-w-xl text-lg leading-relaxed ${even ? "text-ink/65" : "text-paper/65"} ${carousel ? "max-md:mt-4 max-md:text-base" : ""}`}>
                     {s.description}
                   </p>
-                  {ctaHref && s.cta.label && (
-                    <div className="mt-8">
-                      <Button href={ctaHref} newTab={ctx.isExternal(s.cta.link)} variant={even ? "dark" : "primary"} arrow>
-                        {s.cta.label}
-                      </Button>
+                  {((ctaHref && s.cta.label) || str(data.detailLabel)) && (
+                    <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+                      {ctaHref && s.cta.label && (
+                        <Button href={ctaHref} newTab={ctx.isExternal(s.cta.link)} variant={even ? "dark" : "primary"} arrow>
+                          {s.cta.label}
+                        </Button>
+                      )}
+                      {str(data.detailLabel) && (
+                        <Link
+                          href={ctx.serviceDetailHref(s)}
+                          className={`inline-flex min-h-11 items-center text-sm font-semibold underline decoration-2 underline-offset-4 transition-colors ${
+                            even ? "text-ink decoration-ink/25 hover:decoration-ink" : "text-paper decoration-white/30 hover:decoration-accent"
+                          }`}
+                        >
+                          {str(data.detailLabel)}
+                        </Link>
+                      )}
                     </div>
                   )}
                 </div>

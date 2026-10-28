@@ -26,7 +26,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const [docs, media] = q ? await Promise.all([searchDocs(q), listMedia(q)]) : [[], []];
   return (
     <>
-      <PageHeader title="Zoeken" description={q ? `Resultaten voor ‘${q}’` : "Zoek in alle teksten, pagina’s, diensten, cases en afbeeldingen."} />
+      <PageHeader title="Zoeken" description={q ? `Resultaten voor ‘${q}’` : "Zoek in alle teksten, pagina’s, vacatures, cases, foto’s en video’s."} />
       {!q ? null : docs.length === 0 && media.length === 0 ? (
         <EmptyState title="Niets gevonden" text="Probeer een ander woord." />
       ) : (

@@ -16,11 +16,12 @@ export type FieldDef =
   | (Base & { type: "richtext"; minimal?: boolean })
   | (Base & { type: "image" })
   | (Base & { type: "images"; max?: number })
+  | (Base & { type: "video" })
   | (Base & { type: "link" })
   | (Base & { type: "cta" })
   | (Base & { type: "boolean" })
   | (Base & { type: "select"; options: { value: string; label: string }[] })
-  | (Base & { type: "number"; min: number; max: number; step: number; unit?: string })
+  | (Base & { type: "number"; min: number; max: number; step: number; unit?: string; control?: "slider" | "input" })
   | (Base & { type: "color" })
   | (Base & { type: "stringList"; itemLabel: string; max?: number })
   | (Base & { type: "repeater"; itemLabel: string; fields: FieldDef[]; titleKey?: string; max?: number })
@@ -35,6 +36,7 @@ export function emptyValue(field: FieldDef): unknown {
     case "richtext":
       return "";
     case "image":
+    case "video":
       return null;
     case "images":
     case "stringList":

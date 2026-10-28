@@ -110,6 +110,10 @@ export const media = pgTable("media", {
   alt: text("alt").notNull().default(""),
   focalX: integer("focal_x").notNull().default(50),
   focalY: integer("focal_y").notNull().default(50),
+  /** Videos only: a still from the video, shown until it plays. */
+  posterUrl: text("poster_url"),
+  /** Videos only: the length in whole seconds. */
+  duration: integer("duration"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });

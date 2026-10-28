@@ -6,6 +6,7 @@ import { submitContactForm, type ContactFormState } from "@/app/actions/contact"
 import { applicationChecks, type CheckedField } from "@/lib/application-checks";
 import type { FormsConfig } from "@/lib/cms/documents";
 import { ArrowRightIcon, WhatsAppIcon } from "@/lib/icons";
+import { VACANCY_PARAM } from "@/lib/vacancy-link";
 import { readVisitSource } from "@/lib/visit-source";
 
 const initialState: ContactFormState = { status: "idle", message: "" };
@@ -24,7 +25,7 @@ function SubmitButton({ label, sending }: { label: string; sending: string }) {
   );
 }
 
-type FieldId = "name" | "phone" | "email" | "city" | "availability" | "message";
+type FieldId = "name" | "phone" | "email" | "city" | "availability" | "vacancy" | "message";
 
 function Field({ id, label, error, children }: { id: FieldId; label: string; error?: string; children: React.ReactNode }) {
   return (
@@ -61,11 +62,14 @@ type ContactFormProps = {
   config: FormsConfig;
   formStyle?: string;
   whatsapp?: { href: string; label: string } | null;
+  /** The published vacancies to choose from. */
+  vacancies?: { slug: string; title: string }[];
 };
 
-export default function ContactForm({ config, formStyle = "filled", whatsapp = null }: ContactFormProps) {
+export default function ContactForm({ config, formStyle = "filled", whatsapp = null, vacancies = [] }: ContactFormProps) {
   const [state, formAction] = useActionState(submitContactForm, initialState);
   const sourceRef = useRef<HTMLInputElement>(null);
+  const vacancyRef = useRef<HTMLSelectElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   // Fields fixed since the last submit lose their error message right away (and get it back if they break again).
   const [fixed, setFixed] = useState<{ after: ContactFormState; fields: string[] }>({ after: state, fields: [] });
@@ -110,6 +114,13 @@ export default function ContactForm({ config, formStyle = "filled", whatsapp = n
   useEffect(() => {
     if (sourceRef.current) sourceRef.current.value = readVisitSource();
   });
+
+  // Someone who comes from a vacancy page (/solliciteren?vacature=deur-aan-deur) has that vacancy filled in already.
+  useEffect(() => {
+    const slug = new URLSearchParams(window.location.search).get(VACANCY_PARAM);
+    const select = vacancyRef.current;
+    if (slug && select && !select.value && vacancies.some((o) => o.slug === slug)) select.value = slug;
+  }, [vacancies]);
 
   // After a rejected submit, take the visitor to the first field that needs attention.
   useEffect(() => {
@@ -239,6 +250,24 @@ export default function ContactForm({ config, formStyle = "filled", whatsapp = n
             </p>
           )}
         </fieldset>
+      )}
+
+      {vacancies.length > 0 && labels.vacancy && (
+        <Field id="vacancy" label={labels.vacancy}>
+          <div className="relative">
+            <select ref={vacancyRef} id="vacancy" name="vacancy" defaultValue={v?.vacancy ?? ""} className={`${inputClasses} cursor-pointer appearance-none pr-11`}>
+              <option value="">{labels.vacancyNone || "Nog geen voorkeur"}</option>
+              {vacancies.map((o) => (
+                <option key={o.slug} value={o.slug}>
+                  {o.title}
+                </option>
+              ))}
+            </select>
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/60" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </div>
+        </Field>
       )}
 
       <Field id="message" label={labels.message}>

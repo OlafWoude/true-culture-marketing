@@ -6,6 +6,7 @@ import FadeIn from "@/components/FadeIn";
 import GorillaMark from "@/components/GorillaMark";
 import MobileCarousel from "./MobileCarousel";
 import type { CtaValue } from "@/lib/cms/fields";
+import { serviceSlug } from "@/lib/cms/render";
 import { ArrowRightIcon, CheckIcon, WhatsAppIcon } from "@/lib/icons";
 import { whatsappHref } from "@/lib/whatsapp";
 import { bgClass, list, str, Title, type BlockProps } from "./shared";
@@ -212,6 +213,7 @@ export function ContactHeroBlock({ data, ctx, layout }: BlockProps) {
                   config={ctx.bundle.forms}
                   formStyle={ctx.bundle.theme.layout.formStyle}
                   whatsapp={whatsapp && whatsappLabel ? { href: whatsapp, label: whatsappLabel } : null}
+                  vacancies={ctx.bundle.services.map((s) => ({ slug: serviceSlug(s), title: s.title }))}
                 />
               </div>
             </div>

@@ -42,6 +42,7 @@ export function schemaForField(field: FieldDef): z.ZodType {
     case "richtext":
       return z.string().max(40000, `${field.label}: de tekst is te lang`).transform(sanitizeRichText);
     case "image":
+    case "video":
       return uuid.nullable();
     case "images":
       return z.array(uuid).max(field.max ?? 20, `${field.label}: maximaal ${field.max ?? 20} afbeeldingen`);
@@ -105,7 +106,8 @@ export const slugSchema = z
   .toLowerCase()
   .max(80)
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$|^$/, "Gebruik alleen kleine letters, cijfers, streepjes en eventueel /")
-  .refine((s) => !RESERVED_SLUGS.has(s.split("/")[0]), "Deze URL is gereserveerd voor het systeem");
+  .refine((s) => !RESERVED_SLUGS.has(s.split("/")[0]), "Deze URL is gereserveerd voor het systeem")
+  .refine((s) => !s.startsWith("vacatures/"), "Adressen onder /vacatures/ zijn gereserveerd voor de vacaturepagina's");
 
 export const pageDocSchema = objectSchema(pageFields).extend({
   title: z.string().trim().min(1, "Geef de pagina een titel").max(120),
@@ -118,7 +120,7 @@ export function collectionSchema(type: CollectionType) {
   if (type === "service") {
     return base.extend({
       title: z.string().trim().min(1, "Geef de dienst een naam").max(80),
-      anchor: z.string().trim().toLowerCase().max(60).regex(/^[a-z0-9-]*$/, "Alleen kleine letters, cijfers en streepjes"),
+      anchor: z.string().trim().toLowerCase().max(60).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$|^$/, "URL-naam: alleen kleine letters, cijfers en losse streepjes"),
     });
   }
   if (type === "case") {

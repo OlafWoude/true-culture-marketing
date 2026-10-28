@@ -5,6 +5,7 @@ import { clientIpKey, isRateLimited, recordHit } from "@/lib/auth/rate-limit";
 import { getLiveBundle } from "@/lib/cms/repo";
 import { isEmailConfigured, sendEmail } from "@/lib/email";
 import { applicationChecks } from "@/lib/application-checks";
+import { serviceSlug } from "@/lib/cms/render";
 
 type Field = "name" | "phone" | "email" | "city" | "availability";
 
@@ -12,7 +13,7 @@ export type ContactFormState = {
   status: "idle" | "success" | "error";
   message: string;
   fieldErrors?: Partial<Record<Field, string>>;
-  values?: { name: string; phone: string; email: string; city: string; availability: string; message: string };
+  values?: { name: string; phone: string; email: string; city: string; availability: string; vacancy: string; message: string };
 };
 
 // Drops control characters (except tab and newlines) so stored applications and e-mails stay readable.
@@ -28,7 +29,7 @@ const clean = (value: FormDataEntryValue | null, max: number) =>
 
 /** Handles the application form: validates, stores the application for the dashboard and notifies the recruiter. */
 export async function submitContactForm(_prevState: ContactFormState, formData: FormData): Promise<ContactFormState> {
-  const { forms } = await getLiveBundle();
+  const { forms, services } = await getLiveBundle();
   const m = forms.messages;
 
   // Honeypot: real visitors never fill this hidden field in.
@@ -42,9 +43,13 @@ export async function submitContactForm(_prevState: ContactFormState, formData: 
     email: clean(formData.get("email"), 200),
     city: clean(formData.get("city"), 80),
     availability: clean(formData.get("availability"), 80),
+    vacancy: clean(formData.get("vacancy"), 80),
     message: clean(formData.get("message"), 2000),
   };
   const source = clean(formData.get("source"), 300);
+  // Only a published vacancy counts; anything else is treated as "no preference".
+  const vacancy = values.vacancy ? (services.find((s) => serviceSlug(s) === values.vacancy)?.title ?? "") : "";
+  if (!vacancy) values.vacancy = "";
   const options = forms.availabilityOptions.filter(Boolean);
 
   const fieldErrors: ContactFormState["fieldErrors"] = {};
@@ -74,6 +79,7 @@ export async function submitContactForm(_prevState: ContactFormState, formData: 
       `Telefoon: ${values.phone}`,
       `E-mail: ${values.email}`,
       `Woonplaats: ${values.city}`,
+      vacancy && `Vacature: ${vacancy}`,
       values.availability && `Beschikbaar: ${values.availability}`,
       values.message && `\nBericht:\n${values.message}`,
       source && `\nHerkomst: ${source}`,
@@ -81,7 +87,7 @@ export async function submitContactForm(_prevState: ContactFormState, formData: 
     const result = await sendEmail({
       to: recipient,
       replyTo: values.email,
-      subject: `Nieuwe sollicitatie: ${values.name} (${values.city})`,
+      subject: `Nieuwe sollicitatie: ${values.name} (${values.city})${vacancy ? `, ${vacancy}` : ""}`,
       text: `Er is een nieuwe sollicitatie binnengekomen via de website. Bel binnen 24 uur terug.\n\n${lines.join("\n")}`,
     });
     emailed = result.ok;
@@ -92,7 +98,7 @@ export async function submitContactForm(_prevState: ContactFormState, formData: 
     try {
       await getDb()
         .insert(schema.submissions)
-        .values({ form: "sollicitatie", data: { ...values, source }, emailed });
+        .values({ form: "sollicitatie", data: { ...values, vacancy, source }, emailed });
       stored = true;
     } catch (error) {
       console.error("[contact] Could not store application:", error);

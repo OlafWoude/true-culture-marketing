@@ -115,6 +115,7 @@ type SubmissionData = {
   email?: string;
   city?: string;
   availability?: string;
+  vacancy?: string;
   message?: string;
   source?: string;
   companyName?: string;
@@ -136,6 +137,7 @@ export function SubmissionsList({ items }: { items: { id: string; createdAt: str
           ["Telefoon", d.phone && <a className="underline" href={`tel:${d.phone.replace(/[^0-9+]/g, "")}`}>{d.phone}</a>],
           ["E-mail", d.email && <a className="underline" href={`mailto:${d.email}`}>{d.email}</a>],
           ["Woonplaats", d.city],
+          ["Vacature", d.vacancy],
           ["Beschikbaar", d.availability],
           ["Bedrijf", d.companyName],
           ["Herkomst", d.source],
@@ -156,7 +158,7 @@ export function SubmissionsList({ items }: { items: { id: string; createdAt: str
                 <span className={`block truncate ${s.read ? "text-zinc-700" : "font-bold text-zinc-900"}`}>
                   {[d.name, d.city ?? d.companyName].filter(Boolean).join(" · ")}
                 </span>
-                <span className="block truncate text-xs text-zinc-500">{[d.availability, d.phone].filter(Boolean).join(" · ") || d.message}</span>
+                <span className="block truncate text-xs text-zinc-500">{[d.vacancy, d.availability, d.phone].filter(Boolean).join(" · ") || d.message}</span>
               </span>
               <span className="text-xs text-zinc-500">{formatDate(s.createdAt)}</span>
               {!s.read && <StatusBadge status="new" />}

@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { getLiveBundle } from "@/lib/cms/repo";
 import { siteUrl } from "@/lib/cms/metadata";
-import { pathForSlug } from "@/lib/cms/render";
+import { pathForSlug, vacancyPath } from "@/lib/cms/render";
 
 export const revalidate = 300;
 
@@ -24,5 +24,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((c) => !c.seo.noindex)
     .map((c) => ({ url: `${base}/cases/${c.slug}`, changeFrequency: "monthly" as const, priority: 0.6 }));
 
-  return [...pages, ...cases];
+  const vacancies = bundle.services
+    .filter((s) => !s.seo.noindex && !s.seo.canonical)
+    .map((s) => ({
+      url: `${base}${vacancyPath(s)}`,
+      lastModified: new Date(s.updatedAt).getTime() > 0 ? new Date(s.updatedAt) : undefined,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    }));
+
+  return [...pages, ...vacancies, ...cases];
 }

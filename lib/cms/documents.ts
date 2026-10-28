@@ -40,12 +40,23 @@ export type PageDoc = { title: string; slug: string; seo: Seo; sections: Section
 export type ServiceDoc = {
   title: string;
   anchor: string;
+  jobTitle: string;
   tag: string;
   short: string;
   description: string;
   points: string[];
+  requirements: string[];
+  offer: string[];
+  employmentType: string;
+  payText: string;
+  salary: { min: number; max: number; unit: string };
+  locations: { city: string; region: string }[];
   image: string | null;
+  video: string | null;
+  videoPoster: string | null;
+  videoCaption: string;
   cta: CtaValue;
+  seo: Seo;
 };
 
 export type CaseDoc = {
@@ -70,6 +81,21 @@ export type TestimonialDoc = {
   logo: string | null;
 };
 
+// A vacancy's share image is drawn automatically; a chosen picture becomes the photo in it.
+const vacancySeoFields = seoFields.map((f) =>
+  f.key === "ogImage" ? { ...f, help: "Komt in de automatische deelafbeelding van deze vacature. Leeg = de foto van de vacature." } : f,
+);
+
+// Values follow Google's job posting types; a comma means "either".
+export const employmentTypes = [
+  { value: "PART_TIME,FULL_TIME", label: "Parttime of fulltime" },
+  { value: "PART_TIME", label: "Parttime of bijbaan" },
+  { value: "FULL_TIME", label: "Fulltime" },
+  { value: "CONTRACTOR", label: "Zelfstandig (zzp)" },
+  { value: "TEMPORARY", label: "Tijdelijk" },
+  { value: "OTHER", label: "Anders" },
+];
+
 export const collectionDefs = {
   service: {
     label: "Vacatures",
@@ -78,13 +104,36 @@ export const collectionDefs = {
     titleKey: "title",
     fields: [
       { key: "title", label: "Functienaam", type: "text", max: 80 },
-      { key: "anchor", label: "Ankernaam in de URL", type: "text", max: 60, help: "Gebruikt voor links als /vacatures#deur-aan-deur. Alleen kleine letters, cijfers en streepjes." },
+      { key: "anchor", label: "URL-naam", type: "text", max: 60, help: "De vacature staat op /vacatures/<url-naam>, bijv. /vacatures/deur-aan-deur. Alleen kleine letters, cijfers en streepjes. Leeg = afgeleid van de functienaam." },
+      { key: "jobTitle", label: "Functietitel voor Google", type: "text", max: 80, help: "Zoals mensen de baan zoeken, bijv. ‘Promotor deur-aan-deur’. Google toont deze titel in de vacatureresultaten. Leeg = de functienaam." },
       { key: "tag", label: "Kort label (geel)", type: "text", max: 30 },
-      { key: "short", label: "Korte omschrijving (tegels en overzicht)", type: "textarea", max: 220, rows: 3 },
+      { key: "short", label: "Korte omschrijving (tegels, overzicht en Google)", type: "textarea", max: 220, rows: 3 },
       { key: "description", label: "Uitgebreide omschrijving", type: "textarea", max: 1200, rows: 5 },
-      { key: "points", label: "Opsomming (bijv. wat je doet)", type: "stringList", itemLabel: "Punt", max: 8 },
-      { key: "image", label: "Afbeelding (optioneel)", type: "image", help: "Wordt getoond op de vacaturepagina. Een echte foto van het team in actie werkt het best." },
+      { key: "points", label: "Wat je doet", type: "stringList", itemLabel: "Punt", max: 8 },
+      { key: "requirements", label: "Wat we vragen", type: "stringList", itemLabel: "Punt", max: 8 },
+      { key: "offer", label: "Wat je krijgt", type: "stringList", itemLabel: "Punt", max: 8 },
+      { key: "employmentType", label: "Soort dienstverband", type: "select", options: employmentTypes, help: "Google toont dit bij de vacature." },
+      { key: "payText", label: "Beloning in het kort", type: "text", max: 80, help: "Staat bij de kerngegevens op de vacaturepagina, bijv. ‘Per resultaat, zonder plafond’." },
+      { key: "salary", label: "Beloning voor Google (optioneel)", type: "group", help: "Alleen invullen als dit de werkelijke beloning is, geen schatting. Laat ‘Vanaf’ op 0 staan om geen bedrag aan Google door te geven.", fields: [
+        { key: "min", label: "Vanaf", type: "number", min: 0, max: 100000, step: 1, unit: "euro", control: "input" },
+        { key: "max", label: "Tot (optioneel)", type: "number", min: 0, max: 100000, step: 1, unit: "euro", control: "input" },
+        { key: "unit", label: "Per", type: "select", options: [
+          { value: "DAY", label: "Dag" },
+          { value: "HOUR", label: "Uur" },
+          { value: "WEEK", label: "Week" },
+          { value: "MONTH", label: "Maand" },
+        ] },
+      ] },
+      { key: "locations", label: "Werkplaatsen", type: "repeater", itemLabel: "Plaats", titleKey: "city", max: 12, help: "Google toont de vacature bij zoekopdrachten in en rond deze plaatsen.", fields: [
+        { key: "city", label: "Plaats", type: "text", max: 60 },
+        { key: "region", label: "Provincie", type: "text", max: 60 },
+      ] },
+      { key: "image", label: "Foto", type: "image", help: "Staat op de vacaturepagina en in het vacatureoverzicht. Een echte foto van het team in actie werkt het best." },
+      { key: "video", label: "Video van een collega (optioneel)", type: "video", help: "Een korte, staande video (9:16) waarin een collega vertelt hoe het werk echt is. Zet ondertitels in de video zelf." },
+      { key: "videoPoster", label: "Eigen beeld vóór het afspelen (optioneel)", type: "image", help: "Leeg = een beeld uit de video zelf." },
+      { key: "videoCaption", label: "Bij de video", type: "text", max: 120, help: "Bijv. ‘Sanne, deur-aan-deur in Groningen’." },
       { key: "cta", label: "Knop (optioneel)", type: "cta", help: "Bijv. ‘Solliciteer direct’ naar de sollicitatiepagina. De kaarten op de homepage gebruiken deze knop ook." },
+      { key: "seo", label: "SEO en delen", type: "group", fields: vacancySeoFields },
     ] as FieldDef[],
   },
   case: {
@@ -143,6 +192,7 @@ export const singletonDefs = {
       { key: "defaultDescription", label: "Standaard meta description", type: "textarea", max: 200, rows: 3, help: "Ideaal 120–160 tekens; Google kort langere teksten af." },
       { key: "ogImage", label: "Standaard afbeelding bij delen", type: "image", help: "Leeg = de huidige True Culture-banner." },
       { key: "allowIndexing", label: "Website tonen in zoekmachines", type: "boolean", help: "Zet alleen uit als de hele website (tijdelijk) niet gevonden mag worden." },
+      { key: "showMediaPlaceholders", label: "Lege foto- en videoplekken tonen", type: "boolean", help: "Toont een nette plaatshouder op plekken waar nog een foto of video moet komen. Zet uit om die plekken te verbergen tot er echt beeld is." },
       { key: "company", label: "Bedrijfsgegevens", type: "group", fields: [
         { key: "legalName", label: "Statutaire naam", type: "text", max: 120 },
         { key: "kvk", label: "KvK-nummer", type: "text", max: 20 },
@@ -214,6 +264,8 @@ export const singletonDefs = {
         { key: "cityPlaceholder", label: "Voorbeeldtekst woonplaats", type: "text", max: 80 },
         { key: "availability", label: "Label beschikbaarheid", type: "text", max: 80 },
         { key: "availabilityPlaceholder", label: "Toelichting onder de vraag over beschikbaarheid", type: "text", max: 60, help: "Optioneel, bijvoorbeeld: Je kunt dit later nog aanpassen." },
+        { key: "vacancy", label: "Label vacaturekeuze", type: "text", max: 80, help: "Laat leeg om de vraag te verbergen. Wie via de pagina van een vacature solliciteert, ziet die vacature al ingevuld." },
+        { key: "vacancyNone", label: "Keuze ‘geen voorkeur’ bij de vacaturekeuze", type: "text", max: 60 },
         { key: "message", label: "Label bericht (optioneel veld)", type: "text", max: 80 },
         { key: "messagePlaceholder", label: "Voorbeeldtekst bericht", type: "text", max: 200 },
         { key: "submit", label: "Tekst op de knop", type: "text", max: 40 },
@@ -299,6 +351,7 @@ export type Settings = {
   defaultDescription: string;
   ogImage: string | null;
   allowIndexing: boolean;
+  showMediaPlaceholders: boolean;
   company: { legalName: string; kvk: string; vat: string; address: string };
   contact: { email: string; phone: string; whatsapp: string };
   socials: { platform: string; url: string }[];
@@ -309,7 +362,7 @@ export type FormsConfig = {
   retentionDays: number;
   labels: Record<
     | "name" | "namePlaceholder" | "phone" | "phonePlaceholder" | "email" | "emailPlaceholder" | "city" | "cityPlaceholder"
-    | "availability" | "availabilityPlaceholder" | "message" | "messagePlaceholder" | "submit" | "sending",
+    | "availability" | "availabilityPlaceholder" | "vacancy" | "vacancyNone" | "message" | "messagePlaceholder" | "submit" | "sending",
     string
   >;
   availabilityOptions: string[];

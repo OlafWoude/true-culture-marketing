@@ -1,5 +1,5 @@
 import { guardAdminRequest } from "@/lib/auth/request-guard";
-import { MAX_UPLOAD_BYTES, MediaError, replaceMedia } from "@/lib/cms/media";
+import { MAX_UPLOAD_BYTES, MediaError, replaceMedia, toMediaItem } from "@/lib/cms/media";
 import { revalidatePublicSite } from "@/lib/cms/revalidate";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -19,7 +19,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     if (!(file instanceof File)) return Response.json({ error: "Geen bestand ontvangen." }, { status: 400 });
     const row = await replaceMedia(id, file);
     revalidatePublicSite();
-    return Response.json({ media: { id: row.id, url: row.url, alt: row.alt, width: row.width, height: row.height, filename: row.filename, focalX: row.focalX, focalY: row.focalY } });
+    return Response.json({ media: toMediaItem(row) });
   } catch (error) {
     if (error instanceof MediaError) return Response.json({ error: error.message }, { status: 400 });
     console.error("[media] Replace failed:", error);

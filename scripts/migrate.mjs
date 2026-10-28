@@ -73,6 +73,79 @@ async function applyContentMigration(tx, migration) {
   for (const [key, change] of Object.entries(migration.singletons ?? {})) {
     await patchSingleton(tx, key, change, note, now);
   }
+  // Additions that leave everything the editor changed alone: new fields on an item, new sections on a page.
+  for (const patch of migration.documentPatches ?? []) {
+    await updateDocument(tx, patch.id, (doc) => (matches(doc, patch.onlyIf) ? fillMissing(doc, patch.setIfMissing) : doc), note, now);
+  }
+  for (const insert of migration.sectionInserts ?? []) {
+    await updateDocument(tx, insert.pageId, (doc) => insertSection(doc, insert), note, now);
+  }
+  for (const patch of migration.sectionPatches ?? []) {
+    await updateDocument(
+      tx,
+      patch.pageId,
+      (doc) => ({
+        ...doc,
+        sections: (doc.sections ?? []).map((s) => (s.id === patch.sectionId ? { ...s, data: fillMissing(s.data ?? {}, patch.setIfMissing) } : s)),
+      }),
+      note,
+      now,
+    );
+  }
+}
+
+// Helpers are function declarations: the migration above runs before later `const` bindings exist.
+
+/** Reads "a.b" style paths, so a change can target one value inside a group. */
+function getPath(obj, key) {
+  return key.split(".").reduce((o, k) => (o == null ? undefined : o[k]), obj);
+}
+
+function setPath(obj, key, value) {
+  const parts = key.split(".");
+  let target = obj;
+  for (const part of parts.slice(0, -1)) {
+    target[part] = target[part] && typeof target[part] === "object" ? { ...target[part] } : {};
+    target = target[part];
+  }
+  target[parts[parts.length - 1]] = value;
+}
+
+function matches(doc, onlyIf) {
+  return Object.entries(onlyIf ?? {}).every(([k, v]) => JSON.stringify(getPath(doc, k)) === JSON.stringify(v));
+}
+
+function fillMissing(doc, values) {
+  const next = { ...doc };
+  for (const [k, v] of Object.entries(values ?? {})) {
+    const current = getPath(next, k);
+    if (current === undefined || current === null || current === "") setPath(next, k, v);
+  }
+  return next;
+}
+
+/** Adds a section after another one, unless it is already there or the editor removed the section it follows. */
+function insertSection(doc, { after, section }) {
+  const sections = doc.sections ?? [];
+  if (sections.some((s) => s.id === section.id)) return doc;
+  const at = sections.findIndex((s) => s.id === after);
+  if (at < 0) return doc;
+  return { ...doc, sections: [...sections.slice(0, at + 1), section, ...sections.slice(at + 1)] };
+}
+
+/** Applies a change to both the draft and the published version of an item, after keeping a backup. */
+async function updateDocument(tx, id, change, note, now) {
+  const [row] = await tx`select * from documents where id = ${id} and deleted_at is null`;
+  if (!row) return;
+  const draft = change(row.draft);
+  const published = row.published ? change(row.published) : null;
+  if (JSON.stringify(draft) === JSON.stringify(row.draft) && JSON.stringify(published) === JSON.stringify(row.published)) return;
+  await backup(tx, row, note);
+  await tx`
+    update documents set
+      draft = ${tx.json(draft)}, published = ${published ? tx.json(published) : null},
+      draft_updated_at = ${now}, updated_at = ${now}
+    where id = ${id}`;
 }
 
 /** Keeps the previous version in the item's history, so it can be restored from the dashboard (Versies). */
@@ -130,10 +203,13 @@ async function patchSingleton(tx, key, change, note, now) {
   if (!row) return;
   const current = row.published ?? row.draft;
   // `onlyIf` limits a change to values the editor never touched (still the old built-in default).
-  const untouched = Object.entries(change.onlyIf ?? {}).every(([k, v]) => JSON.stringify(current[k]) === JSON.stringify(v));
-  if (!untouched) return;
+  if (!matches(current, change.onlyIf)) return;
   await backup(tx, row, note);
-  const next = change.replace ?? { ...current, ...change.set };
+  let next = change.replace;
+  if (!next) {
+    next = { ...current };
+    for (const [k, v] of Object.entries(change.set ?? {})) setPath(next, k, v);
+  }
   await tx`
     update documents set
       draft = ${tx.json(next)}, published = ${tx.json(next)}, status = 'published',

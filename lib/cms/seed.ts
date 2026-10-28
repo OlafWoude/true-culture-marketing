@@ -158,12 +158,26 @@ export function seedPages(): SeedPage[] {
           "Kans om door te groeien naar teamleider",
         ],
       }),
+      section("home-photos", "photoStrip", {
+        eyebrow: "Het werk in beeld",
+        title: "Zo ziet het werk eruit",
+        intro: "Aan de deur, op straat en op events: overal ben je samen met je team op pad.",
+        photos: [
+          { image: null, caption: "Aan de deur in een woonwijk" },
+          { image: null, caption: "Op straat in de binnenstad" },
+          { image: null, caption: "Met een stand op een event" },
+          { image: null, caption: "Samen met het team na een werkdag" },
+        ],
+        background: "light",
+        mobileCarousel: true,
+      }),
       section("home-services", "servicesOverview", {
         eyebrow: "Vacatures",
         title: "Kies het werk dat bij je past",
         intro:
           "Aan de deur, op straat of op een event: overal werk je in een team en verdien je per resultaat. Heb je een voorkeur? Vertel het ons in je sollicitatie.",
         linkLabel: "Solliciteer direct",
+        detailLabel: "Bekijk vacature",
         mobileCarousel: true,
       }),
       section("home-comparison", "comparison", {
@@ -197,6 +211,18 @@ export function seedPages(): SeedPage[] {
         ],
         mobileCarousel: true,
       }),
+      section("home-videos", "videoStories", {
+        eyebrow: "In hun eigen woorden",
+        title: "Hoor het van je collega's",
+        intro: "Collega's vertellen in een minuut hoe het werk echt is: wat ze doen, wat het oplevert en hoe het team is.",
+        items: [
+          { video: null, poster: null, name: "", role: "Deur-aan-deur", quote: "", transcript: "" },
+          { video: null, poster: null, name: "", role: "Straatwerving", quote: "", transcript: "" },
+          { video: null, poster: null, name: "", role: "Teamleider", quote: "", transcript: "" },
+        ],
+        background: "dark",
+        mobileCarousel: true,
+      }),
       section("home-testimonials", "testimonials", {
         eyebrow: "Ervaringen",
         title: "Dit zegt ons team",
@@ -225,7 +251,7 @@ export function seedPages(): SeedPage[] {
           "Aan de deur, op straat of op events in Groningen, Friesland en Drenthe. Overal werk je in een team, leer je mensen enthousiast maken en verdien je per resultaat.",
         showWatermark: true,
       }),
-      section("vacatures-list", "servicesDetailed", { pointsTitle: "Wat je doet", mobileCarousel: true }),
+      section("vacatures-list", "servicesDetailed", { pointsTitle: "Wat je doet", detailLabel: "Bekijk vacature", mobileCarousel: true }),
       section("vacatures-usps", "valuesGrid", {
         eyebrow: "Wat je krijgt",
         title: "Waarom bij ons werken?",
@@ -299,6 +325,20 @@ export function seedPages(): SeedPage[] {
         ],
         mobileCarousel: true,
       }),
+      section("zo-werkt-het-video", "imageText", {
+        eyebrow: "Kijk mee",
+        title: "Een werkdag in het veld",
+        body: "<p>Hoe ziet een dag in het veld er echt uit? In deze video neemt een collega je mee: van de start met het team tot het afsluiten aan het eind van de dag.</p>",
+        image: null,
+        video: null,
+        poster: null,
+        mediaAspect: "9/16",
+        placeholder: "video",
+        placeholderText: "Een werkdag van begin tot eind",
+        imagePosition: "right",
+        cta: applyNow,
+        background: "white",
+      }),
       faq("zo-werkt-het-faq", "light"),
       closing("zo-werkt-het-closing"),
     ],
@@ -327,6 +367,7 @@ export function seedPages(): SeedPage[] {
           "<p>Field marketing draait om gesprekken. Een goed gesprek voer je alleen als je energie hebt, als je weet waar je over praat en als je je gesteund voelt door je team.</p>" +
           "<p>Daarom investeren we in onze mensen: in training, in coaching en in een sfeer waarin je jezelf kunt zijn. Wie hard werkt, verdient bij ons goed en krijgt de ruimte om door te groeien.</p>",
         image: null,
+        placeholderText: "Het team van True Culture",
       }),
       section("over-values", "valuesGrid", {
         eyebrow: "Waar we voor staan",
@@ -432,49 +473,124 @@ export function seedPages(): SeedPage[] {
   ];
 }
 
-const roles: Omit<ServiceDoc, "image" | "cta">[] = [
+type Role = Pick<
+  ServiceDoc,
+  "title" | "anchor" | "jobTitle" | "tag" | "short" | "description" | "points" | "requirements" | "offer" | "payText" | "videoCaption"
+>;
+
+const fieldOffer = [
+  "Verdienen per resultaat, zonder plafond",
+  "Een training vanaf je eerste dag",
+  "Een hecht team om je heen",
+  "Kans om door te groeien naar teamleider",
+];
+
+const roles: Role[] = [
   {
     title: "Deur-aan-deur",
     anchor: "deur-aan-deur",
+    jobTitle: "Promotor deur-aan-deur",
     tag: "In woonwijken",
     short: "Je belt aan bij mensen thuis en vertelt over het aanbod van onze opdrachtgever. Persoonlijk en één op één.",
     description:
       "Als field marketeer deur-aan-deur ga je met je team naar een woonwijk. Je belt aan, maakt een praatje en vertelt over een product, dienst of organisatie van een van onze opdrachtgevers. Je leert snel contact maken en mensen eerlijk informeren, zodat ze zelf een goede keuze maken.",
     points: ["Gesprekken voeren bij mensen thuis", "Met je team op pad in Noord-Nederland", "Verdienen per resultaat, zonder plafond"],
+    requirements: [
+      "Energie, een open houding en zin om te leren",
+      "Je vindt het leuk om met mensen in gesprek te gaan",
+      "Je spreekt goed Nederlands",
+      "Geen ervaring of cv nodig",
+    ],
+    offer: fieldOffer,
+    payText: "Per resultaat, zonder plafond",
+    videoCaption: "Een collega over deur-aan-deur",
   },
   {
     title: "Straatwerving",
     anchor: "straatwerving",
+    jobTitle: "Promotor straatwerving",
     tag: "Op straat",
     short: "In winkelstraten, winkelcentra en op stations spreek je voorbijgangers aan. Elke dag een andere plek.",
     description:
       "Bij straatwerving sta je op drukke plekken: in winkelstraten, in winkelcentra of op stations. Je spreekt voorbijgangers aan, maakt ze nieuwsgierig en vertelt over het aanbod van onze opdrachtgever. Je werkt met een team om je heen en elke dag ziet er weer anders uit.",
     points: ["Voorbijgangers aanspreken en enthousiast maken", "Steeds wisselende locaties", "Verdienen per resultaat, zonder plafond"],
+    requirements: [
+      "Je durft voorbijgangers aan te spreken",
+      "Een nee neem je niet persoonlijk",
+      "Energie, een open houding en zin om te leren",
+      "Geen ervaring of cv nodig",
+    ],
+    offer: fieldOffer,
+    payText: "Per resultaat, zonder plafond",
+    videoCaption: "Een collega over straatwerving",
   },
   {
     title: "Events en in-store",
     anchor: "events-en-in-store",
+    jobTitle: "Promotor events en in-store",
     tag: "Op events",
     short: "Op evenementen, beurzen en in winkels sta je met een stand en vertel je bezoekers over het aanbod.",
     description:
       "Op evenementen, beurzen en in winkels sta je met een stand van een van onze opdrachtgevers. Bezoekers komen naar je toe of jij stapt op ze af. Je geeft uitleg, beantwoordt vragen en helpt mensen om klant te worden. Ideaal als je houdt van drukte en afwisseling.",
     points: ["Bezoekers ontvangen bij een stand", "Werken op evenementen en in winkels", "Verdienen per resultaat, zonder plafond"],
+    requirements: [
+      "Je houdt van drukte en afwisseling",
+      "Je geeft graag uitleg en beantwoordt vragen",
+      "Energie, een open houding en zin om te leren",
+      "Geen ervaring of cv nodig",
+    ],
+    offer: fieldOffer,
+    payText: "Per resultaat, zonder plafond",
+    videoCaption: "Een collega over events en in-store",
   },
   {
     title: "Teamleider",
     anchor: "teamleider",
+    jobTitle: "Teamleider field marketing",
     tag: "Doorgroeien",
     short: "Haal je mooie resultaten en help je graag anderen? Dan kun je doorgroeien naar teamleider.",
     description:
       "Ben je een tijd bij ons en haal je goede resultaten? Dan kun je doorgroeien naar teamleider. Je coacht je eigen team, helpt nieuwe collega's op weg en zorgt dat iedereen gemotiveerd het veld in gaat. Zo bouw je ervaring op in leidinggeven die je de rest van je carrière meeneemt.",
     points: ["Je eigen team coachen", "Nieuwe collega's inwerken", "Ervaring opdoen in leidinggeven"],
+    requirements: [
+      "Je werkt al een tijd bij ons en haalt goede resultaten",
+      "Je helpt graag anderen om beter te worden",
+      "Je bent een voorbeeld voor je team",
+    ],
+    offer: [
+      "Je eigen team en meer verantwoordelijkheid",
+      "Ervaring in leidinggeven die je de rest van je carrière meeneemt",
+      "Een hecht team om je heen",
+    ],
+    payText: "Bespreken we in het eerste gesprek",
+    videoCaption: "Een teamleider over het werk",
   },
+];
+
+// Placeholder work areas, one per province; adjust them in the dashboard to where the teams actually go.
+const northernCities = [
+  { city: "Groningen", region: "Groningen" },
+  { city: "Leeuwarden", region: "Friesland" },
+  { city: "Assen", region: "Drenthe" },
 ];
 
 export function seedServices(): { id: string; doc: ServiceDoc }[] {
   return roles.map((role, i) => ({
     id: serviceIds[i],
-    doc: { ...role, points: [...role.points], image: null, cta: applyNow },
+    doc: {
+      ...role,
+      points: [...role.points],
+      requirements: [...role.requirements],
+      offer: [...role.offer],
+      employmentType: "PART_TIME,FULL_TIME",
+      salary: { min: 0, max: 0, unit: "DAY" },
+      locations: northernCities.map((l) => ({ ...l })),
+      image: null,
+      video: null,
+      videoPoster: null,
+      cta: applyNow,
+      seo: seo("", ""),
+    },
   }));
 }
 
@@ -495,6 +611,7 @@ export function seedSettings(): Settings {
       "Verdien €300+ per dag als field marketeer in Groningen, Friesland of Drenthe. Geen ervaring of cv nodig: solliciteer in 2 minuten en we bellen je binnen 24 uur.",
     ogImage: null,
     allowIndexing: true,
+    showMediaPlaceholders: true,
     company: { legalName: "", kvk: "", vat: "", address: "" },
     contact: { email: "", phone: "", whatsapp: "" },
     socials: [],
@@ -549,8 +666,10 @@ export function seedForms(): FormsConfig {
       cityPlaceholder: "Bijv. Groningen",
       availability: "Hoeveel dagen per week wil je werken?",
       availabilityPlaceholder: "Kies wat bij je past",
+      vacancy: "Welke vacature spreekt je het meest aan?",
+      vacancyNone: "Nog geen voorkeur",
       message: "Wil je nog iets kwijt? (optioneel)",
-      messagePlaceholder: "Bijv. je voorkeur voor deur-aan-deur, straat of events.",
+      messagePlaceholder: "Bijv. vanaf wanneer je kunt beginnen of wat je graag wilt weten.",
       submit: "Verstuur sollicitatie",
       sending: "Versturen…",
     },

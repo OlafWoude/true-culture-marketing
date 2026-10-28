@@ -242,7 +242,7 @@ export function TrashList({ items }: { items: DocSummary[] }) {
   const { run, pending } = useRunner();
   const confirm = useConfirm();
   const typeLabel: Record<string, string> = { page: "Pagina", service: "Dienst", case: "Case", testimonial: "Testimonial" };
-  if (!items.length) return <EmptyState title="De prullenbak is leeg" text="Verwijderde pagina’s, diensten, cases en testimonials komen hier terecht, zodat je ze kunt terugzetten." />;
+  if (!items.length) return <EmptyState title="De prullenbak is leeg" text="Verwijderde pagina’s, vacatures, cases en testimonials komen hier terecht, zodat je ze kunt terugzetten." />;
   return (
     <ul className="divide-y divide-zinc-200 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
       {items.map((d) => (

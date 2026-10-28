@@ -15,6 +15,13 @@
       "when": 1793099530467,
       "tag": "0001_content_migrations",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793174669407,
+      "tag": "0002_media_video",
+      "breakpoints": true
     }
   ]
 }

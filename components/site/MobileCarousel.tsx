@@ -12,11 +12,13 @@ type MobileCarouselProps = {
   enabled?: boolean;
   tone?: "light" | "dark";
   label: string;
+  /** Width of each card on phones. */
+  itemWidth?: string;
 };
 
 // Below the md breakpoint the children sit side by side and snap into place; from md upwards nothing changes.
 const SCROLLER =
-  "max-md:relative max-md:flex max-md:snap-x max-md:snap-mandatory max-md:gap-3 max-md:space-y-0 max-md:overflow-x-auto max-md:overscroll-x-contain max-md:py-1 max-md:[scrollbar-width:none] max-md:[&::-webkit-scrollbar]:hidden max-md:*:w-[min(84%,20rem)] max-md:*:shrink-0 max-md:*:snap-start";
+  "max-md:relative max-md:flex max-md:snap-x max-md:snap-mandatory max-md:gap-3 max-md:space-y-0 max-md:overflow-x-auto max-md:overscroll-x-contain max-md:py-1 max-md:[scrollbar-width:none] max-md:[&::-webkit-scrollbar]:hidden max-md:*:shrink-0 max-md:*:snap-start";
 
 const dotTone = {
   light: { active: "bg-ink", idle: "bg-ink/20" },
@@ -31,6 +33,7 @@ export default function MobileCarousel({
   enabled = true,
   tone = "light",
   label,
+  itemWidth = "max-md:*:w-[min(84%,20rem)]",
 }: MobileCarouselProps) {
   const ref = useRef<HTMLDivElement>(null);
   const count = Children.count(children);
@@ -90,7 +93,7 @@ export default function MobileCarousel({
     <>
       <Tag
         ref={ref}
-        className={on ? `${className} ${SCROLLER} ${bleed} focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent` : className}
+        className={on ? `${className} ${SCROLLER} ${itemWidth} ${bleed} focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent` : className}
         tabIndex={scrollable ? 0 : undefined}
         role={scrollable && as === "div" ? "region" : undefined}
         aria-label={scrollable ? label : undefined}

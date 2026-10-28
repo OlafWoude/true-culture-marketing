@@ -1,0 +1,301 @@
+{
+  "backupNote": "Automatische back-up van vóór de vacaturepagina's en de foto- en videoplekken",
+  "documentPatches": [
+    {
+      "id": "6a1b7c00-0000-4000-8000-000000000201",
+      "onlyIf": {
+        "title": "Deur-aan-deur"
+      },
+      "setIfMissing": {
+        "jobTitle": "Promotor deur-aan-deur",
+        "requirements": [
+          "Energie, een open houding en zin om te leren",
+          "Je vindt het leuk om met mensen in gesprek te gaan",
+          "Je spreekt goed Nederlands",
+          "Geen ervaring of cv nodig"
+        ],
+        "offer": [
+          "Verdienen per resultaat, zonder plafond",
+          "Een training vanaf je eerste dag",
+          "Een hecht team om je heen",
+          "Kans om door te groeien naar teamleider"
+        ],
+        "employmentType": "PART_TIME,FULL_TIME",
+        "payText": "Per resultaat, zonder plafond",
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "unit": "DAY"
+        },
+        "locations": [
+          {
+            "city": "Groningen",
+            "region": "Groningen"
+          },
+          {
+            "city": "Leeuwarden",
+            "region": "Friesland"
+          },
+          {
+            "city": "Assen",
+            "region": "Drenthe"
+          }
+        ],
+        "videoCaption": "Een collega over deur-aan-deur"
+      }
+    },
+    {
+      "id": "6a1b7c00-0000-4000-8000-000000000202",
+      "onlyIf": {
+        "title": "Straatwerving"
+      },
+      "setIfMissing": {
+        "jobTitle": "Promotor straatwerving",
+        "requirements": [
+          "Je durft voorbijgangers aan te spreken",
+          "Een nee neem je niet persoonlijk",
+          "Energie, een open houding en zin om te leren",
+          "Geen ervaring of cv nodig"
+        ],
+        "offer": [
+          "Verdienen per resultaat, zonder plafond",
+          "Een training vanaf je eerste dag",
+          "Een hecht team om je heen",
+          "Kans om door te groeien naar teamleider"
+        ],
+        "employmentType": "PART_TIME,FULL_TIME",
+        "payText": "Per resultaat, zonder plafond",
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "unit": "DAY"
+        },
+        "locations": [
+          {
+            "city": "Groningen",
+            "region": "Groningen"
+          },
+          {
+            "city": "Leeuwarden",
+            "region": "Friesland"
+          },
+          {
+            "city": "Assen",
+            "region": "Drenthe"
+          }
+        ],
+        "videoCaption": "Een collega over straatwerving"
+      }
+    },
+    {
+      "id": "6a1b7c00-0000-4000-8000-000000000203",
+      "onlyIf": {
+        "title": "Events en in-store"
+      },
+      "setIfMissing": {
+        "jobTitle": "Promotor events en in-store",
+        "requirements": [
+          "Je houdt van drukte en afwisseling",
+          "Je geeft graag uitleg en beantwoordt vragen",
+          "Energie, een open houding en zin om te leren",
+          "Geen ervaring of cv nodig"
+        ],
+        "offer": [
+          "Verdienen per resultaat, zonder plafond",
+          "Een training vanaf je eerste dag",
+          "Een hecht team om je heen",
+          "Kans om door te groeien naar teamleider"
+        ],
+        "employmentType": "PART_TIME,FULL_TIME",
+        "payText": "Per resultaat, zonder plafond",
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "unit": "DAY"
+        },
+        "locations": [
+          {
+            "city": "Groningen",
+            "region": "Groningen"
+          },
+          {
+            "city": "Leeuwarden",
+            "region": "Friesland"
+          },
+          {
+            "city": "Assen",
+            "region": "Drenthe"
+          }
+        ],
+        "videoCaption": "Een collega over events en in-store"
+      }
+    },
+    {
+      "id": "6a1b7c00-0000-4000-8000-000000000204",
+      "onlyIf": {
+        "title": "Teamleider"
+      },
+      "setIfMissing": {
+        "jobTitle": "Teamleider field marketing",
+        "requirements": [
+          "Je werkt al een tijd bij ons en haalt goede resultaten",
+          "Je helpt graag anderen om beter te worden",
+          "Je bent een voorbeeld voor je team"
+        ],
+        "offer": [
+          "Je eigen team en meer verantwoordelijkheid",
+          "Ervaring in leidinggeven die je de rest van je carrière meeneemt",
+          "Een hecht team om je heen"
+        ],
+        "employmentType": "PART_TIME,FULL_TIME",
+        "payText": "Bespreken we in het eerste gesprek",
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "unit": "DAY"
+        },
+        "locations": [
+          {
+            "city": "Groningen",
+            "region": "Groningen"
+          },
+          {
+            "city": "Leeuwarden",
+            "region": "Friesland"
+          },
+          {
+            "city": "Assen",
+            "region": "Drenthe"
+          }
+        ],
+        "videoCaption": "Een teamleider over het werk"
+      }
+    }
+  ],
+  "sectionInserts": [
+    {
+      "pageId": "6a1b7c00-0000-4000-8000-000000000001",
+      "after": "home-intro",
+      "section": {
+        "id": "home-photos",
+        "type": "photoStrip",
+        "hidden": false,
+        "data": {
+          "eyebrow": "Het werk in beeld",
+          "title": "Zo ziet het werk eruit",
+          "intro": "Aan de deur, op straat en op events: overal ben je samen met je team op pad.",
+          "photos": [
+            {
+              "image": null,
+              "caption": "Aan de deur in een woonwijk"
+            },
+            {
+              "image": null,
+              "caption": "Op straat in de binnenstad"
+            },
+            {
+              "image": null,
+              "caption": "Met een stand op een event"
+            },
+            {
+              "image": null,
+              "caption": "Samen met het team na een werkdag"
+            }
+          ],
+          "background": "light",
+          "mobileCarousel": true
+        }
+      }
+    },
+    {
+      "pageId": "6a1b7c00-0000-4000-8000-000000000001",
+      "after": "home-steps",
+      "section": {
+        "id": "home-videos",
+        "type": "videoStories",
+        "hidden": false,
+        "data": {
+          "eyebrow": "In hun eigen woorden",
+          "title": "Hoor het van je collega's",
+          "intro": "Collega's vertellen in een minuut hoe het werk echt is: wat ze doen, wat het oplevert en hoe het team is.",
+          "items": [
+            {
+              "video": null,
+              "poster": null,
+              "name": "",
+              "role": "Deur-aan-deur",
+              "quote": "",
+              "transcript": ""
+            },
+            {
+              "video": null,
+              "poster": null,
+              "name": "",
+              "role": "Straatwerving",
+              "quote": "",
+              "transcript": ""
+            },
+            {
+              "video": null,
+              "poster": null,
+              "name": "",
+              "role": "Teamleider",
+              "quote": "",
+              "transcript": ""
+            }
+          ],
+          "background": "dark",
+          "mobileCarousel": true
+        }
+      }
+    },
+    {
+      "pageId": "6a1b7c00-0000-4000-8000-000000000003",
+      "after": "zo-werkt-het-day",
+      "section": {
+        "id": "zo-werkt-het-video",
+        "type": "imageText",
+        "hidden": false,
+        "data": {
+          "eyebrow": "Kijk mee",
+          "title": "Een werkdag in het veld",
+          "body": "<p>Hoe ziet een dag in het veld er echt uit? In deze video neemt een collega je mee: van de start met het team tot het afsluiten aan het eind van de dag.</p>",
+          "image": null,
+          "video": null,
+          "poster": null,
+          "mediaAspect": "9/16",
+          "placeholder": "video",
+          "placeholderText": "Een werkdag van begin tot eind",
+          "imagePosition": "right",
+          "cta": {
+            "label": "Solliciteer direct",
+            "link": {
+              "kind": "page",
+              "pageId": "6a1b7c00-0000-4000-8000-000000000005"
+            }
+          },
+          "background": "white"
+        }
+      }
+    }
+  ],
+  "sectionPatches": [
+    {
+      "pageId": "6a1b7c00-0000-4000-8000-000000000004",
+      "sectionId": "over-story",
+      "setIfMissing": {
+        "placeholderText": "Het team van True Culture"
+      }
+    }
+  ],
+  "singletons": {
+    "forms": {
+      "onlyIf": {
+        "labels.messagePlaceholder": "Bijv. je voorkeur voor deur-aan-deur, straat of events."
+      },
+      "set": {
+        "labels.messagePlaceholder": "Bijv. vanaf wanneer je kunt beginnen of wat je graag wilt weten."
+      }
+    }
+  }
+}

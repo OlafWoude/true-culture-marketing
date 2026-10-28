@@ -13,6 +13,22 @@ const mobileCarousel: FieldDef = {
   help: "Op telefoons staan de kaarten dan naast elkaar en veeg je opzij. Op grotere schermen verandert er niets.",
 };
 
+const detailLabel: FieldDef = {
+  key: "detailLabel",
+  label: "Linktekst naar de pagina van de vacature",
+  type: "text",
+  max: 40,
+  help: "Elke vacature heeft een eigen pagina met alle details. Leeg = geen link.",
+};
+
+const mediaAspects = [
+  { value: "4/3", label: "Liggend (4:3)" },
+  { value: "16/9", label: "Breed (16:9)" },
+  { value: "1/1", label: "Vierkant" },
+  { value: "4/5", label: "Staand (4:5)" },
+  { value: "9/16", label: "Staand, zoals een telefoonvideo (9:16)" },
+];
+
 export type BlockCategory = "Kop" | "Tekst" | "Media" | "Inhoud" | "Collecties" | "Oproep" | "Contact";
 
 export type BlockDef = {
@@ -74,15 +90,22 @@ export const blockDefs = {
     label: "Vacatures (overzicht)",
     description: "Zwart paneel met alle gepubliceerde vacatures in kaarten.",
     category: "Collecties",
-    fields: [eyebrow, title, intro, { key: "linkLabel", label: "Linktekst per vacature (als die zelf geen knop heeft)", type: "text", max: 40 }, mobileCarousel],
-    defaults: { linkLabel: "Lees meer", mobileCarousel: true },
+    fields: [
+      eyebrow,
+      title,
+      intro,
+      { key: "linkLabel", label: "Linktekst per vacature (als die zelf geen knop heeft)", type: "text", max: 40 },
+      detailLabel,
+      mobileCarousel,
+    ],
+    defaults: { linkLabel: "Lees meer", detailLabel: "Bekijk vacature", mobileCarousel: true },
   },
   servicesDetailed: {
     label: "Vacatures (uitgebreid)",
     description: "Alle gepubliceerde vacatures onder elkaar, afwisselend wit en zwart.",
     category: "Collecties",
-    fields: [{ key: "pointsTitle", label: "Titel boven de opsomming", type: "text", max: 60 }, mobileCarousel],
-    defaults: { pointsTitle: "Wat je krijgt", mobileCarousel: true },
+    fields: [{ key: "pointsTitle", label: "Titel boven de opsomming", type: "text", max: 60 }, detailLabel, mobileCarousel],
+    defaults: { pointsTitle: "Wat je krijgt", detailLabel: "Bekijk vacature", mobileCarousel: true },
   },
   comparison: {
     label: "Vergelijking",
@@ -185,9 +208,15 @@ export const blockDefs = {
   },
   storySplit: {
     label: "Verhaal met beeld",
-    description: "Tekst links en een afbeelding rechts. Zonder afbeelding verschijnt de gele gorilla.",
+    description: "Tekst links en een foto rechts. Zonder foto verschijnt een plaatshouder of de gele gorilla.",
     category: "Tekst",
-    fields: [eyebrow, title, { key: "body", label: "Tekst", type: "richtext" }, { key: "image", label: "Afbeelding (optioneel)", type: "image" }],
+    fields: [
+      eyebrow,
+      title,
+      { key: "body", label: "Tekst", type: "richtext" },
+      { key: "image", label: "Foto (optioneel)", type: "image" },
+      { key: "placeholderText", label: "Tekst op de plaatshouder", type: "text", max: 100, help: "Zolang er nog geen foto is, staat hier een plaatshouder met deze tekst, bijv. ‘Het team na een werkdag’. Leeg = de gele gorilla." },
+    ],
   },
   valuesGrid: {
     label: "USP’s / principes",
@@ -257,14 +286,22 @@ export const blockDefs = {
     defaults: { background: "white" },
   },
   imageText: {
-    label: "Afbeelding met tekst",
-    description: "Afbeelding naast kop, tekst en knop.",
+    label: "Foto of video met tekst",
+    description: "Foto of video naast kop, tekst en knop. Zonder beeld verschijnt een plaatshouder.",
     category: "Media",
     fields: [
       eyebrow,
       title,
       { key: "body", label: "Tekst", type: "richtext" },
-      { key: "image", label: "Afbeelding", type: "image" },
+      { key: "image", label: "Foto", type: "image" },
+      { key: "video", label: "Video (optioneel, in plaats van de foto)", type: "video", help: "Liefst korter dan een minuut, met ondertitels in de video zelf: de meeste mensen kijken zonder geluid." },
+      { key: "poster", label: "Eigen beeld vóór het afspelen (optioneel)", type: "image", help: "Leeg = een beeld uit de video zelf." },
+      { key: "mediaAspect", label: "Verhouding van de foto of video", type: "select", options: mediaAspects },
+      { key: "placeholder", label: "Plaatshouder zolang er nog geen beeld is", type: "select", options: [
+        { value: "photo", label: "Foto volgt" },
+        { value: "video", label: "Video volgt" },
+      ] },
+      { key: "placeholderText", label: "Tekst op de plaatshouder", type: "text", max: 120, help: "Bijv. ‘Een werkdag van begin tot eind’." },
       { key: "imagePosition", label: "Positie van de afbeelding", type: "select", options: [
         { value: "right", label: "Rechts" },
         { value: "left", label: "Links" },
@@ -272,7 +309,7 @@ export const blockDefs = {
       { key: "cta", label: "Knop", type: "cta" },
       background,
     ],
-    defaults: { background: "white" },
+    defaults: { background: "white", mediaAspect: "4/3", placeholder: "photo" },
   },
   image: {
     label: "Afbeelding",
@@ -295,6 +332,44 @@ export const blockDefs = {
       background,
     ],
     defaults: { background: "white" },
+  },
+  photoStrip: {
+    label: "Fotostrip",
+    description: "Een rij foto's van het werk; op mobiel swipe je erdoorheen. Lege plekken tonen een plaatshouder met de omschrijving.",
+    category: "Media",
+    fields: [
+      eyebrow,
+      title,
+      intro,
+      { key: "photos", label: "Foto's", type: "repeater", itemLabel: "Foto", titleKey: "caption", max: 8, fields: [
+        { key: "image", label: "Foto", type: "image" },
+        { key: "caption", label: "Omschrijving", type: "text", max: 100, help: "Bijv. ‘Aan de deur in een woonwijk’. Staat onder de foto, en op de plaatshouder zolang er nog geen foto is." },
+      ] },
+      background,
+      mobileCarousel,
+    ],
+    defaults: { background: "light", mobileCarousel: true },
+  },
+  videoStories: {
+    label: "Video's van collega's",
+    description: "Korte, staande video's waarin collega's vertellen hoe het werk is. Lege plekken tonen een plaatshouder.",
+    category: "Media",
+    fields: [
+      eyebrow,
+      title,
+      intro,
+      { key: "items", label: "Video's", type: "repeater", itemLabel: "Video", titleKey: "role", max: 6, fields: [
+        { key: "video", label: "Video", type: "video", help: "Staand (9:16), liefst korter dan een minuut, met ondertitels in de video zelf: de meeste mensen kijken zonder geluid." },
+        { key: "poster", label: "Eigen beeld vóór het afspelen (optioneel)", type: "image", help: "Leeg = een beeld uit de video zelf." },
+        { key: "name", label: "Naam", type: "text", max: 60 },
+        { key: "role", label: "Functie en plaats", type: "text", max: 80, help: "Bijv. ‘Deur-aan-deur in Groningen’. Staat ook op de plaatshouder zolang er nog geen video is." },
+        { key: "quote", label: "Korte quote (optioneel)", type: "textarea", max: 200, rows: 2 },
+        { key: "transcript", label: "Uitgeschreven tekst (optioneel)", type: "textarea", max: 3000, rows: 5, help: "Voor wie de video niet kan afspelen of horen. Staat onder ‘Lees wat er gezegd wordt’." },
+      ] },
+      background,
+      mobileCarousel,
+    ],
+    defaults: { background: "dark", mobileCarousel: true },
   },
   testimonials: {
     label: "Testimonials",
