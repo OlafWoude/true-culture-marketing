@@ -200,9 +200,13 @@ export const singletonDefs = {
         { key: "address", label: "Adres", type: "textarea", max: 300, rows: 3 },
       ] },
       { key: "contact", label: "Contactgegevens", type: "group", fields: [
-        { key: "email", label: "E-mailadres", type: "text", max: 120 },
-        { key: "phone", label: "Telefoonnummer", type: "text", max: 30 },
-        { key: "whatsapp", label: "WhatsApp-nummer (optioneel)", type: "text", max: 30, help: "Bijv. 06 12345678. Dan verschijnen er WhatsApp-knoppen voor sollicitanten met een vraag." },
+        { key: "email", label: "E-mailadres", type: "text", max: 120, help: "Staat in de footer." },
+        { key: "phone", label: "Telefoonnummer", type: "text", max: 30, help: "Staat in de footer." },
+        { key: "whatsapp", label: "WhatsApp-nummer", type: "text", max: 30, help: "Bijv. 06 12345678 of +31 6 12345678. Leeg = geen WhatsApp-knoppen op de website." },
+        { key: "whatsappMessage", label: "Bericht dat in WhatsApp al klaarstaat", type: "textarea", max: 200, rows: 2, help: "Wie op een WhatsApp-knop klikt, ziet dit bericht al in de chat staan en kan het nog aanpassen voordat hij het verstuurt." },
+        { key: "whatsappVacancyMessage", label: "Bericht vanaf de pagina van een vacature", type: "textarea", max: 200, rows: 2, help: "{vacature} wordt vervangen door de naam van de vacature. Leeg = het bericht hierboven." },
+        { key: "whatsappButton", label: "WhatsApp-knop rechtsonder tonen", type: "boolean", help: "Een knop die altijd in beeld blijft, behalve op de sollicitatiepagina. Op telefoons schuift hij na het scrollen in de balk met de sollicitatieknop." },
+        { key: "whatsappLabel", label: "Tekst op de WhatsApp-knop", type: "text", max: 30, help: "Op de computer staat deze tekst naast het WhatsApp-icoon, en in het menu op telefoons." },
       ] },
       { key: "socials", label: "Social media", type: "repeater", itemLabel: "Profiel", titleKey: "platform", max: 8, fields: [
         { key: "platform", label: "Platform", type: "select", options: [
@@ -353,7 +357,15 @@ export type Settings = {
   allowIndexing: boolean;
   showMediaPlaceholders: boolean;
   company: { legalName: string; kvk: string; vat: string; address: string };
-  contact: { email: string; phone: string; whatsapp: string };
+  contact: {
+    email: string;
+    phone: string;
+    whatsapp: string;
+    whatsappMessage: string;
+    whatsappVacancyMessage: string;
+    whatsappButton: boolean;
+    whatsappLabel: string;
+  };
   socials: { platform: string; url: string }[];
 };
 export type FormsConfig = {

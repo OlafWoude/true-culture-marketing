@@ -8,7 +8,7 @@ import MobileCarousel from "./MobileCarousel";
 import type { CtaValue } from "@/lib/cms/fields";
 import { serviceSlug } from "@/lib/cms/render";
 import { ArrowRightIcon, CheckIcon, WhatsAppIcon } from "@/lib/icons";
-import { whatsappHref } from "@/lib/whatsapp";
+import { whatsappChat } from "@/lib/whatsapp";
 import { bgClass, list, str, Title, type BlockProps } from "./shared";
 
 const tileCols: Record<number, string> = { 1: "lg:grid-cols-1", 2: "lg:grid-cols-2", 3: "lg:grid-cols-3" };
@@ -147,7 +147,7 @@ export function PageHeroBlock({ data, layout }: BlockProps) {
 
 export function ContactHeroBlock({ data, ctx, layout }: BlockProps) {
   const Heading = layout.index === 0 ? "h1" : "h2";
-  const whatsapp = whatsappHref(ctx.bundle.settings.contact.whatsapp, "Hoi! Ik heb een vraag over werken bij True Culture Marketing.");
+  const whatsapp = whatsappChat(ctx.bundle.settings.contact);
   const whatsappLabel = str(data.whatsappLabel);
   return (
     <div className={layout.nextBg ? bgClass[layout.nextBg] : "bg-ink"}>
@@ -197,7 +197,7 @@ export function ContactHeroBlock({ data, ctx, layout }: BlockProps) {
                   rel="noopener noreferrer"
                   className="mt-9 inline-flex items-center gap-2.5 rounded-btn border border-white/15 px-5 py-3 text-sm font-semibold text-paper transition-colors hover:border-white/40"
                 >
-                  <WhatsAppIcon className="h-5 w-5 text-accent" />
+                  <WhatsAppIcon className="h-5 w-5 text-whatsapp" />
                   {whatsappLabel}
                 </a>
               </FadeIn>

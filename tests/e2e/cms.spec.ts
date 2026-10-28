@@ -420,6 +420,62 @@ test("videos can be uploaded and played; empty photo and video spots show placeh
   await expectToast(page, /Gepubliceerd/);
 });
 
+test("visitors can start a WhatsApp chat with a ready-made message from every page, and find the contact details", async ({ browser }) => {
+  const chatName = "Chat direct met ons via WhatsApp";
+  const messageOf = async (link: ReturnType<Page["getByRole"]>) => {
+    const url = new URL((await link.getAttribute("href"))!);
+    expect(url.origin + url.pathname).toBe("https://wa.me/31642787443");
+    return url.searchParams.get("text");
+  };
+
+  const desktop = await publicPage(page, "/");
+  const corner = desktop.visitor.getByRole("link", { name: chatName });
+  await expect(corner).toBeVisible();
+  await expect(corner).toHaveAttribute("target", "_blank");
+  expect(await messageOf(corner)).toBe("Hoi! Ik zou graag wat meer willen weten over jullie bedrijf.");
+  const footer = desktop.visitor.locator("footer");
+  await expect(footer.getByRole("link", { name: "info@trueculture.nl" })).toHaveAttribute("href", "mailto:info@trueculture.nl");
+  await expect(footer.getByRole("link", { name: "+31 6 42787443" })).toHaveAttribute("href", "tel:+31642787443");
+  await expect(footer.getByRole("link", { name: "Chat direct met ons" })).toHaveAttribute("href", /^https:\/\/wa\.me\/31642787443\?text=/);
+  // Search engines learn the contact details from the homepage.
+  const organization = (await desktop.visitor.locator('script[type="application/ld+json"]').allTextContents())
+    .map((t) => JSON.parse(t))
+    .find((d) => d["@type"] === "Organization");
+  expect(organization).toMatchObject({ email: "info@trueculture.nl", telephone: "+31642787443" });
+
+  // On a vacancy page the message names the vacancy.
+  await desktop.visitor.goto("/vacatures/straatwerving");
+  expect(await messageOf(desktop.visitor.getByRole("link", { name: chatName }))).toBe(
+    "Hoi! Ik zou graag wat meer willen weten over de vacature Straatwerving.",
+  );
+  // On the application page nothing floats over the form; its own WhatsApp button sits above it.
+  await desktop.visitor.goto("/solliciteren");
+  await expect(desktop.visitor.getByRole("link", { name: chatName })).toHaveCount(0);
+  expect(await messageOf(desktop.visitor.getByRole("link", { name: "Eerst een vraag? App ons" }))).toBe(
+    "Hoi! Ik zou graag wat meer willen weten over jullie bedrijf.",
+  );
+  await desktop.close();
+
+  // Phones: a round button that makes way for the apply bar, which has the same button next to "Solliciteer".
+  const phone = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const visitor = await phone.newPage();
+  await visitor.goto("/");
+  const bubble = visitor.locator("a.fixed");
+  await expect(bubble).toBeInViewport();
+  await expect(bubble).not.toHaveAttribute("inert", "");
+  await visitor.evaluate(() => window.scrollTo(0, 1600));
+  const bar = visitor.locator("div.fixed").filter({ has: visitor.getByRole("link", { name: "Solliciteer in 2 minuten" }) });
+  await expect(bar.getByRole("link", { name: chatName })).toBeInViewport();
+  await expect(bubble).toHaveAttribute("inert", "");
+  await visitor.evaluate(() => window.scrollTo(0, 0));
+  await expect(bubble).not.toHaveAttribute("inert", "");
+  await visitor.getByRole("button", { name: "Menu openen" }).click();
+  expect(await messageOf(visitor.locator("#mobiel-menu").getByRole("link", { name: "Chat direct met ons" }))).toBe(
+    "Hoi! Ik zou graag wat meer willen weten over jullie bedrijf.",
+  );
+  await phone.close();
+});
+
 test("SEO metadata, sitemap and robots.txt come from the CMS", async ({ request }) => {
   const vacaturesId = "6a1b7c00-0000-4000-8000-000000000002";
   await page.goto(`/admin/paginas/${vacaturesId}`);

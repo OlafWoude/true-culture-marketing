@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { WhatsAppIcon } from "@/lib/icons";
 
 export type FooterData = {
   logo: ReactNode;
@@ -7,7 +8,7 @@ export type FooterData = {
   text: string;
   links: { label: string; href: string; external: boolean }[];
   legalLinks: { label: string; href: string; external: boolean }[];
-  contact: { email: string; phone: string } | null;
+  contact: { email: string; phone: string; whatsapp: { href: string; label: string } | null } | null;
   socials: { platform: string; url: string }[];
   copyright: string;
 };
@@ -38,13 +39,24 @@ export default function Footer({ data }: { data: FooterData }) {
             {data.contact && (
               <div className="flex flex-col items-center text-sm md:items-start">
                 {data.contact.email && (
-                  <a href={`mailto:${data.contact.email}`} className="inline-flex min-h-10 items-center text-paper/75 transition-colors hover:text-paper">
+                  <a href={`mailto:${data.contact.email}`} className="inline-flex min-h-11 items-center text-paper/75 transition-colors hover:text-paper">
                     {data.contact.email}
                   </a>
                 )}
                 {data.contact.phone && (
-                  <a href={`tel:${data.contact.phone.replace(/[^0-9+]/g, "")}`} className="inline-flex min-h-10 items-center text-paper/75 transition-colors hover:text-paper">
+                  <a href={`tel:${data.contact.phone.replace(/\(0\)/g, "").replace(/[^0-9+]/g, "")}`} className="inline-flex min-h-11 items-center text-paper/75 transition-colors hover:text-paper">
                     {data.contact.phone}
+                  </a>
+                )}
+                {data.contact.whatsapp && (
+                  <a
+                    href={data.contact.whatsapp.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-11 items-center gap-2 text-paper/75 transition-colors hover:text-paper"
+                  >
+                    <WhatsAppIcon className="h-4 w-4 text-whatsapp" />
+                    {data.contact.whatsapp.label}
                   </a>
                 )}
               </div>

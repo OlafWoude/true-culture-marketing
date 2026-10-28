@@ -7,16 +7,12 @@ import { createRenderCtx } from "@/lib/cms/render";
 import type { Bundle, BundleService } from "@/lib/cms/types";
 import { breadcrumbJsonLd, employmentLabel, jobPostingJsonLd, paragraphsOf, regionsText, vacanciesPage } from "@/lib/cms/vacancy";
 import { ArrowRightIcon, CheckIcon, ClockIcon, EuroIcon, MapPinIcon, WhatsAppIcon } from "@/lib/icons";
-import { whatsappHref } from "@/lib/whatsapp";
+import { whatsappChat } from "@/lib/whatsapp";
+import JsonLd from "./JsonLd";
 import { hasMedia, MediaSlot } from "./media";
 import MobileCarousel from "./MobileCarousel";
 import Sections from "./Sections";
 import { str } from "./shared";
-
-function JsonLd({ data }: { data: unknown }) {
-  // "<" is escaped so text from the dashboard can never close the script element.
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} />;
-}
 
 function ListCard({ title, items, dark = false }: { title: string; items: string[]; dark?: boolean }) {
   const filled = items.filter((i) => i.trim());
@@ -50,7 +46,7 @@ export default function VacancyView({ bundle, service }: { bundle: Bundle; servi
   // The application page's WhatsApp button, so the wording stays editable in one place.
   const formHero = bundle.pages.flatMap((p) => p.sections).find((s) => s.type === "contactHero" && !s.hidden);
   const whatsappLabel = str(formHero?.data.whatsappLabel);
-  const whatsapp = whatsappHref(bundle.settings.contact.whatsapp, `Hoi! Ik heb een vraag over de vacature ${service.title}.`);
+  const whatsapp = whatsappChat(bundle.settings.contact, service.title);
 
   const facts = [
     { icon: MapPinIcon, label: "Werkgebied", value: regionsText(service) },
@@ -146,7 +142,7 @@ export default function VacancyView({ bundle, service }: { bundle: Bundle; servi
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-2.5 rounded-btn border border-white/15 px-6 py-3.5 text-sm font-semibold text-paper transition-colors hover:border-white/40"
                   >
-                    <WhatsAppIcon className="h-5 w-5 text-accent" />
+                    <WhatsAppIcon className="h-5 w-5 text-whatsapp" />
                     {whatsappLabel}
                   </a>
                 )}

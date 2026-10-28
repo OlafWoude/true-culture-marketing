@@ -613,7 +613,15 @@ export function seedSettings(): Settings {
     allowIndexing: true,
     showMediaPlaceholders: true,
     company: { legalName: "", kvk: "", vat: "", address: "" },
-    contact: { email: "", phone: "", whatsapp: "" },
+    contact: {
+      email: "info@trueculture.nl",
+      phone: "+31 6 42787443",
+      whatsapp: "+31 6 42787443",
+      whatsappMessage: "Hoi! Ik zou graag wat meer willen weten over jullie bedrijf.",
+      whatsappVacancyMessage: "Hoi! Ik zou graag wat meer willen weten over de vacature {vacature}.",
+      whatsappButton: true,
+      whatsappLabel: "Chat direct met ons",
+    },
     socials: [],
   };
 }

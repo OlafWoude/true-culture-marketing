@@ -47,6 +47,9 @@
   --color-accent: var(--tc-accent);
   --color-accent-hover: var(--tc-accent-hover);
   --color-on-accent: var(--tc-on-accent);
+  /* WhatsApp's green, a shade darker so the white logo on it stays clearly visible. */
+  --color-whatsapp: #1da851;
+  --color-whatsapp-hover: #178f45;
   --font-sans: var(--tc-font-body), system-ui, sans-serif;
   --font-display: var(--tc-font-display), "Arial Narrow", sans-serif;
 
@@ -153,19 +156,14 @@
 }
 
 html {
-  /* Keeps anchors and focused fields clear of the fixed menu (and of the apply bar on phones). */
+  /* Keeps anchors and focused fields clear of the fixed menu, the apply bar on phones and the chat button. */
   scroll-padding-top: 6rem;
+  scroll-padding-bottom: 6.5rem;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
-  }
-}
-
-@media (width < 48rem) {
-  html {
-    scroll-padding-bottom: 6.5rem;
   }
 }
 

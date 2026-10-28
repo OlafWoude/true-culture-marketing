@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
+import { WhatsAppIcon } from "@/lib/icons";
 import { vacancyFromPath, withVacancy } from "@/lib/vacancy-link";
+import { chatHrefFor, type ChatLinks } from "./site/FloatingActions";
 
 export type NavLink = { label: string; href: string; external: boolean; children: { label: string; href: string; external: boolean }[] };
 
@@ -15,6 +17,7 @@ type NavProps = {
   variant: "floating" | "bar";
   homeHref?: string;
   offsetTop?: boolean;
+  chat?: ChatLinks | null;
 };
 
 function SmartLink({ href, external, className, children, onClick, current }: { href: string; external: boolean; className: string; children: ReactNode; onClick?: () => void; current?: boolean }) {
@@ -93,7 +96,7 @@ function useHideOnScroll(nav: RefObject<HTMLElement | null>) {
   return [hidden, setHidden] as const;
 }
 
-export default function Nav({ logo, items, cta, variant, homeHref = "/", offsetTop = false }: NavProps) {
+export default function Nav({ logo, items, cta, variant, homeHref = "/", offsetTop = false, chat = null }: NavProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const navRef = useRef<HTMLElement>(null);
@@ -248,6 +251,18 @@ export default function Nav({ logo, items, cta, variant, homeHref = "/", offsetT
               >
                 {cta.mobileLabel || cta.label}
               </SmartLink>
+            )}
+            {chat && (
+              <a
+                href={chatHrefFor(chat, pathname)}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={close}
+                className="mt-3 flex items-center justify-center gap-2.5 rounded-control border border-white/15 px-5 py-3.5 font-semibold text-paper active:border-white/40"
+              >
+                <WhatsAppIcon className="h-5 w-5 text-whatsapp" />
+                {chat.label}
+              </a>
             )}
           </div>
         )}

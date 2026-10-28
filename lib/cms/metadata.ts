@@ -70,3 +70,21 @@ export function buildMetadata(
     },
   };
 }
+
+/** Who the site belongs to and how to reach them, for search engines (on the homepage). */
+export function organizationJsonLd(bundle: Bundle) {
+  const base = siteUrl(bundle);
+  const { settings } = bundle;
+  const phone = settings.contact.phone.replace(/\(0\)/g, "").replace(/[^0-9+]/g, "");
+  const profiles = settings.socials.map((s) => s.url).filter(Boolean);
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: settings.company.legalName || settings.siteName,
+    url: base,
+    logo: `${base}/brand/favicon.png`,
+    ...(settings.contact.email ? { email: settings.contact.email } : {}),
+    ...(phone ? { telephone: phone } : {}),
+    ...(profiles.length ? { sameAs: profiles } : {}),
+  };
+}

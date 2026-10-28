@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect, redirect } from "next/navigation";
+import JsonLd from "@/components/site/JsonLd";
 import Sections from "@/components/site/Sections";
 import { getLiveBundle, getRedirect } from "@/lib/cms/repo";
-import { buildMetadata } from "@/lib/cms/metadata";
+import { buildMetadata, organizationJsonLd } from "@/lib/cms/metadata";
 import { createRenderCtx, pathForSlug } from "@/lib/cms/render";
 
 type Props = { params: Promise<{ slug?: string[] }> };
@@ -44,5 +45,10 @@ export default async function CmsPage({ params }: Props) {
     notFound();
   }
 
-  return <Sections sections={page.sections} ctx={createRenderCtx(bundle)} />;
+  return (
+    <>
+      {page.systemKey === "home" && <JsonLd data={organizationJsonLd(bundle)} />}
+      <Sections sections={page.sections} ctx={createRenderCtx(bundle)} />
+    </>
+  );
 }

@@ -139,7 +139,7 @@ export default function ContactForm({ config, formStyle = "filled", whatsapp = n
             rel="noopener noreferrer"
             className="mt-7 inline-flex items-center gap-2 rounded-btn border border-ink/15 px-5 py-3 text-sm font-semibold text-ink transition-colors hover:border-ink/40"
           >
-            <WhatsAppIcon className="h-5 w-5" />
+            <WhatsAppIcon className="h-5 w-5 text-whatsapp" />
             {whatsapp.label}
           </a>
         )}

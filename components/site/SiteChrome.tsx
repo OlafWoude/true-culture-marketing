@@ -3,8 +3,9 @@ import Logo from "@/components/Logo";
 import Nav, { type NavLink } from "@/components/Nav";
 import type { RenderCtx } from "@/lib/cms/render";
 import { themeToCss } from "@/lib/cms/theme-css";
-import { whatsappHref } from "@/lib/whatsapp";
-import StickyApply from "./StickyApply";
+import { serviceSlug } from "@/lib/cms/render";
+import { whatsappChat } from "@/lib/whatsapp";
+import FloatingActions, { type ChatLinks } from "./FloatingActions";
 import VisitSourceTracker from "./VisitSourceTracker";
 
 export function ThemeStyle({ ctx }: { ctx: RenderCtx }) {
@@ -26,14 +27,24 @@ function navItems(ctx: RenderCtx): NavLink[] {
     .filter((item): item is NavLink => Boolean(item.href && item.label));
 }
 
-function footerData(ctx: RenderCtx, logo: React.ReactNode, homeHref: string): FooterData {
+/** WhatsApp chat links with the standard message, and per vacancy page a message that names the vacancy. */
+function chatLinks(ctx: RenderCtx): ChatLinks | null {
+  const { contact } = ctx.bundle.settings;
+  const href = whatsappChat(contact);
+  if (!href) return null;
+  const byVacancy = Object.fromEntries(ctx.bundle.services.map((s) => [serviceSlug(s), whatsappChat(contact, s.title) ?? href]));
+  return { href, byVacancy, label: contact.whatsappLabel.trim() || "Chat met ons" };
+}
+
+function footerData(ctx: RenderCtx, logo: React.ReactNode, homeHref: string, chat: ChatLinks | null): FooterData {
   const { footer, settings } = ctx.bundle;
   const resolve = (links: typeof footer.links) =>
     links
       .filter((l) => l.visible)
       .map((l) => ({ label: l.label, href: ctx.href(l.link), external: ctx.isExternal(l.link) }))
       .filter((l): l is { label: string; href: string; external: boolean } => Boolean(l.href && l.label));
-  const contact = footer.showContact && (settings.contact.email || settings.contact.phone) ? settings.contact : null;
+  const { email, phone } = settings.contact;
+  const contact = footer.showContact && (email || phone || chat) ? { email, phone, whatsapp: chat ? { href: chat.href, label: chat.label } : null } : null;
   return {
     logo,
     homeHref,
@@ -53,7 +64,13 @@ export default function SiteChrome({ ctx, children, banner }: { ctx: RenderCtx; 
   const { cta } = ctx.bundle.navigation;
   const ctaHref = cta.visible ? ctx.href(cta.link) : null;
   const sticky = Boolean(ctaHref && cta.mobileSticky && (cta.mobileLabel || cta.label));
-  const whatsapp = whatsappHref(ctx.bundle.settings.contact.whatsapp, "Hoi! Ik heb een vraag over werken bij True Culture Marketing.");
+  const chat = chatLinks(ctx);
+  const floatingChat = Boolean(chat && ctx.bundle.settings.contact.whatsappButton);
+  // Pages with the application form, where nothing needs to float over the form.
+  const formPaths = ctx.bundle.pages
+    .filter((p) => p.sections.some((s) => s.type === "contactHero" && !s.hidden))
+    .map((p) => ctx.pagePath(p.id))
+    .filter((path): path is string => Boolean(path));
   const logo = <Logo media={logoMedia} alt={ctx.bundle.settings.siteName} eager />;
   const footerLogo = <Logo media={logoMedia} alt={ctx.bundle.settings.siteName} size="sm" />;
 
@@ -78,22 +95,24 @@ export default function SiteChrome({ ctx, children, banner }: { ctx: RenderCtx; 
         variant={ctx.bundle.theme.layout.navStyle === "bar" ? "bar" : "floating"}
         homeHref={homeHref}
         offsetTop={Boolean(banner)}
+        chat={chat}
       />
       <main id="inhoud">{children}</main>
-      <Footer data={footerData(ctx, footerLogo, homeHref)} />
-      {sticky && ctaHref && (
-        <>
-          {/* Keeps the end of the footer reachable above the fixed button on phones. */}
-          <div className="h-24 bg-ink md:hidden" aria-hidden="true" />
-          <StickyApply
-            label={cta.mobileLabel || cta.label}
-            href={ctaHref}
-            external={ctx.isExternal(cta.link)}
-            form={ctx.isFormLink(cta.link)}
-            whatsapp={whatsapp}
-          />
-        </>
+      <Footer data={footerData(ctx, footerLogo, homeHref, chat)} />
+      {(sticky || floatingChat) && (
+        // Keeps the end of the footer reachable above the fixed buttons.
+        <div className={`h-24 bg-ink ${floatingChat ? "md:h-20" : "md:hidden"}`} aria-hidden="true" />
       )}
+      <FloatingActions
+        apply={
+          sticky && ctaHref
+            ? { label: cta.mobileLabel || cta.label, href: ctaHref, external: ctx.isExternal(cta.link), form: ctx.isFormLink(cta.link) }
+            : null
+        }
+        chat={chat}
+        floatingChat={floatingChat}
+        formPaths={formPaths}
+      />
       <VisitSourceTracker />
     </>
   );

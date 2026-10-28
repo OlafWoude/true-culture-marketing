@@ -1,0 +1,17 @@
+{
+  "backupNote": "Automatische back-up van vóór het koppelen van de contactgegevens en WhatsApp",
+  "singletons": {
+    "settings": {
+      "set": {
+        "contact.email": "info@trueculture.nl",
+        "contact.phone": "+31 6 42787443",
+        "contact.whatsapp": "+31 6 42787443"
+      }
+    },
+    "footer": {
+      "set": {
+        "showContact": true
+      }
+    }
+  }
+}
