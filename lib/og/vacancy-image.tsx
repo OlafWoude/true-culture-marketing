@@ -11,6 +11,8 @@ export const shareImageSize = { width: 1200, height: 630 };
 
 const PHOTO = { width: 430, height: 550 };
 const GORILLA = { width: 640, height: 490 };
+// The bottom row stays left of the gorilla's shoulder (and of the photo).
+const PILLS_WIDTH = 600;
 
 const dataUri = (type: string, data: Buffer) => `data:${type};base64,${data.toString("base64")}`;
 
@@ -86,10 +88,10 @@ export async function vacancyShareImage(bundle: Bundle, service: BundleService) 
 
   const columnWidth = (photo ? 690 : 720) - 64;
   const title = service.title.toUpperCase();
-  // Satori wraps at spaces: the longest word must fit on one line and the whole title on two.
+  // The longest word must fit on one line and the whole title on two.
   const longestWord = Math.max(...title.split(/\s+/).map((w) => w.length), 1);
-  const titleSize = Math.round(Math.max(56, Math.min(132, columnWidth / (0.52 * longestWord), (columnWidth * 2) / (0.5 * title.length))));
-  const eyebrow = ["Vacature", service.tag].filter(Boolean).join(" · ");
+  const titleSize = Math.round(Math.max(56, Math.min(116, columnWidth / (0.52 * longestWord), (columnWidth * 2) / (0.5 * title.length))));
+  const eyebrow = ["Vacature", service.tag].filter(Boolean);
   const subtitle = regionsText(service) || service.short;
   const pills = [service.payText, employmentLabel(service.employmentType)].filter(Boolean);
 
@@ -126,17 +128,41 @@ export async function vacancyShareImage(bundle: Bundle, service: BundleService) 
           {/* eslint-disable-next-line @next/next/no-img-element -- drawn by the image generator, not shown in a page */}
           <img src={wordmark} width={150} height={58} alt="" />
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ display: "flex", fontSize: 22, fontWeight: 700, letterSpacing: 3.5, textTransform: "uppercase", color: accent }}>{eyebrow}</div>
-            <div style={{ display: "flex", marginTop: 18, fontFamily: "Archivo", fontSize: titleSize, lineHeight: 0.92 }}>{title}</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 22, fontWeight: 700, letterSpacing: 3.5, textTransform: "uppercase", color: accent }}>
+              {eyebrow.map((part, i) => (
+                <div key={part} style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                  {i > 0 && <div style={{ width: 7, height: 7, borderRadius: 7, backgroundColor: accent }} />}
+                  {part}
+                </div>
+              ))}
+            </div>
+            {/* Words never break inside, so "IN-STORE" stays whole; lines only wrap between words. */}
+            <div style={{ display: "flex", flexWrap: "wrap", columnGap: Math.round(titleSize * 0.22), marginTop: 18, fontFamily: "Archivo", fontSize: titleSize, lineHeight: 0.92 }}>
+              {title.split(/\s+/).map((word, i) => (
+                <span key={i} style={{ whiteSpace: "nowrap" }}>
+                  {word}
+                </span>
+              ))}
+            </div>
             {subtitle && (
               <div style={{ display: "flex", marginTop: 24, fontSize: 30, lineHeight: 1.3, color: "rgba(255, 255, 255, 0.72)" }}>{subtitle}</div>
             )}
           </div>
-          <div style={{ display: "flex", gap: 12 }}>
+          {/* Long texts wrap onto a second row instead of squeezing the labels or running into the gorilla. */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, width: PILLS_WIDTH }}>
             {pills.map((pill) => (
               <div
                 key={pill}
-                style={{ display: "flex", padding: "12px 22px", borderRadius: 999, border: "2px solid rgba(255, 255, 255, 0.18)", fontSize: 22, fontWeight: 500 }}
+                style={{
+                  display: "flex",
+                  flexShrink: 0,
+                  padding: "11px 20px",
+                  borderRadius: 999,
+                  border: "2px solid rgba(255, 255, 255, 0.18)",
+                  fontSize: 21,
+                  fontWeight: 500,
+                  whiteSpace: "nowrap",
+                }}
               >
                 {pill}
               </div>
